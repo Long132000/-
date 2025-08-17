@@ -1,0 +1,222 @@
+body {
+    background-color: rgb(16, 17, 17);
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    color: rgb(255, 255, 255);
+}
+
+h1 {
+    /* color: rgb(255, 255, 255); */
+    width: 600px;
+    height: 144px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 64px;
+    line-height: 72px;
+    /* or 112% */
+
+    background: linear-gradient(90deg, #93D5E1 0%, rgba(147, 213, 225, 0.4) 97.33%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+h2 {
+    color: rgb(255, 255, 255);
+}
+
+ul {
+    color: rgb(255, 255, 255);
+}
+
+/* span {
+    font-style: italic;
+} */
+/* --> делает что то в span курсивом если другой не поменяли формат*/
+
+
+/* span {
+    font-style: italic;
+    background-color: rgb(0, 0, 0);
+    color: antiquewhite;
+} */
+
+/* .bold-text {
+    font-weight: bold;
+}
++жирный */
+
+.aganim {
+    display: inline-block;
+    /* gap: 32px;
+    padding: 30px;
+    width: 560px;
+    height: 570px; */
+    border-style: solid;
+    border-width: 0.5px;
+    padding-right: 20px;
+    color: rgb(23, 29, 30);
+    background-color: rgb(23, 29, 30);
+}
+
+.aganim>.aganim-im {
+    text-align: center;
+}
+
+/* img {
+    float: right;
+} */
+
+/* .image3-1_conteiner {
+    float: left;
+} */
+
+.aganim-zag {
+    font-size: 56px;
+    color: rgb(255, 255, 255);
+    font-weight: bold;
+    /* жирно */
+
+}
+
+.aga-3 {
+    float: left;
+    /* border-style: solid;
+    border-width: 0.5px; */
+    padding: 5px;
+    margin-right: 50px;
+    /* отступ справа */
+}
+
+.aga-3-1 {
+    margin-top: 180px;
+    /* max-width: 70px; */
+}
+
+.nav-conteiner {
+    display: flex;
+    justify-content: space-between;
+    /* максимально далеко друг от друга */
+
+}
+
+
+.nav-conteiner>nav>ul {
+    display: flex;
+    list-style: none;
+    /* убрать пункты */
+
+
+}
+
+/* панель */
+
+
+.nav-conteiner>nav>ul>li>a {
+    display: block;
+    padding: 10px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+    /* margin: 25px; */
+    /* border-width: 0.5px; */
+}
+
+/* панель>сам текст */
+
+
+.li-in-nav {
+    /* display: block;
+    padding: 10px;
+    margin-right: 100px; */
+
+    position: absolute;
+    left: 0%;
+    right: 87.82%;
+    top: 16.67%;
+    bottom: 16.67%;
+/* logo-center */
+
+position: absolute;
+left: 0%;
+right: 87.82%;
+top: 16.67%;
+bottom: 16.67%;
+
+
+
+    /* border-width: 0.5px; */
+}
+
+.first-img {
+    /* float: right; */
+    /* отступ наружу padding внутрь margin */
+    /* display: block; */
+    /* margin-left: 300px; */
+    position: absolute;
+    width: 453px;
+    height: 456px;
+    left: 852px;
+    top: 220px;
+    /* position: absolute; */
+
+}
+
+@media (max-width: 900px) {
+    .nav-conteiner {
+        flex-direction: column;
+    }
+}
+
+
+.page {
+    display: flex;
+    justify-content: center;
+}
+
+.header {
+    /* width: 14%; */
+    background-color: rgb(16, 17, 17);
+    width: 63px;
+    height: 18px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    color: #FFFFFF;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    font-family: 'Epilogue';
+    /* шрифт */
+    font-style: normal;
+    /* не жирный */
+
+}
+
+.nav-conteiner {
+    width: 82%;
+}
+
+/* ------------------------ */
+
+
+
+.Sign {
+    width: 50px;
+}
+
+.GetS {
+    width: 100px;
+}
