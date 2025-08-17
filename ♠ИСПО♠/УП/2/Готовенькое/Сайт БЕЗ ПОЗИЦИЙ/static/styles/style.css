@@ -1,0 +1,4741 @@
+body {
+
+
+    width: 100%;
+    height: 6760px;
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* уубрал left основных контейнеров */
+
+
+    background: #101111;
+    /* background: rgb(16, 17, 17); */
+
+
+}
+
+/* .All-all {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+  //////////////
+    width: 1440px;
+
+    border: 3px solid black;
+
+    overflow: hidden;
+  //////////////
+    
+    background-image: url(../images/Ellipse2.png);
+    background-repeat: no-repeat;
+    background-position: -10px top;
+
+} */
+
+
+.logos {
+
+    /* logos */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 119px;
+
+    width: 1170px;
+    height: 48px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+
+.logos-1 {
+    /* logo 1 */
+
+    width: 139px;
+    height: 48px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.logos-2 {
+    /* logo 2 */
+
+    width: 139px;
+    height: 48px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.logos-3 {
+    /* logo 3 */
+
+    width: 139px;
+    height: 48px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+}
+
+.logos-4 {
+    /* logo 4 */
+
+    width: 139px;
+    height: 48px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 3;
+    flex-grow: 0;
+}
+
+.logos-5 {
+    /* logo 5 */
+
+    width: 139px;
+    height: 48px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 4;
+    flex-grow: 0;
+}
+
+.logo-group {
+    /* logo-group */
+
+    margin: 0 auto;
+    width: 142.48px;
+    height: 32px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+
+    /* background-color: rgb(16, 17, 17); */
+}
+
+
+.images-in-hero {
+    /* image */
+
+    background-image: url(../images/Ellipse1.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+.first-img {
+    /* Hero section image */
+
+    background: url(.png);
+}
+
+.ellipse-1 {
+    /* Ellipse 1 */
+
+    /* Primary 2 */
+    background: #93D5E1;
+    opacity: 0.4;
+    filter: blur(125px);
+}
+
+.container {
+    /* Container */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 64px;
+
+}
+
+.frame-3 {
+    /* Frame 3 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 32px;
+
+    width: 600px;
+    height: 208px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.page {
+    display: flex;
+    justify-content: center;
+}
+
+.header {
+    /* width: 14%; */
+    background-color: rgb(16, 17, 17);
+    width: 63px;
+    height: 18px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    color: #FFFFFF;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    font-family: 'Epilogue';
+    /* шрифт */
+    font-style: normal;
+    /* не жирный */
+
+}
+
+.Nave {
+    /* Nave Bar */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    gap: 169px;
+
+   
+}
+
+/* ------------------------ */
+
+
+.hero {
+    /* hero */
+
+    width: 1170px;
+    height: 644px;
+
+    
+}
+
+.menu {
+    /* Menu */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 40px;
+
+
+
+
+
+    /* color: rgb(255, 255, 255);
+    text-decoration: none; */
+
+
+
+    margin: 0 auto;
+    width: 470px;
+    height: 18px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.menu>a {
+    width: 8px;
+    height: 18px;
+
+    text-decoration: none;
+    color: #DDDDDD;
+
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+    /* identical to box height, or 112% */
+
+    /* Neutral/N50 */
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.menu>a:hover {
+    color: #FFFFFF;
+}
+
+
+.button {
+    /* Button */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 40px;
+
+    margin: 0 auto;
+    width: 252px;
+    height: 48px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+}
+
+.Sign {
+    /* Sign In */
+
+    width: 56px;
+    height: 18px;
+
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 18px;
+    /* identical to box height, or 112% */
+    letter-spacing: 0.04em;
+
+    /* Neutral/N50 */
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.button>.Sign>a {
+    color: #DDDDDD;
+    text-decoration: none;
+
+}
+
+.button>.Sign>a:hover {
+    color: #ffffff;
+}
+
+
+
+.frame-2 {
+    /* Frame 2 */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 18px 28px;
+    gap: 8px;
+
+    width: 141px;
+    height: 48px;
+
+    /* Neutral/N50 */
+    border: 1px solid #FFFFFF;
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+    background-color: rgb(16, 17, 17);
+}
+
+.frame-2>.GetS>a {
+    color: #DDDDDD;
+    text-decoration: none;
+}
+
+.frame-2:hover {
+    background-color: rgb(43, 46, 46);
+}
+
+.button-1:hover {
+    background-color: rgb(43, 46, 46);
+}
+
+.button-2:hover {
+    background-color: rgb(43, 46, 46);
+}
+
+.button-3:hover {
+    background-color: rgb(43, 46, 46);
+}
+
+/* .Buttons11:hover {
+    background-color: rgb(43, 46, 46);
+} */
+
+.Text-Review:hover {
+    background-color: rgb(43, 46, 46);
+    transform: scale(1.05);
+}
+
+.Video-Review:hover {
+    background-color: rgb(43, 46, 46);
+    color: #93D5E1;
+    transform: scale(1.05);
+}
+
+.GetS {
+    /* Get Started */
+
+    width: 100px;
+    height: 25px;
+
+    font-family: 'Epilogue';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+
+    margin-left: -8px;
+
+
+    letter-spacing: 0.04em;
+
+    /* Neutral/N50 */
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Trust {
+    /* Trusted by */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    gap: 48px;
+
+    
+}
+
+
+.Futures {
+    /* Fuatures section */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    gap: 60px;
+
+    
+
+    /* background-color: rgb(16, 17, 17); */
+}
+
+.feat-title {
+    /* Features tittel */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    gap: 16px;
+
+    width: 716px;
+    height: 148px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Overline {
+    /* Overline Cap */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 16px;
+    gap: 8px;
+
+    width: 80px;
+    height: 20px;
+
+    background: rgba(147, 213, 225, 0.13);
+    border-radius: 70px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.title-in-Ov {
+    /* Features */
+
+    width: 75px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+
+.Unlocking {
+    /* Unlocking Powerful Capabilities */
+
+    width: 716px;
+    height: 56px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 56px;
+    /* identical to box height, or 117% */
+    text-align: center;
+
+    background: linear-gradient(90deg, rgba(147, 213, 225, 0.4) 0%, #93D5E1 42.65%, rgba(147, 213, 225, 0.4) 89.78%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Explore {
+    /* Explore the Key Features That Propel Paynola to Excellence */
+
+    width: 716px;
+    height: 32px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 32px;
+    /* identical to box height, or 160% */
+    text-align: center;
+    letter-spacing: 0.02em;
+
+    /* Neutral/N300 */
+    color: #C2C0C0;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Card-s {
+    /* Card s */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    padding: 0px;
+    gap: 50px;
+
+    width: 1170px;
+    height: 940px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Effortless {
+    /* Effortless  */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 30px;
+    gap: 32px;
+    isolation: isolate;
+
+    width: 560px;
+    min-width: 370px;
+    height: 570px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.Ramka {
+    /* Rectangle 6 */
+
+
+    bottom: 0px;
+
+    width: 560px;
+    height: 570px;
+    gap: 0px;
+    border-radius: 24px 0px 0px 0px;
+    opacity: 0px;
+
+    background: linear-gradient(136.25deg, rgba(122, 201, 216, 0.08) 0%, rgba(129, 208, 222, 0.02) 100%);
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    z-index: 0;
+    /* ---------- */
+
+
+}
+
+.image1 {
+    /* image 1 */
+
+    width: 500px;
+    height: 260px;
+
+    background: linear-gradient(0deg, rgba(147, 213, 225, 0.28), rgba(147, 213, 225, 0.28)), url(online-money-transfer-mobile-with-wallet-credit-card-coins-online-payment-earning-making-money-shopping-online-money-savings-financial-transaction-3d-icon-rendering-illustration.jpg);
+    background-blend-mode: hue, normal;
+    border-radius: 16px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 1;
+
+    margin-top: -30px;
+}
+
+.frame-12 {
+    /* Frame 12 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+
+    width: 500px;
+    height: 134px;
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 2;
+}
+
+.Effortless1 {
+    /* Effortless Transactions */
+
+    width: 500px;
+    height: 40px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 40px;
+    /* identical to box height, or 125% */
+
+    /* Neutral/N50 */
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Simplify {
+    /* Simplify your payment processes and enhance efficiency with Paynola. Our intuitive interface and automated workflows make transactions seamless, allowing you to focus on business growth. */
+
+    width: 500px;
+    height: 78px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    /* or 162% */
+
+    color: rgba(255, 255, 255, 0.75);
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.button-1 {
+    /* button 1 */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 28px;
+    gap: 8px;
+
+    width: 169px;
+    height: 52px;
+
+
+    border: 1px solid rgba(147, 213, 225, 0.4);
+    border-radius: 30px;
+    /* ------------- */
+    background-color: rgb(21, 27, 27);
+    /* ------------- */
+
+    /* Inside auto layout */
+    flex: none;
+    order: 3;
+    flex-grow: 0;
+    z-index: 3;
+}
+
+.Icon1 {
+    /* Icon 1 */
+
+    width: 24px;
+    height: 24px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+
+}
+
+.GetS2 {
+    /* Get Started */
+
+    width: 81px;
+    height: 24px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+
+    /* Primary 2 */
+    color: #93D5E1;
+    /* margin-right: 0px; */
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+
+}
+
+.RobustS {
+    /* Robust Security */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 30px;
+    gap: 32px;
+    isolation: isolate;
+
+    width: 560px;
+    min-width: 370px;
+    height: 570px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 1;
+}
+
+.Ramka2 {
+    /* Rectangle 6 */
+
+
+    width: 560px;
+    height: 570px;
+    gap: 0px;
+    border-radius: 24px 0px 0px 0px;
+    opacity: 0px;
+
+
+
+
+    background: linear-gradient(136.25deg, rgba(122, 201, 216, 0.08) 0%, rgba(129, 208, 222, 0.02) 100%);
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    z-index: 0;
+}
+
+.Icon2 {
+    /* image 2 */
+
+    width: 500px;
+    height: 260px;
+
+
+    background: linear-gradient(0deg, rgba(147, 213, 225, 0.28), rgba(147, 213, 225, 0.28)), url(money-protection-shield-with-check-mark-icon-money-security-online-payment-protection-financial-saving-insurance-money-saving-coins-debit-credit-card-banknote-3d-render-illustration.jpg);
+    background-blend-mode: hue, normal;
+    border-radius: 16px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 1;
+}
+
+
+
+
+.Hedline {
+    /* Hedline */
+
+    width: 600px;
+    height: 144px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 64px;
+    line-height: 72px;
+    /* or 112% */
+
+    background: linear-gradient(90deg, #93D5E1 0%, rgba(147, 213, 225, 0.4) 97.33%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Subtittle {
+    /* Subtittle */
+
+    width: 600px;
+    height: 32px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 32px;
+    /* identical to box height, or 160% */
+    letter-spacing: 0.02em;
+
+    /* Neutral/N300 */
+    color: #C2C0C0;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Cta {
+    /* Cta Buttne */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 34px;
+    gap: 8px;
+
+    /* ======================= */
+    /* transform: scale(1.05); */
+    /* ======================= */
+
+
+    width: 167px;
+    height: 56px;
+
+    /* Primary 2 */
+    background: #93D5E1;
+    border-radius: 32px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+
+
+
+
+
+/* для кнопки */
+
+.Cta:hover {
+
+    background-color: #93d5e1ce;
+    color: #93D5E1;
+    transform: scale(1.05);
+}
+
+
+
+
+
+
+.GetSS {
+    /* Get Started */
+
+    width: 110px;
+    height: 16px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 24px;
+
+
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.04em;
+
+    /* Neutral/N900 */
+    color: #1F2733;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.tittle2 {
+    /* tittle */
+
+    width: 600px;
+    height: 30px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 30px;
+    /* identical to box height, or 125% */
+    text-align: center;
+    letter-spacing: 0.02em;
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.tittle1 {
+    /* tittle */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+
+    width: 716px;
+    height: 104px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.frame-13 {
+    /* Frame 12 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+
+
+    width: 500px;
+    height: 134px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 2;
+}
+
+.Robust-text {
+    /* Robust Security Measures */
+
+    width: 500px;
+    height: 40px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 40px;
+    /* identical to box height, or 125% */
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Trust-text {
+    /* Trust in the security of your transactions with [Your Platform Name]. We implement bank-level security measures, actively prevent fraud, and handle data with the utmost confidentiality, */
+
+    width: 500px;
+    height: 78px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    /* or 162% */
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.button-2 {
+    /* Button 2 */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 28px;
+    gap: 8px;
+
+    border: 1px solid rgba(147, 213, 225, 0.4);
+    border-radius: 30px;
+
+    background-color: rgb(21, 27, 27);
+
+
+    width: 174px;
+    height: 52px;
+
+    border: 1px solid rgba(147, 213, 225, 0.2);
+    border-radius: 30px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 3;
+    flex-grow: 0;
+    z-index: 3;
+}
+
+.Icon3 {
+    /* Icon 2 */
+
+    width: 24px;
+    height: 24px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.SecureN {
+    /* Secure Now */
+
+    width: 86px;
+    height: 24px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+
+.Dashboard1 {
+    /* Dashboard */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 30px;
+    gap: 50px;
+    isolation: isolate;
+
+    width: 1170px;
+    min-width: 370px;
+    height: 320px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    flex-grow: 1;
+}
+
+.Ramka3 {
+    /* Rectangle 6 */
+
+
+    width: 1170px;
+    height: 320px;
+    gap: 0px;
+    border-radius: 24px 0px 0px 0px;
+    opacity: 0px;
+
+    background: linear-gradient(136.25deg, rgba(122, 201, 216, 0.08) 0%, rgba(129, 208, 222, 0.02) 100%);
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    z-index: 0;
+}
+
+.Icon4 {
+    /* image 3 */
+
+    width: 530px;
+    height: 260px;
+
+
+
+    background: linear-gradient(0deg, rgba(147, 213, 225, 0.28), rgba(147, 213, 225, 0.28)), url(data-analysis-business-report-chart-graph-growth-diagram-website-business-strategy-seo-optimization-dashboard-financial-research-report-data-analysis-concept-3d-icon-render-illustration.jpg);
+    background-blend-mode: hue, normal;
+    border-radius: 16px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 1;
+    z-index: 1;
+}
+
+.frame-14 {
+    /* Frame 14 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 48px;
+
+    width: 530px;
+    height: 260px;
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    flex-grow: 1;
+    z-index: 2;
+}
+
+
+.frame-15 {
+    /* Frame 12 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+
+    width: 530px;
+    height: 160px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Intuitive1 {
+    /* Intuitive Dashboard */
+
+    width: 530px;
+    height: 40px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 40px;
+    /* identical to box height, or 125% */
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Access1 {
+    /* Access real-time insights and take control of your financial activities through our user-friendly dashboard. Tailor it to your needs, effortlessly navigate your payment data, and make informed decisions to optimize your business's financial strategy. */
+
+    width: 530px;
+    height: 104px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    /* or 162% */
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.button-3 {
+    /* Button 3 */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 28px;
+    gap: 8px;
+
+    width: 202px;
+    height: 52px;
+
+    margin-top: -45px;
+
+    border: 1px solid rgba(147, 213, 225, 0.4);
+    border-radius: 30px;
+
+    background-color: rgb(21, 27, 27);
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Icon5 {
+    /* Icon 3 */
+
+    width: 24px;
+    height: 24px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Explore1 {
+    /* Explore Insights */
+
+    width: 114px;
+    height: 24px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.WorkC {
+    /* Work and cta */
+
+    background-image: url(../images/Ellipse3.png), url(../images/Ellipse5.png);
+    background-repeat: no-repeat, no-repeat;
+    background-position: left 20px top, right 230px bottom;
+}
+
+.CTAS {
+    /* CTA Section */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 70px;
+    gap: 259px;
+
+
+    /* Primary 2 */
+    background: #93D5E1;
+    border-radius: 24px;
+}
+
+.CTA-text {
+    /* Cta Text */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 24px;
+
+    margin: 0 auto;
+    width: 530px;
+    height: 140px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Talk-to {
+    /* Talk to an Expert */
+
+    width: 380px;
+    height: 56px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 48px;
+    line-height: 56px;
+    /* identical to box height, or 117% */
+    text-align: center;
+
+    /* Neutral/N900 */
+    color: #1F2733;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Aut-neque {
+    /* Aut neque impedit non voluptate repudiandae. Impedit fugiat ab et earum neque enim alias atque. */
+
+    width: 530px;
+    height: 60px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 30px;
+    /* or 167% */
+
+    /* Neutral/N900 */
+    color: #1F2733;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+
+.CTA-but {
+    /* Cta Button */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 18px 36px;
+    gap: 8px;
+
+    margin: 0 auto;
+    width: 230px;
+    height: 60px;
+
+    /* Neutral/N900 */
+    background: #1F2733;
+    border-radius: 30px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.CTA-but:hover {
+
+    background-color: #0e1618ce;
+    color: #93D5E1;
+    transform: scale(1.05);
+}
+
+.Icon6 {
+    /* Icon  */
+
+    width: 24px;
+    height: 24px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+
+.Start-Your {
+    /* Start Your Journey */
+
+    width: 132px;
+    height: 24px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.titleIt {
+    /* tittle */
+
+    width: 480px;
+    height: 56px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 56px;
+    /* identical to box height, or 117% */
+    text-align: center;
+
+    background: linear-gradient(90deg, rgba(147, 213, 225, 0.4) 0%, #93D5E1 42.65%, rgba(147, 213, 225, 0.4) 89.78%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.cardsIt {
+    /* cards */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 47px;
+
+    width: 1160px;
+    height: 364px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Card1 {
+    /* Card 1 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px;
+    gap: 32px;
+
+    width: 253px;
+    height: 293px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.step1 {
+    /* Step 1 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 8px;
+
+    width: 67px;
+    height: 20px;
+
+    background: rgba(147, 213, 225, 0.06);
+    border-radius: 70px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.step1-1 {
+    /* Step 1 */
+
+    width: 62px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 20px;
+    /* identical to box height, or 100% */
+    text-align: center;
+    letter-spacing: 0.04em;
+
+    color: rgba(147, 213, 225, 0.7);
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Icon7 {
+    /* icon */
+
+    width: 120px;
+    height: 120px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.SignUp {
+    /* Sign up and create your account */
+
+    width: 360px;
+    height: 72px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 36px;
+
+    /* margin-left: -37px; */
+    /* or 129% */
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Card2 {
+    /* card 2 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px;
+    gap: 32px;
+
+    width: 253px;
+    height: 293px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 1;
+}
+
+.step2 {
+    /* Step 2 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 8px;
+
+    width: 67px;
+    height: 20px;
+
+    background: rgba(147, 213, 225, 0.06);
+    border-radius: 70px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.step2-2 {
+    /* Step 2 */
+
+    width: 62px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 20px;
+    /* identical to box height, or 100% */
+    text-align: center;
+    letter-spacing: 0.04em;
+
+    color: rgba(147, 213, 225, 0.7);
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Icon8 {
+    /* Frame 21 */
+
+    width: 120px;
+    height: 120px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Choose-your {
+    /* Choose your pricing plan */
+
+    width: 360px;
+    height: 72px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 36px;
+
+    margin-left: -37px;
+
+    /* or 129% */
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Card3 {
+    /* Card 3 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 32px;
+    gap: 32px;
+
+    width: 253px;
+    height: 293px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    flex-grow: 1;
+}
+
+.step3 {
+    /* Step 3 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 8px;
+
+    width: 67px;
+    height: 20px;
+
+    background: rgba(147, 213, 225, 0.06);
+    border-radius: 70px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.step3-3 {
+    /* Step 3 */
+
+    width: 62px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 20px;
+    /* identical to box height, or 100% */
+    text-align: center;
+    letter-spacing: 0.04em;
+
+    color: rgba(147, 213, 225, 0.7);
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Icon9 {
+    /* Frame 21 */
+
+    width: 120px;
+    height: 120px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Start-processing {
+    /* Start processing payments seamlessly */
+
+    width: 360px;
+    height: 72px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 36px;
+
+    margin-left: -37px;
+
+    /* or 129% */
+    text-align: center;
+    letter-spacing: -0.02em;
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Rectangle-10 {
+    /* Rectangle 10 */
+
+
+    background: rgba(30, 36, 37, 0.3);
+    /* ------------ */
+    backdrop-filter: blur(75px);
+    /* ------------ */
+    /* Note: backdrop-filter has minimal browser support */
+}
+
+.HowIt {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    gap: 60px;
+
+}
+
+.Testimonial {
+    /* Testimonial section */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 60px;
+
+}
+
+.Frame-Testi {
+    /* Frame */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding: 0px;
+    gap: 375px;
+
+    width: 1170px;
+    height: 96px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+
+.TittelSection1 {
+    /* Tittel section */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 12px;
+
+    width: 538px;
+    height: 96px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.OverlineCap {
+    /* Overline Cap */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 16px;
+    gap: 8px;
+
+    width: 111px;
+    height: 20px;
+
+    background: rgba(147, 213, 225, 0.13);
+    border-radius: 70px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Testimonials {
+    /* Testimonials */
+
+    width: 110px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+
+.What-Our {
+    /* Tittel */
+
+    width: 538px;
+    height: 56px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 56px;
+    /* identical to box height, or 117% */
+
+    background: linear-gradient(90deg, #93D5E1 0%, rgba(147, 213, 225, 0.4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+
+.Buttons11 {
+    /* Buttons */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 12px;
+
+    width: 260px;
+    height: 48px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Text-Review {
+    /* Text Review */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 6px;
+    gap: 8px;
+
+    width: 117px;
+    height: 46px;
+
+
+    background: #151516;
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Text-Review-text {
+    /* Text Review */
+
+    width: 85px;
+    height: 32px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 32px;
+    /* identical to box height, or 200% */
+    text-align: center;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Video-Review {
+    /* Video Review */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 16px;
+    gap: 8px;
+
+    width: 128px;
+    height: 45px;
+
+    /* Primary 2 */
+    border: 1px solid #93D5E1;
+    border-radius: 12px;
+    background-color: rgb(16, 17, 17);
+    ;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Video-Review-text {
+    /* Video Review */
+
+    width: 96px;
+    height: 32px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 32px;
+    /* identical to box height, or 200% */
+    text-align: center;
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Frame-Testi2 {
+    /* Frame 34 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 30px;
+
+    width: 1170px;
+    height: 540px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Review-1-image {
+    /* Review 1 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+
+    width: 220px;
+    height: 540px;
+
+    opacity: 0.2;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.image-card-img {
+    /* image card */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    filter: blur(4px);
+
+    width: 220px;
+    height: 480px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+
+}
+
+.image-frame-img {
+    /* image frame */
+
+    width: 220px;
+    height: 480px;
+
+    background: #FFFFFF;
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 1;
+
+}
+
+.overlay1 {
+    /* overlay */
+
+    background: rgba(20, 28, 35, 0.2);
+    backdrop-filter: blur(4px);
+    /* Note: backdrop-filter has minimal browser support */
+    border-radius: 12px;
+}
+
+.Video-img-1 {
+    /* Video 1 */
+
+    background: url(image.png);
+    border-radius: 12px;
+}
+
+
+/* .PlayButton1 {}
+
+.text-video-1 {} */
+
+.Frame-29 {
+    /* Frame 29 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 4px;
+
+    width: 220px;
+    height: 44px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Melinda-text {
+    /* Melinda Stamm */
+
+    width: 120px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height, or 125% */
+
+    /* Neutral/N100 */
+    color: #F5F5F5;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Product-text {
+    /* Product Intranet Designer */
+
+    width: 166px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Review-2-image {
+    /* Review 2 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+
+    width: 670px;
+    height: 540px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.image-card-img2 {
+    /* image card */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+
+    width: 670px;
+    height: 480px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.image-frame-img2 {
+    /* image frame */
+
+    width: 670px;
+    height: 480px;
+
+    background: #FFFFFF;
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 1;
+}
+
+.overlay2 {
+    /* overlay */
+
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 43.34%, #000000 100%);
+    border-radius: 12px;
+    backdrop-filter: blur(4px);
+}
+
+.Video-img-2 {
+    /* Video 2 */
+
+    background: url(image.png);
+    border-radius: 12px;
+}
+
+.PlayButton2 {
+    /* Play button */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 0px;
+    gap: 9px;
+
+
+    border: #93D5E1;
+
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    /* Note: backdrop-filter has minimal browser support */
+    border-radius: 24px;
+}
+
+.text-video-2 {
+    /* text */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 24px 32px;
+    gap: 12px;
+
+}
+
+.Illum {
+    /* “Illum praesentium recusandae qui unde libero rem. Similique et sit qui voluptatibus. Animi fugit aliquid eum.” */
+
+    width: 622px;
+    height: 60px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 30px;
+    /* or 125% */
+
+    color: #F5F5F7;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Frame-29-2 {
+    /* Frame 29 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 4px;
+
+    width: 670px;
+    height: 44px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Beverly-text {
+    /* Beverly Jerde */
+
+    width: 100px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height, or 125% */
+
+    /* Neutral/N100 */
+    color: #F5F5F5;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Product-text2 {
+    /* Product Intranet Designer */
+
+    width: 166px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Review-3-image {
+    /* Review 3 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+
+    width: 220px;
+    height: 540px;
+
+    opacity: 0.2;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+}
+
+.image-card-img3 {
+    /* image card */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+
+    filter: blur(4px);
+
+    width: 220px;
+    height: 480px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.image-frame-img3 {
+    /* image frame */
+
+    width: 220px;
+    height: 480px;
+
+    background: #FFFFFF;
+    border-radius: 24px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 1;
+}
+
+.overlay3 {
+    /* overlay */
+
+    background: rgba(20, 28, 35, 0.2);
+    backdrop-filter: blur(4px);
+    /* Note: backdrop-filter has minimal browser support */
+    border-radius: 12px;
+}
+
+.Video-img-3 {
+    /* Video 3 */
+
+    background: url(image.png);
+    border-radius: 12px;
+}
+
+.Frame-29-3 {
+    /* Frame 29 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 4px;
+
+    width: 220px;
+    height: 44px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Rafael-text {
+    /* Rafael Keeling */
+
+    width: 104px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    /* identical to box height, or 125% */
+
+    /* Neutral/N100 */
+    color: #F5F5F5;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Product-text3 {
+    /* Product Intranet Designer */
+
+    width: 166px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.pricing-section {
+    /* Pricing Section */
+
+
+}
+
+.Frame-50 {
+    /* Frame 50 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    gap: 60px;
+
+}
+
+.Frame-49 {
+    /* Frame 49 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 48px;
+
+    width: 1170px;
+    height: 528px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Frame-48 {
+    /* Frame 48 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    gap: 95px;
+
+    width: 1170px;
+    height: 276px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Tittel-Section1 {
+    /* Tittel section */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 32px;
+
+    margin: 0 auto;
+    width: 470px;
+    height: 276px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+
+.Frame-35 {
+    /* Frame 35 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+
+    width: 434px;
+    height: 100px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Overline-Cap1 {
+    /* Overline Cap */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 16px;
+    gap: 8px;
+
+    width: 62px;
+    height: 23px;
+
+    background: rgba(147, 213, 225, 0.13);
+    border-radius: 70px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Pricing111 {
+    /* Pricing */
+
+    width: 61px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Tittel111 {
+    /* Tittel */
+
+    width: 289px;
+    height: 56px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 56px;
+    /* identical to box height, or 117% */
+
+    background: linear-gradient(90deg, #93D5E1 0%, rgba(147, 213, 225, 0.4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+
+.Frame-46 {
+    /* Frame 46 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 32px;
+
+    width: 470px;
+    height: 144px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Table {
+    /* Table */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 8px;
+    gap: 12px;
+
+    width: 339px;
+    height: 42px;
+
+    background: rgba(144, 213, 225, 0.04);
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Badid {
+    /* Badid */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: -1px 24px;
+    gap: 8px;
+
+    width: 88px;
+    height: 40px;
+
+    /* Primary 2 */
+    background: #93D5E1;
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Basis {
+    /* Basis */
+
+    width: 40px;
+    height: 32px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 32px;
+    /* identical to box height, or 200% */
+    text-align: center;
+
+    /* Neutral/N900 */
+    color: #1F2733;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+
+.Standard {
+    /* Standard */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: -1px 24px;
+    gap: 8px;
+
+    width: 113px;
+    height: 40px;
+
+    background: #131314;
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+
+.Standard-text {
+    /* Standard */
+
+    width: 65px;
+    height: 32px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 32px;
+    /* identical to box height, or 200% */
+    text-align: center;
+
+    color: rgba(255, 255, 255, 0.75);
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Premium {
+    /* Premium */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: -1px 24px;
+    gap: 8px;
+
+    width: 113px;
+    height: 40px;
+
+    background: #131314;
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+}
+
+.Premium-text {
+    /* Premium */
+
+    width: 65px;
+    height: 32px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 32px;
+    /* identical to box height, or 200% */
+    text-align: center;
+
+    color: rgba(255, 255, 255, 0.75);
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Badid:hover {
+    background-color: #93d5e1d3;
+    color: #93D5E1;
+    transform: scale(1.05);
+}
+
+.Standard:hover {
+    background-color: rgb(43, 46, 46);
+    color: #93D5E1;
+    transform: scale(1.05);
+}
+
+.Premium:hover {
+    background-color: rgb(43, 46, 46);
+    color: #93D5E1;
+    transform: scale(1.05);
+}
+
+.CtaButton50:hover {
+    background-color: rgb(43, 46, 46);
+    color: #93D5E1;
+    transform: scale(1.05);
+}
+
+.Subtittle46 {
+    /* Subtittle */
+
+    width: 470px;
+    height: 56px;
+
+    /* Paragraph/P2 - Medium/Regular */
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 158%;
+    /* or 28px */
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Price48 {
+    /* Price */
+
+    margin: 0 auto;
+    width: 572px;
+    height: 250px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 250px;
+    line-height: 100%;
+    /* identical to box height, or 250px */
+    text-align: center;
+
+    background: linear-gradient(180deg, rgba(64, 118, 128, 0.13) 0%, rgba(65, 137, 150, 0.8) 48.4%, rgba(64, 118, 128, 0.11) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Whats-inclded {
+    /* What's included Section */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 24px;
+
+    width: 1170px;
+    height: 204px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+
+.Whats-in-txt {
+    /* What’s included */
+
+    width: 172px;
+    height: 28px;
+
+    /* Heading/H5 - Peragraph Title/SemiBold */
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 128%;
+    /* or 28px */
+    text-align: center;
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Included4142 {
+    /* Included */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 24px;
+
+    width: 1170px;
+    height: 152px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Frame-41 {
+    /* Frame 41 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 30px;
+
+    width: 1170px;
+    height: 64px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.included1 {
+    /* included 1 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 11px;
+    gap: 12px;
+
+    width: 250px;
+    height: 40px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.Frame-img41-1 {
+    /* Frame */
+
+    width: 20px;
+    height: 20px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Tools-to-build {
+    /* Tools to build optimized checkout flows */
+
+    width: 202px;
+    height: 40px;
+
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.included2 {
+    /* included 2 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 11px;
+    gap: 12px;
+
+    width: 250px;
+    height: 40px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 1;
+}
+
+.Frame-img41-2 {
+    /* Frame */
+
+    width: 20px;
+    height: 20px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Global-payments {
+    /* Global payments with a single integration */
+
+    width: 202px;
+    height: 40px;
+
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.included3 {
+    /* included 3 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 11px;
+    gap: 12px;
+
+    width: 250px;
+    height: 40px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    flex-grow: 1;
+}
+
+.Frame-img41-3 {
+    /* Frame */
+
+    width: 20px;
+    height: 20px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Comprehensive-security {
+    /* Comprehensive security and rigorous compliance */
+
+    width: 202px;
+    height: 40px;
+
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.included4 {
+    /* included 4 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 11px;
+    gap: 12px;
+
+    width: 250px;
+    height: 40px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 3;
+    flex-grow: 1;
+}
+
+.Frame-img41-4 {
+    /* Frame */
+
+    width: 20px;
+    height: 20px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+
+.Fast-predictable {
+    /* Fast, predictable payouts to your bank accounts */
+
+    width: 202px;
+    height: 40px;
+
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Frame-42 {
+    /* Frame 42 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 30px;
+
+    width: 1170px;
+    height: 64px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.included5 {
+    /* included 5 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 11px;
+    gap: 12px;
+
+    width: 250px;
+    height: 40px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.Frame-img41-5 {
+    /* Frame */
+
+    width: 20px;
+    height: 20px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Financial-reconciliation {
+    /* Financial reconciliation and reporting */
+
+    width: 202px;
+    height: 40px;
+
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.included6 {
+    /* included 6 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 11px;
+    gap: 12px;
+
+    width: 250px;
+    height: 40px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 1;
+}
+
+.Frame-img41-6 {
+    /* Frame */
+
+    width: 20px;
+    height: 20px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.phone-chat {
+    /* 24x7 phone, chat, and email support */
+
+    width: 202px;
+    height: 40px;
+
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.included7 {
+    /* included 7 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 11px;
+    gap: 12px;
+
+    width: 250px;
+    height: 40px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    flex-grow: 1;
+}
+
+.Frame-img41-7 {
+    /* Frame */
+
+    width: 20px;
+    height: 20px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Manage-business {
+    /* Manage business operations with a unified dashboard */
+
+    width: 202px;
+    height: 40px;
+
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.included8 {
+    /* included 8 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 12px 11px;
+    gap: 12px;
+
+    width: 250px;
+    height: 40px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.032) 0%, rgba(255, 255, 255, 0.006) 100%);
+    border-radius: 12px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 3;
+    flex-grow: 1;
+}
+
+.Frame-img41-8 {
+    /* Frame */
+
+    width: 20px;
+    height: 20px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Robust-developer {
+    /* Robust developer platform and third-party integrations */
+
+    width: 202px;
+    height: 40px;
+
+    font-family: 'Plus Jakarta Sans';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* or 143% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.CtaButton50 {
+    /* Cta Button */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 32px;
+    gap: 8px;
+
+    width: 163px;
+    height: 54px;
+
+    background-color: rgb(16, 17, 17);
+
+    /* Primary 2 */
+    border: 1px solid #93D5E1;
+    border-radius: 32px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.GetS50 {
+    /* Get Started */
+
+    width: 100px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+    margin-right: 8px;
+
+
+    /* or 133% */
+    /* leading-trim and text-edge are draft CSS properties.
+    
+    
+    */
+
+    letter-spacing: 0.04em;
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.FaqsS {
+    /* Faqs Section */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    gap: 60px;
+
+
+    background-image: url(../images/Ellipse4.png);
+    background-repeat: no-repeat;
+    background-position: center top -500px;
+}
+
+.Taittle1 {
+    /* Taittle */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0px;
+    gap: 16px;
+
+    margin-top: 170px;
+    width: 602px;
+    height: 100px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Cap-in-ov {
+    /* Overline Cap */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 16px;
+    gap: 8px;
+
+    width: 43px;
+    height: 23px;
+
+    background: rgba(147, 213, 225, 0.13);
+    border-radius: 70px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.FAQs-t {
+    /* FAQs */
+
+    width: 37px;
+    height: 20px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    /* identical to box height, or 143% */
+    text-align: center;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+
+    /* Primary 2 */
+    color: #93D5E1;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Frequentlt-a-q {
+    /* Frequently Asked Questions */
+
+    width: 602px;
+    height: 56px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 56px;
+    /* identical to box height, or 117% */
+    text-align: center;
+
+    background: linear-gradient(90deg, rgba(147, 213, 225, 0.4) 0%, #93D5E1 42.65%, rgba(147, 213, 225, 0.4) 89.78%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.FAQ2 {
+    /* FAQ */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 24px;
+    isolation: isolate;
+
+    width: 770px;
+    height: 396px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.faq-01 {
+    /* faq 01 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 30px;
+    gap: 12px;
+
+    width: 770px;
+    height: 130px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.0256) 0%, rgba(255, 255, 255, 0.0048) 100%);
+    border-radius: 16px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 2;
+}
+
+.Frame-1000006908 {
+    /* Frame 1000006908 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 30px;
+
+    width: 710px;
+    height: 44px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.How-long-do {
+    /* How long do payouts take? */
+
+    width: 700px;
+    height: 30px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 30px;
+    /* identical to box height, or 125% */
+
+    /* Neutral/N50 */
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.Minus-icon {
+    /* Minus icon */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    gap: 8px;
+
+    width: 44px;
+    height: 44px;
+
+    /* Neutral/N700 */
+    border: 1px solid #4A494D;
+    border-radius: 30px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Eos-quas-est {
+    /* Eos quas est voluptatibus distinctio odit ipsum aut provident est. Sit sunt esse harum dolorem. Ipsa aut ut beatae animi iure possimus fugit voluptatem non. */
+
+    width: 710px;
+    height: 60px;
+
+    /* Paragraph/P1 ( Size 18px)/Regular */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 30px;
+    /* or 167% */
+
+    /* Neutral/N300 */
+    color: #C2C0C0;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.faq-02 {
+    /* faq 2 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 24px 30px;
+    gap: 12px;
+
+    width: 770px;
+    height: 65px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.0256) 0%, rgba(255, 255, 255, 0.0048) 100%);
+    border-radius: 16px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 1;
+}
+
+.Will-I-be-charged {
+    /* Will I be charged tax? */
+
+    width: 654px;
+    height: 28px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 30px;
+    /* or 125% */
+
+    /* Neutral/N50 */
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.Plus-Icon-1 {
+    /* Plus Icon 1 */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    gap: 8px;
+
+    width: 44px;
+    height: 44px;
+
+    /* Neutral/N700 */
+    border: 1px solid #4A494D;
+    border-radius: 30px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.faq-03 {
+    /* faq 3 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 24px 30px;
+    gap: 12px;
+
+    width: 770px;
+    height: 60px;
+
+    background: linear-gradient(136.25deg, rgba(255, 255, 255, 0.0256) 0%, rgba(255, 255, 255, 0.0048) 100%);
+    border-radius: 16px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+    z-index: 0;
+}
+
+.How-do-refunds123 {
+    /* How do refunds work? */
+
+    width: 654px;
+    height: 30px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 30px;
+    /* identical to box height, or 125% */
+
+    /* Neutral/N50 */
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.Plus-Icon-2 {
+    /* Plus Icon 2 */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px;
+    gap: 8px;
+
+    width: 44px;
+    height: 44px;
+
+    /* Neutral/N700 */
+    border: 1px solid #4A494D;
+    border-radius: 30px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Footer-Section {
+    /* Footer Section */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 130px 135px 0px;
+    gap: 100px;
+
+
+    background: #121414;
+}
+
+.Frame-1000006922 {
+    /* Frame 1000006922 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 230px;
+
+    width: 1170px;
+    height: 200px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Frame-1000006914 {
+    /* Frame 1000006914 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 24px;
+
+    width: 370px;
+    height: 112px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Tittel914 {
+    /* Tittel */
+
+    width: 323px;
+    height: 40px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 40px;
+    /* identical to box height, or 125% */
+
+    background: linear-gradient(90deg, #93D5E1 0%, rgba(147, 213, 225, 0.4) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Subte-Tittlel-14 {
+    /* Subte Tittel */
+
+    width: 370px;
+    height: 48px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    /* or 133% */
+
+    /* Neutral/N300 */
+    color: #C2C0C0;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Subscribe18 {
+    /* Subscribe  */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+
+    width: 470px;
+    height: 56px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Input-Email {
+    /* Input Email */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 23px 20px;
+    gap: 8px;
+
+    width: 313px;
+    height: 7px;
+
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 70px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.Enter-email-address {
+    /* Enter email address */
+
+    width: 317px;
+    height: 30px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+    letter-spacing: 0.02em;
+
+    /* Neutral/N300 */
+    color: #C2C0C0;
+
+    background-color: rgb(35, 36, 36);
+    border: none;
+    border-radius: 70px;
+    padding: 18px;
+    margin-left: -20px;
+    outline: none;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 1;
+}
+
+.Butten918 {
+    /* Butten */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 24px;
+    gap: 8px;
+
+    width: 80px;
+    height: 29px;
+
+    /* Primary 2 */
+    background: #93D5E1;
+    border-radius: 70px;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Subscribe918 {
+    /* Subscribe */
+
+    width: 80px;
+    height: 24px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 24px;
+    /* identical to box height, or 133% */
+
+    /* Neutral/N900 */
+    color: #1F2733;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Butten918:hover {
+
+    background-color: #93d5e1ce;
+    color: #93D5E1;
+    transform: scale(1.05);
+}
+
+.Frame-1000006918 {
+    /* Frame 1000006918 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 24px;
+
+    margin: 0 auto;
+    width: 470px;
+    height: 192px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Footer-Menu-1 {
+    /* Footer Menu */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 130px;
+
+    margin: 0 auto;
+    width: 470px;
+    height: 200px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Company-Footer {
+    /* Company */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 32px;
+
+    margin: 0 auto;
+    width: 170px;
+    height: 200px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Company1234 {
+    /* Company */
+
+    width: 70px;
+    height: 24px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Menu1-foot {
+    /* Menu 1 */
+
+    width: 170px;
+    height: 144px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    /* or 150% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Social-Media-f {
+    /* Social Media */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 32px;
+
+    margin: 0 auto;
+    width: 170px;
+    height: 160px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Social-Media-txt {
+    /* Social Media */
+
+    width: 100px;
+    height: 24px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Menu2-foot {
+    /* Manu 2 */
+
+    width: 170px;
+    height: 104px;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    /* or 150% */
+    letter-spacing: 0.02em;
+
+    color: #FFFFFF;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Copy-Right {
+    /* Copy Right */
+
+    box-sizing: border-box;
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 0px;
+    gap: 146px;
+
+    width: 1170px;
+    height: 84px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.Copyright228 {
+    /* Copyright © 2024 Paynola. All rights reserved. */
+
+    margin: 0 auto;
+    width: 308px;
+    height: 20px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    /* identical to box height, or 20px */
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    /* === */
+    flex-grow: 1;
+    /* === */
+}
+
+.Frame-1000002019 {
+    /* Frame 1000002019 */
+
+    /* Auto layout */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 30px;
+
+    margin: 0 auto;
+    width: 295px;
+    height: 20px;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
+
+.Terms-and-Conditions {
+    /* Terms and Conditions */
+
+    width: 145px;
+    height: 20px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    /* identical to box height, or 20px */
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.Privacy-statement {
+    /* Privacy statement */
+
+    width: 120px;
+    height: 20px;
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 140%;
+    /* identical to box height, or 20px */
+
+    /* Neutral/N200 */
+    color: #DDDDDD;
+
+
+    /* Inside auto layout */
+    flex: none;
+    order: 1;
+    flex-grow: 0;
+}
