@@ -1,0 +1,6 @@
+H:\МДК.01.01 Разработка программных модулей\Task1\5ZAD\obj\Debug\net8.0-windows\_5ZAD.Form1.resources
+H:\МДК.01.01 Разработка программных модулей\Task1\5ZAD\obj\Debug\net8.0-windows\5ZAD.csproj.GenerateResource.cache
+H:\МДК.01.01 Разработка программных модулей\Task1\5ZAD\obj\Debug\net8.0-windows\5ZAD.GeneratedMSBuildEditorConfig.editorconfig
+H:\МДК.01.01 Разработка программных модулей\Task1\5ZAD\obj\Debug\net8.0-windows\5ZAD.AssemblyInfoInputs.cache
+H:\МДК.01.01 Разработка программных модулей\Task1\5ZAD\obj\Debug\net8.0-windows\5ZAD.AssemblyInfo.cs
+H:\МДК.01.01 Разработка программных модулей\Task1\5ZAD\obj\Debug\net8.0-windows\5ZAD.csproj.CoreCompileInputs.cache
