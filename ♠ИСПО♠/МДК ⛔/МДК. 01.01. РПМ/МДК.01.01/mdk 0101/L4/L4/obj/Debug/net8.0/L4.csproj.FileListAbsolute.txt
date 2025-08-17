@@ -1,0 +1,14 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\bin\Debug\net8.0\L4.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\bin\Debug\net8.0\L4.deps.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\bin\Debug\net8.0\L4.runtimeconfig.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\bin\Debug\net8.0\L4.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\bin\Debug\net8.0\L4.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\obj\Debug\net8.0\L4.GeneratedMSBuildEditorConfig.editorconfig
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\obj\Debug\net8.0\L4.AssemblyInfoInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\obj\Debug\net8.0\L4.AssemblyInfo.cs
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\obj\Debug\net8.0\L4.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\obj\Debug\net8.0\L4.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\obj\Debug\net8.0\refint\L4.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\obj\Debug\net8.0\L4.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\obj\Debug\net8.0\L4.genruntimeconfig.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\L4\L4\obj\Debug\net8.0\ref\L4.dll

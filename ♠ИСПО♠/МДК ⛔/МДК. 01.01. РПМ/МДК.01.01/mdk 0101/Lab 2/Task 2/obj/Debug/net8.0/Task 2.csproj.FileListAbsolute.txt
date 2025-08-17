@@ -1,0 +1,14 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\bin\Debug\net8.0\Task 2.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\bin\Debug\net8.0\Task 2.deps.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\bin\Debug\net8.0\Task 2.runtimeconfig.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\bin\Debug\net8.0\Task 2.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\bin\Debug\net8.0\Task 2.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\obj\Debug\net8.0\Task 2.GeneratedMSBuildEditorConfig.editorconfig
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\obj\Debug\net8.0\Task 2.AssemblyInfoInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\obj\Debug\net8.0\Task 2.AssemblyInfo.cs
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\obj\Debug\net8.0\Task 2.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\obj\Debug\net8.0\Task 2.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\obj\Debug\net8.0\refint\Task 2.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\obj\Debug\net8.0\Task 2.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\obj\Debug\net8.0\Task 2.genruntimeconfig.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab 2\Task 2\obj\Debug\net8.0\ref\Task 2.dll
