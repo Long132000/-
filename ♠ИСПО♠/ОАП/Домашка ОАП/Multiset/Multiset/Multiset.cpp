@@ -1,0 +1,74 @@
+﻿#include <iostream>
+#include <set>
+#include <string>
+
+int main() {
+	std::multiset<int> myMultiSet;
+
+	while (true) {
+		int operation;
+		std::cin >> operation;
+
+		if (operation == 1) {
+			int value;
+			std::cin >> value;
+			myMultiSet.insert(value);
+		}
+		else if (operation == 2) {
+			int value;
+			std::cin >> value;
+			auto it = myMultiSet.find(value);
+			if (it != myMultiSet.end()) {
+				myMultiSet.erase(it);
+				std::cout << "Deleted " << value << std::endl;
+			}
+			else {
+				std::cout << "Element " << value << " not found" << std::endl;
+			}
+		}
+		else if (operation == 3) {
+			int value;
+			std::cin >> value;
+			auto it = myMultiSet.lower_bound(value);
+			if (it != myMultiSet.end()) {
+				std::cout << "Lower bound of " << value << " is " << *it << std::endl;
+			}
+			else {
+				std::cout << "No lower bound for " << value << std::endl;
+			}
+		}
+		else if (operation == 4) {
+			int value;
+			std::cin >> value;
+			auto it = myMultiSet.upper_bound(value);
+			if (it != myMultiSet.end()) {
+				std::cout << "Upper bound of " << value << " is " << *it << std::endl;
+			}
+			else {
+				std::cout << "No upper bound for " << value << std::endl;
+			}
+		}
+		else if (operation == 5) {
+			int value;
+			std::cin >> value;
+			auto range = myMultiSet.equal_range(value);
+			std::cout << "Equal range for " << value << ":";
+			for (auto it = range.first; it != range.second; ++it) {
+				std::cout << ' ' << *it;
+			}
+			std::cout << std::endl;
+		}
+		else {
+			break; // Выход из цикла при вводе любой другой команды
+		}
+	}
+
+	// Выводим все элементы мультисета
+	std::cout << "Multiset contains:";
+	for (const auto& elem : myMultiSet) {
+		std::cout << ' ' << elem;
+	}
+	std::cout << std::endl;
+
+	return 0;
+}
