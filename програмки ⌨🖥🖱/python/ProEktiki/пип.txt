@@ -1,0 +1,32 @@
+C:\Users\breus\AppData\Local\Programs\Python\Python310\Scripts
+
+
+
+1)cd путь///////сверху 3)pip install discord
+
+
+
+pyinstaller -F "название.py"
+
+
+
+
+
+
+это cmd!!!!!
+
+
+
+
+
+
+
+
+
+!!!!будет в папке dist!!!!
+
+
+
+
+C:\Users\Роман\AppData\Local\Programs\Python\Python310\Scripts
+(Для 3.10.2)
