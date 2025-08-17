@@ -1,0 +1,10 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\WindowsFormsApp3.exe.config
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\WindowsFormsApp3.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\bin\Debug\WindowsFormsApp3.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.csproj.AssemblyReference.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.Form1.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.Properties.Resources.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.csproj.GenerateResource.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp3\WindowsFormsApp3\obj\Debug\WindowsFormsApp3.pdb

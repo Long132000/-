@@ -1,0 +1,10 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\bin\Debug\WindowsFormsApp5.exe.config
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\bin\Debug\WindowsFormsApp5.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\bin\Debug\WindowsFormsApp5.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\obj\Debug\WindowsFormsApp5.csproj.AssemblyReference.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\obj\Debug\WindowsFormsApp5.Form1.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\obj\Debug\WindowsFormsApp5.Properties.Resources.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\obj\Debug\WindowsFormsApp5.csproj.GenerateResource.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\obj\Debug\WindowsFormsApp5.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\obj\Debug\WindowsFormsApp5.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\WindowsFormsApp5\WindowsFormsApp5\obj\Debug\WindowsFormsApp5.pdb
