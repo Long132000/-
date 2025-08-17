@@ -1,0 +1,20 @@
+C:\Users\Egor\source\repos\Lab10\Lab10\obj\Debug\Lab10.csproj.AssemblyReference.cache
+C:\Users\Egor\source\repos\Lab10\Lab10\obj\Debug\Lab10.Properties.Resources.resources
+C:\Users\Egor\source\repos\Lab10\Lab10\obj\Debug\Lab10.csproj.GenerateResource.cache
+C:\Users\Egor\source\repos\Lab10\Lab10\obj\Debug\Lab10.csproj.CoreCompileInputs.cache
+C:\Users\Egor\source\repos\Lab10\Lab10\obj\Debug\Lab10.Form1.resources
+C:\Users\Egor\source\repos\Lab10\Lab10\bin\Debug\Lab10.exe.config
+C:\Users\Egor\source\repos\Lab10\Lab10\bin\Debug\Lab10.exe
+C:\Users\Egor\source\repos\Lab10\Lab10\bin\Debug\Lab10.pdb
+C:\Users\Egor\source\repos\Lab10\Lab10\obj\Debug\Lab10.exe
+C:\Users\Egor\source\repos\Lab10\Lab10\obj\Debug\Lab10.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\bin\Debug\Lab10.exe.config
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\bin\Debug\Lab10.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\bin\Debug\Lab10.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\obj\Debug\Lab10.csproj.AssemblyReference.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\obj\Debug\Lab10.Form1.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\obj\Debug\Lab10.Properties.Resources.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\obj\Debug\Lab10.csproj.GenerateResource.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\obj\Debug\Lab10.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\obj\Debug\Lab10.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab10\Lab10\obj\Debug\Lab10.pdb

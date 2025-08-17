@@ -1,0 +1,20 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\bin\Debug\Lab7.exe.config
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\bin\Debug\Lab7.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\bin\Debug\Lab7.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\obj\Debug\Lab7.csproj.AssemblyReference.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\obj\Debug\Lab7.Form1.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\obj\Debug\Lab7.Properties.Resources.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\obj\Debug\Lab7.csproj.GenerateResource.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\obj\Debug\Lab7.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\obj\Debug\Lab7.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7\Lab7\obj\Debug\Lab7.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\bin\Debug\Lab7.exe.config
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\bin\Debug\Lab7.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\bin\Debug\Lab7.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\obj\Debug\Lab7.csproj.AssemblyReference.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\obj\Debug\Lab7.Form1.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\obj\Debug\Lab7.Properties.Resources.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\obj\Debug\Lab7.csproj.GenerateResource.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\obj\Debug\Lab7.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\obj\Debug\Lab7.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab7 — копия\Lab7\obj\Debug\Lab7.pdb

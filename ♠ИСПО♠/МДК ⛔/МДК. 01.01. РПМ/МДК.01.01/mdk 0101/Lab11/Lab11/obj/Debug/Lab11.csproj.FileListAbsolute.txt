@@ -1,0 +1,9 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab11\Lab11\bin\Debug\Lab11.exe.config
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab11\Lab11\bin\Debug\Lab11.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab11\Lab11\bin\Debug\Lab11.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab11\Lab11\obj\Debug\Lab11.csproj.AssemblyReference.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab11\Lab11\obj\Debug\Lab11.Properties.Resources.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab11\Lab11\obj\Debug\Lab11.csproj.GenerateResource.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab11\Lab11\obj\Debug\Lab11.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab11\Lab11\obj\Debug\Lab11.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab11\Lab11\obj\Debug\Lab11.pdb
