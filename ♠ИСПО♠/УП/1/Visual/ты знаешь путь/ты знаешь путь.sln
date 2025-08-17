@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1972
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ты знаешь путь", "ты знаешь путь\ты знаешь путь.vcxproj", "{1D2400A0-FC1F-485E-8760-28E94D0740F4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D2400A0-FC1F-485E-8760-28E94D0740F4}.Debug|x64.ActiveCfg = Debug|x64
+		{1D2400A0-FC1F-485E-8760-28E94D0740F4}.Debug|x64.Build.0 = Debug|x64
+		{1D2400A0-FC1F-485E-8760-28E94D0740F4}.Debug|x86.ActiveCfg = Debug|Win32
+		{1D2400A0-FC1F-485E-8760-28E94D0740F4}.Debug|x86.Build.0 = Debug|Win32
+		{1D2400A0-FC1F-485E-8760-28E94D0740F4}.Release|x64.ActiveCfg = Release|x64
+		{1D2400A0-FC1F-485E-8760-28E94D0740F4}.Release|x64.Build.0 = Release|x64
+		{1D2400A0-FC1F-485E-8760-28E94D0740F4}.Release|x86.ActiveCfg = Release|Win32
+		{1D2400A0-FC1F-485E-8760-28E94D0740F4}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {97F0DA41-D1A2-4387-93CF-CFD5E503BC0A}
+	EndGlobalSection
+EndGlobal
