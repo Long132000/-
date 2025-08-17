@@ -1,0 +1,18 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.csproj.AssemblyReference.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.Properties.Resources.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.csproj.GenerateResource.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab13\Lab13\bin\Debug\Lab13.exe.config
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab13\Lab13\bin\Debug\Lab13.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab13\Lab13\bin\Debug\Lab13.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\МДК.01.01\mdk 0101\Lab13\Lab13\bin\Debug\Lab13.exe.config
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\МДК.01.01\mdk 0101\Lab13\Lab13\bin\Debug\Lab13.exe
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\МДК.01.01\mdk 0101\Lab13\Lab13\bin\Debug\Lab13.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.csproj.AssemblyReference.cache
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.Properties.Resources.resources
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.csproj.GenerateResource.cache
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.csproj.CoreCompileInputs.cache
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.exe
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\МДК.01.01\mdk 0101\Lab13\Lab13\obj\Debug\Lab13.pdb
