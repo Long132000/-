@@ -1,0 +1,34 @@
+C:\Programs (¬_¬ )\c#\11\11\bin\Debug\net8.0-windows\11.exe
+C:\Programs (¬_¬ )\c#\11\11\bin\Debug\net8.0-windows\11.deps.json
+C:\Programs (¬_¬ )\c#\11\11\bin\Debug\net8.0-windows\11.runtimeconfig.json
+C:\Programs (¬_¬ )\c#\11\11\bin\Debug\net8.0-windows\11.dll
+C:\Programs (¬_¬ )\c#\11\11\bin\Debug\net8.0-windows\11.pdb
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\_11.Form1.resources
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\_11.InputForm.resources
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\11.csproj.GenerateResource.cache
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\11.GeneratedMSBuildEditorConfig.editorconfig
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\11.AssemblyInfoInputs.cache
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\11.AssemblyInfo.cs
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\11.csproj.CoreCompileInputs.cache
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\11.dll
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\refint\11.dll
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\11.pdb
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\11.genruntimeconfig.cache
+C:\Programs (¬_¬ )\c#\11\11\obj\Debug\net8.0-windows\ref\11.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\bin\Debug\net8.0-windows\11.exe
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\bin\Debug\net8.0-windows\11.deps.json
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\bin\Debug\net8.0-windows\11.runtimeconfig.json
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\bin\Debug\net8.0-windows\11.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\bin\Debug\net8.0-windows\11.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\_11.Form1.resources
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\_11.InputForm.resources
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\11.csproj.GenerateResource.cache
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\11.GeneratedMSBuildEditorConfig.editorconfig
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\11.AssemblyInfoInputs.cache
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\11.AssemblyInfo.cs
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\11.csproj.CoreCompileInputs.cache
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\11.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\refint\11.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\11.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\11.genruntimeconfig.cache
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\лб10\11\11\obj\Debug\net8.0-windows\ref\11.dll
