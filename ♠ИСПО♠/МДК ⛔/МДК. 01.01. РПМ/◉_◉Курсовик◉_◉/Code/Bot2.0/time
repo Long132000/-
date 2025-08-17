@@ -1,0 +1,175 @@
+import telegram
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ConversationHandler, ContextTypes
+import os
+
+# Состояния для разговора о создании теста
+(TOP_LEVEL, TEST_NAME, QUESTION, ANSWER, ADD_MORE, RUN_TEST, CHECK_ANSWER) = range(7)
+
+DATABASE_FILE = "db.txt"
+
+# Создаем клавиатуру основного меню
+def main_menu_keyboard():
+    return ReplyKeyboardMarkup([
+        ["Создать тест", "Список тестов"],
+        ["Запустить тест", "Помощь"],
+        ["Ресурсы"]
+    ], resize_keyboard=True)
+
+def load_data():
+    data = {}
+    if os.path.exists(DATABASE_FILE):
+        with open(DATABASE_FILE, "r", encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if "=" in line:
+                    key, value = line.split("=", 1)
+                    data[key] = value.replace('\\n', '\n')
+    return data
+
+def save_data(data):
+    with open(DATABASE_FILE, "w", encoding='utf-8') as f:
+        for key, value in data.items():
+            escaped_value = value.replace('\n', '\\n')
+            f.write(f"{key}={escaped_value}\n")
+
+async def start(update: telegram.Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.message.from_user
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"Привет, {user.first_name}! Я бот для изучения Python с конструктором тестов.",
+        reply_markup=main_menu_keyboard()
+    )
+
+async def help_command(update: telegram.Update, context: ContextTypes.DEFAULT_TYPE):
+    help_text = """
+    Доступные команды:
+    Создать тест - создать новый тест
+    Список тестов - показать доступные тесты
+    Запустить тест - начать выполнение теста
+    Ресурсы - полезные материалы
+    """
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=help_text,
+        reply_markup=main_menu_keyboard()
+    )
+
+async def resources(update: telegram.Update, context: ContextTypes.DEFAULT_TYPE):
+    resource_text = """
+    Полезные ресурсы:
+    - Официальная документация Python: https://docs.python.org/3/
+    - Learn Python: https://www.learnpython.org/
+    """
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=resource_text,
+        reply_markup=main_menu_keyboard()
+    )
+
+async def list_tests(update: telegram.Update, context: ContextTypes.DEFAULT_TYPE):
+    data = load_data()
+    if not data:
+        text = "Нет доступных тестов."
+    else:
+        text = "Список тестов:\n" + "\n".join(data.keys())
+    
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=text,
+        reply_markup=main_menu_keyboard()
+    )
+
+# Остальные функции (create_test, test_name, question, answer, add_more, cancel, run_test, choose_test, ask_question, check_question) 
+# остаются без изменений, но нужно добавить обработку reply_markup где необходимо
+
+async def create_test(update: telegram.Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    await update.message.reply_text(
+        "Давайте создадим новый тест! Как назовем тест?",
+        reply_markup=ReplyKeyboardRemove()
+    )
+    return TEST_NAME
+
+async def add_more(update: telegram.Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    if update.message.text.lower() == 'да':
+        await update.message.reply_text(
+            "Введите следующий вопрос:",
+            reply_markup=ReplyKeyboardRemove()
+        )
+        return QUESTION
+    else:
+        test_name = context.user_data['test_name']
+        data = load_data()
+        test_data = "\n".join([f"{q['question']}||{q['answer']}" for q in context.user_data['questions']])
+        data[test_name] = test_data
+        save_data(data)
+        await update.message.reply_text(
+            f"Тест '{test_name}' сохранен!",
+            reply_markup=main_menu_keyboard()
+        )
+        return ConversationHandler.END
+
+async def run_test(update: telegram.Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    data = load_data()
+    if not data:
+        await update.message.reply_text("Нет тестов.", reply_markup=main_menu_keyboard())
+        return ConversationHandler.END
+    
+    test_list = "\n".join(data.keys())
+    await update.message.reply_text(
+        f"Выберите тест:\n{test_list}",
+        reply_markup=ReplyKeyboardRemove()
+    )
+    return RUN_TEST
+
+# Модифицируем основную функцию для обработки кнопок
+def main():
+    BOT_TOKEN = "ВАШ_ТОКЕН"
+    app = ApplicationBuilder().token(BOT_TOKEN).build()
+
+    # Обработчики команд из меню
+    app.add_handler(MessageHandler(filters.Text("Создать тест"), create_test))
+    app.add_handler(MessageHandler(filters.Text("Список тестов"), list_tests))
+    app.add_handler(MessageHandler(filters.Text("Помощь"), help_command))
+    app.add_handler(MessageHandler(filters.Text("Ресурсы"), resources))
+    app.add_handler(MessageHandler(filters.Text("Запустить тест"), run_test))
+
+    # Обработчики разговоров
+    conv_create = ConversationHandler(
+        entry_points=[MessageHandler(filters.Text("Создать тест"), create_test)],
+        states={
+            TEST_NAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, test_name)],
+            QUESTION: [MessageHandler(filters.TEXT & ~filters.COMMAND, question)],
+            ANSWER: [MessageHandler(filters.TEXT & ~filters.COMMAND, answer)],
+            ADD_MORE: [MessageHandler(filters.TEXT & ~filters.COMMAND, add_more)],
+        },
+        fallbacks=[CommandHandler('cancel', cancel)],
+        map_to_parent={ConversationHandler.END: TOP_LEVEL}
+    )
+
+    conv_run = ConversationHandler(
+        entry_points=[MessageHandler(filters.Text("Запустить тест"), run_test)],
+        states={
+            RUN_TEST: [MessageHandler(filters.TEXT & ~filters.COMMAND, choose_test)],
+            CHECK_ANSWER: [MessageHandler(filters.TEXT & ~filters.COMMAND, check_answer)],
+        },
+        fallbacks=[CommandHandler('cancel', cancel)],
+        map_to_parent={ConversationHandler.END: TOP_LEVEL}
+    )
+
+    app.add_handler(conv_create)
+    app.add_handler(conv_run)
+    app.add_handler(CommandHandler("start", start))
+    app.add_error_handler(error_handler)
+    
+    if not os.path.exists(DATABASE_FILE):
+        save_data({
+            "print_test": "Что делает print()?||Выводит текст",
+            "input_test": "Как получить ввод?||input()",
+            "if_test": "Как проверить условие?||if"
+        })
+
+    app.run_polling()
+
+if __name__ == '__main__':
+    main()

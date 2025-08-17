@@ -1,0 +1,6 @@
+https://docs.google.com/spreadsheets/d/12sux45qhtlJTMqnqfpE_q3jXX2kA8SQLS0nsBC9jDTU/edit?usp=sharing
+
+Телеграмм-бот помощник в изучении языка программирования Python с конструктором тестов  	32919/21	Бреусов
+
+
+& "C:\Program Files\Python311\python.exe" "H:\МДК.01.01 Разработка программных модулей\Курсовик\Code\Bot2.0\BotTG.py"

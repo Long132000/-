@@ -1,0 +1,7 @@
+pip install python-telegram-bot sqlalchemy
+
+C:\Program Files\Python311\Scripts
+
+telegram.ext
+
+telegram
