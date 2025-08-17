@@ -1,0 +1,14 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\bin\Debug\net8.0\Lab3.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\bin\Debug\net8.0\Lab3.deps.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\bin\Debug\net8.0\Lab3.runtimeconfig.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\bin\Debug\net8.0\Lab3.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\bin\Debug\net8.0\Lab3.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\obj\Debug\net8.0\Lab3.GeneratedMSBuildEditorConfig.editorconfig
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\obj\Debug\net8.0\Lab3.AssemblyInfoInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\obj\Debug\net8.0\Lab3.AssemblyInfo.cs
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\obj\Debug\net8.0\Lab3.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\obj\Debug\net8.0\Lab3.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\obj\Debug\net8.0\refint\Lab3.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\obj\Debug\net8.0\Lab3.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\obj\Debug\net8.0\Lab3.genruntimeconfig.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab3\Lab3\obj\Debug\net8.0\ref\Lab3.dll
