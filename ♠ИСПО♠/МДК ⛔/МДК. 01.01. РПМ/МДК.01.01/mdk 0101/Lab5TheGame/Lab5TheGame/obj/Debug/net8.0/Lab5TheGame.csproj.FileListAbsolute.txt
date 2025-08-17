@@ -1,0 +1,14 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\bin\Debug\net8.0\Lab5TheGame.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\bin\Debug\net8.0\Lab5TheGame.deps.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\bin\Debug\net8.0\Lab5TheGame.runtimeconfig.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\bin\Debug\net8.0\Lab5TheGame.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\bin\Debug\net8.0\Lab5TheGame.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\obj\Debug\net8.0\Lab5TheGame.GeneratedMSBuildEditorConfig.editorconfig
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\obj\Debug\net8.0\Lab5TheGame.AssemblyInfoInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\obj\Debug\net8.0\Lab5TheGame.AssemblyInfo.cs
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\obj\Debug\net8.0\Lab5TheGame.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\obj\Debug\net8.0\Lab5TheGame.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\obj\Debug\net8.0\refint\Lab5TheGame.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\obj\Debug\net8.0\Lab5TheGame.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\obj\Debug\net8.0\Lab5TheGame.genruntimeconfig.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab5TheGame\Lab5TheGame\obj\Debug\net8.0\ref\Lab5TheGame.dll

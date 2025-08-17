@@ -1,0 +1,14 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\obj\Debug\net8.0\Lab6.GeneratedMSBuildEditorConfig.editorconfig
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\obj\Debug\net8.0\Lab6.AssemblyInfoInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\obj\Debug\net8.0\Lab6.AssemblyInfo.cs
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\obj\Debug\net8.0\Lab6.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\bin\Debug\net8.0\Lab6.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\bin\Debug\net8.0\Lab6.deps.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\bin\Debug\net8.0\Lab6.runtimeconfig.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\bin\Debug\net8.0\Lab6.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\bin\Debug\net8.0\Lab6.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\obj\Debug\net8.0\Lab6.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\obj\Debug\net8.0\refint\Lab6.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\obj\Debug\net8.0\Lab6.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\obj\Debug\net8.0\Lab6.genruntimeconfig.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\Lab6\Lab6\obj\Debug\net8.0\ref\Lab6.dll
