@@ -1,0 +1,6 @@
+﻿  MathLibrary.cpp
+c:\users\2291921-5\source\repos\new10\new10\mathlibrary.h(2): warning C4068: неизвестная директива pragma
+c:\users\2291921-5\source\repos\new10\new10\mathlibrary.cpp(8): error C2653: Arithmetic: не является именем класса или пространства имен
+c:\users\2291921-5\source\repos\new10\new10\mathlibrary.cpp(13): error C2653: Arithmetic: не является именем класса или пространства имен
+c:\users\2291921-5\source\repos\new10\new10\mathlibrary.cpp(18): error C2653: Arithmetic: не является именем класса или пространства имен
+c:\users\2291921-5\source\repos\new10\new10\mathlibrary.cpp(23): error C2653: Arithmetic: не является именем класса или пространства имен
