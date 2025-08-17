@@ -1,0 +1,5 @@
+H:\УП\Visual\4444444\4444444\obj\Debug\4444444.csprojAssemblyReference.cache
+H:\УП\Visual\4444444\4444444\obj\Debug\_4444444.maskedTextBox2.resources
+H:\УП\Visual\4444444\4444444\obj\Debug\_4444444.Properties.Resources.resources
+H:\УП\Visual\4444444\4444444\obj\Debug\4444444.csproj.GenerateResource.cache
+H:\УП\Visual\4444444\4444444\obj\Debug\4444444.csproj.CoreCompileInputs.cache
