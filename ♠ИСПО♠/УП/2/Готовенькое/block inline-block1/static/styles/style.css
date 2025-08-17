@@ -1,0 +1,59 @@
+/* * {
+    margin: 0;
+} */
+/* margin сброс всего начального с помощбю (*) */
+
+p {
+    font-size: 24px;
+    background-color: rgb(118, 240, 118);
+    /* padding: 30px; */
+
+    /* margin: 30px; */
+    /* отступ 30 и там и там */
+
+}
+
+/* .conteiner {
+    text-align: center;
+    /* width: 500px;
+} */
+/* центровка дива - container + ~ширина */
+
+.conteiner {
+    /* display: inline; */
+    /* display: inline-block; */
+    /* display: block; */
+    /* строгий */
+
+    /* блочный вся ширина, инлайн по контенту, инлайнблок начтраевомый*/
+
+    /* width: 500px; */
+    /* height: 100px; */
+
+    margin: 20px;
+    margin-top: 50px;
+    /* отступы */
+
+    display: inline-block;
+    /* как карточка товара, маштаб по самому широкому объекту */
+    text-align: center;
+    /* центр */
+    background-color: rgb(141, 139, 139);
+}
+/* инлайновые контейнеры не воспреимчивы к ширине и высоте в отличие от блочных*/
+
+/* p {
+    display: inline;
+}
+cтрочные теги */
+
+.main {
+    text-align: center;
+}
+
+.conteiner>img {
+    /* дочерние теги из сласса */
+    
+    width: 300px;
+    /* max-width: 300px; */
+}

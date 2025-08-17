@@ -1,0 +1,16 @@
+
+p {
+    font-size: 24px;
+    background-color: rgb(118, 240, 118);
+
+}
+
+.conteiner {
+    display: flex;
+    /* flex-direction: column;
+    в столбец */
+    flex-direction: row;
+    justify-content: space-between;
+    /* свободное пространство распределиться поровну между картинками */
+    background-color: rgb(141, 139, 139);
+}
