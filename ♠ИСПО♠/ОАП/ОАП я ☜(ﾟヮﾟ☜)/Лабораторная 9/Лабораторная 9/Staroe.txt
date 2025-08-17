@@ -1,0 +1,46 @@
+#include <iostream> 
+#include <fstream> 
+#include <sstream> 
+#include <vector> 
+
+void swapAdjacentWords(std::vector<std::string>& words) {// ссылка на вектор строк и меняет местами соседние слова
+	for (int i = 0; i < words.size() - 1; i += 2) {// Индекс i начинается с 0 (первое слово в векторе) и итерируется до предпоследнего элемента вектора (words.size() - 1), Шаг итерации равен 2
+		std::swap(words[i], words[i + 1]);//это индекс текущего слова, а i + 1 - индекс следующего слова, меняются местами
+	}
+}
+
+int main() {
+	setlocale(LC_ALL, "rus");
+
+	std::string filename;
+	std::cout << "Введите имя файла: ";
+	std::cin >> filename;
+
+	std::ifstream file(filename);
+	if (!file.is_open()) {
+		std::cerr << "Ошибка при открытии файла\n";
+		return 1;
+	}
+
+	std::vector<std::string> words;//Создается вектор words для хранения слов из файла
+	std::string word;
+	while (file >> word) {
+		words.push_back(word);
+	}
+
+	swapAdjacentWords(words);//меняет местами соседние слова в векторе words
+
+	std::ofstream outFile("output.txt");
+	for (const auto& w : words) {//перебирает элементы вектора words и присваивает каждый элемент переменной w в каждой итерации
+		std::cout << w << " ";//Выводятся все слова из вектора words через пробел
+		if (outFile.is_open()) {
+			outFile << w << " ";
+		}
+	}
+	std::cout << std::endl;
+
+	outFile.close();
+	file.close();//Файл закрывается
+
+	return 0;
+}
