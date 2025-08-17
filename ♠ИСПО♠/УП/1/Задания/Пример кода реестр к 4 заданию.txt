@@ -1,0 +1,43 @@
+private int _clr = -1;
+private string _str;
+const string userRoot = "HKEY_CURRENT_USER";
+const string subkey = "RegistrySetValueExample";
+const string keyName = userRoot + "\\" + subkey;
+public Form1()
+{
+InitializeComponent();
+}
+private void Form1_Load(object sender, EventArgs e)
+{
+if((int)Registry.GetValue(keyName, "clr", "-1") == 0)
+Collor(Color.DarkSlateGray, Color.Gray);
+if((int)Registry.GetValue(keyName, "clr", "-1") == 1)
+Collor(Color.WhiteSmoke, Color.White);
+maskedTextBox1.Text = (string)Registry.GetValue(keyName, "text", "");
+Size = new Size((int)Registry.GetValue(keyName, "y", "808"), (int)Registry.GetValue(keyName, "x", "477"));
+}
+private void button1_Click(object sender, EventArgs e)
+{
+Collor(Color.DarkSlateGray, Color.Gray);
+_clr = 0;
+Registry.SetValue(keyName, "clr", 0);
+}
+private void button2_Click(object sender, EventArgs e)
+{
+Collor(Color.WhiteSmoke, Color.White);
+_clr = 1;
+Registry.SetValue(keyName, "clr", 1);
+}
+private void Collor(Color buttonc, Color backgroundc)
+{
+button1.BackColor = buttonc;
+button2.BackColor = buttonc;
+listBox1.BackColor = buttonc;
+this.BackColor = backgroundc;
+maskedTextBox1.BackColor = buttonc;
+}
+private void maskedTextBox1_TextChanged(object sender, EventArgs e)
+{
+_str = maskedTextBox1.Text;
+Registry.SetValue(keyName, "text", _str);
+}
