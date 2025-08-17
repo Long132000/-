@@ -1,0 +1,42 @@
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.exe
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.deps.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.runtimeconfig.json
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\TextFileLibrary.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\TextFileLibrary.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.csproj.AssemblyReference.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17_18.Form1.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17_18.Form2.resources
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.csproj.GenerateResource.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.GeneratedMSBuildEditorConfig.editorconfig
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.AssemblyInfoInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.AssemblyInfo.cs
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.csproj.CoreCompileInputs.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.csproj.Up2Date
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\refint\Lab17-18.dll
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.pdb
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.genruntimeconfig.cache
+D:\Учебка 💾\МДК.01.01\mdk 0101\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\ref\Lab17-18.dll
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.exe
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.deps.json
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.runtimeconfig.json
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.dll
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\Lab17-18.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\TextFileLibrary.dll
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\bin\Debug\net8.0-windows\TextFileLibrary.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.csproj.AssemblyReference.cache
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17_18.Form1.resources
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17_18.Form2.resources
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.csproj.GenerateResource.cache
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.GeneratedMSBuildEditorConfig.editorconfig
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.AssemblyInfoInputs.cache
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.AssemblyInfo.cs
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.csproj.CoreCompileInputs.cache
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.csproj.Up2Date
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.dll
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\refint\Lab17-18.dll
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\Lab17-18.genruntimeconfig.cache
+E:\♠ИСПО♠\МДК ⛔\МДК. 01.01. РПМ\TextFileLibrary\Lab17-18\obj\Debug\net8.0-windows\ref\Lab17-18.dll

@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Lab17-18/1.0.0": {
+        "dependencies": {
+          "TextFileLibrary": "1.0.0"
+        },
+        "runtime": {
+          "Lab17-18.dll": {}
+        }
+      },
+      "TextFileLibrary/1.0.0": {
+        "runtime": {
+          "TextFileLibrary.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Lab17-18/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "TextFileLibrary/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
