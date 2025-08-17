@@ -1,0 +1,24 @@
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\ru\Microsoft.TestPlatform.AdapterUtilities.resources.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\ru\Microsoft.TestPlatform.CoreUtilities.resources.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Microsoft.TestPlatform.AdapterUtilities.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\UnitTestProject1.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\UnitTestProject1.pdb
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Лабораторная №12.exe
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Лабораторная №12.pdb
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Лабораторная №12.exe.config
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\obj\Debug\UnitTestProject1.csproj.AssemblyReference.cache
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\obj\Debug\UnitTestProject1.csproj.CoreCompileInputs.cache
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\obj\Debug\UnitTest.40E657F8.Up2Date
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\obj\Debug\UnitTestProject1.dll
+H:\МДК.01.01 РПМ\Лабораторная №12\Лабораторная №12\UnitTestProject1\obj\Debug\UnitTestProject1.pdb
