@@ -1,0 +1,48 @@
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.TestPlatform.AdapterUtilities.resources.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.TestPlatform.CoreUtilities.resources.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.TestPlatform.AdapterUtilities.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\UnitTestProject1.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\UnitTestProject1.pdb
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Laba_11.exe
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Laba_11.pdb
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Laba_11.exe.config
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTestProject1.csproj.AssemblyReference.cache
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTestProject1.csproj.CoreCompileInputs.cache
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTest.40E657F8.Up2Date
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTestProject1.dll
+C:\Users\utren\OneDrive\Рабочий стол\МДК C#\Игорь Болотов\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTestProject1.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.TestPlatform.AdapterUtilities.resources.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.TestPlatform.CoreUtilities.resources.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.resources.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.resources.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.ObjectModel.resources.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\ru\Microsoft.VisualStudio.TestPlatform.TestFramework.resources.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.TestPlatform.AdapterUtilities.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\UnitTestProject1.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\UnitTestProject1.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Laba_11.exe
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Laba_11.pdb
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Laba_11.exe.config
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTestProject1.csproj.AssemblyReference.cache
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTestProject1.csproj.CoreCompileInputs.cache
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTest.40E657F8.Up2Date
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTestProject1.dll
+E:\♠ИСПО♠\МДК ⛔\МДК.01.01 Разработка программных модулей\Codes\Лабораторная №11\Laba_11\UnitTestProject1\obj\Debug\UnitTestProject1.pdb
