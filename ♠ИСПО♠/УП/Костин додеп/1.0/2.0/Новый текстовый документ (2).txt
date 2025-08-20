@@ -1,0 +1,30 @@
+🔑 Данные для входа (по умолчанию в database.py)
+
+Клиент:
+
+email: client@test.com
+пароль: 256
+
+
+Менеджер:
+
+email: manager@test.com
+пароль: 256
+
+
+Админ:
+
+email: admin@test.com
+пароль: 256
+----------------
+
+Можно будет входить как:
+
+client@example.com
+ / 1234 (роль client)
+
+manager@example.com
+ / 1234 (роль manager)
+
+admin@example.com
+ / 1234 (роль admin)
