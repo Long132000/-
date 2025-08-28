@@ -1,0 +1,3 @@
+('client@test.com', '256', 'client'),
+('manager@test.com', '256', 'manager'),
+('admin@test.com', '256', 'admin')
