@@ -1,1 +1,1 @@
-https://cmake.org/download/
+https://github.com/Kitware/CMake/releases/download/v4.1.1/cmake-4.1.1-windows-x86_64.zip
