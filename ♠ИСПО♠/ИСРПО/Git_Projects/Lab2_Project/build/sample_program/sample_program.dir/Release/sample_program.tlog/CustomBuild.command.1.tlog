@@ -1,0 +1,10 @@
+^C:\USERS\222909072091-5\DESKTOP\LAB2_PROJECT\SAMPLE_PROGRAM\CMAKELISTS.TXT
+setlocal
+H:\ИСРПО\cmake-4.1.1-windows-x86_64\bin\cmake.exe -SC:/Users/222909072091-5/Desktop/Lab2_Project -BC:/Users/222909072091-5/Desktop/Lab2_Project/build --check-stamp-file C:/Users/222909072091-5/Desktop/Lab2_Project/build/sample_program/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
