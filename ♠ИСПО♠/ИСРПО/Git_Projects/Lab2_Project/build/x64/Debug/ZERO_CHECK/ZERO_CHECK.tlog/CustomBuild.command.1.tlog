@@ -1,0 +1,10 @@
+^C:\USERS\222909072091-5\DESKTOP\LAB2_PROJECT\BUILD\CMAKEFILES\FC608C12A800B286353BB74F4E1CDBC1\GENERATE.STAMP.RULE
+setlocal
+H:\ИСРПО\cmake-4.1.1-windows-x86_64\bin\cmake.exe -SC:/Users/222909072091-5/Desktop/Lab2_Project -BC:/Users/222909072091-5/Desktop/Lab2_Project/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/222909072091-5/Desktop/Lab2_Project/build/Lab2_Project.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
