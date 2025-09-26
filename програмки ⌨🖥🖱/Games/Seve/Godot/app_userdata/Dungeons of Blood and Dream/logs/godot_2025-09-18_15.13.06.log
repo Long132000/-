@@ -1,8 +1,0 @@
-Godot Engine v3.5.1.stable.official.6fed1ffa3 - https://godotengine.org
-OpenGL ES 3.0 Renderer: Intel(R) UHD Graphics 630
-Async. shader compilation: OFF
- 
-[STEAM] Did Steam initialize?: {status:20, verbal:Steam not running.}
-[STEAM] Failed to initialize Steam. Steam not running.
-ERROR: Skeleton parenthood graph is cyclic
-   at: _update_process_order (scene/3d/skeleton.cpp:219) - Skeleton parenthood graph is cyclic
