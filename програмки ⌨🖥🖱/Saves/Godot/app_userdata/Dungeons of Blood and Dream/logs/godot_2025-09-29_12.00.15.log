@@ -2,12 +2,10 @@ Godot Engine v3.5.1.stable.official.6fed1ffa3 - https://godotengine.org
 OpenGL ES 3.0 Renderer: NVIDIA GeForce GTX 1050/PCIe/SSE2
 Async. shader compilation: OFF
  
-[STEAM] Did Steam initialize?: {status:20, verbal:Steam not running.}
-[STEAM] Failed to initialize Steam. Steam not running.
+[STEAM] Did Steam initialize?: {status:79, verbal:Invalid app ID or app not installed.}
+[STEAM] Failed to initialize Steam. Invalid app ID or app not installed.
 ERROR: Skeleton parenthood graph is cyclic
    at: _update_process_order (scene/3d/skeleton.cpp:219) - Skeleton parenthood graph is cyclic
-ERROR: Condition "!is_inside_tree()" is true. Returned: Transform()
-   at: get_global_transform (scene/3d/spatial.cpp:407) - Condition "!is_inside_tree()" is true. Returned: Transform()
 ERROR: Condition "!is_inside_tree()" is true. Returned: Transform()
    at: get_global_transform (scene/3d/spatial.cpp:407) - Condition "!is_inside_tree()" is true. Returned: Transform()
 ERROR: Condition "_first != nullptr" is true.

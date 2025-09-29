@@ -6,10 +6,6 @@ Async. shader compilation: OFF
 [STEAM] Failed to initialize Steam. Steam not running.
 ERROR: Skeleton parenthood graph is cyclic
    at: _update_process_order (scene/3d/skeleton.cpp:219) - Skeleton parenthood graph is cyclic
-ERROR: Condition "!is_inside_tree()" is true. Returned: Transform()
-   at: get_global_transform (scene/3d/spatial.cpp:407) - Condition "!is_inside_tree()" is true. Returned: Transform()
-ERROR: Condition "!is_inside_tree()" is true. Returned: Transform()
-   at: get_global_transform (scene/3d/spatial.cpp:407) - Condition "!is_inside_tree()" is true. Returned: Transform()
 ERROR: Condition "_first != nullptr" is true.
    at: ~List (./core/self_list.h:108) - Condition "_first != nullptr" is true.
 ERROR: Condition "_first != nullptr" is true.
