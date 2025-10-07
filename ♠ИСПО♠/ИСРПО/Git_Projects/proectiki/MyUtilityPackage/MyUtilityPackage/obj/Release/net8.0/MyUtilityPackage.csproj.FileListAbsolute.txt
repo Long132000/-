@@ -1,0 +1,11 @@
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\bin\Release\net8.0\MyUtilityPackage.deps.json
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\bin\Release\net8.0\MyUtilityPackage.dll
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\bin\Release\net8.0\MyUtilityPackage.pdb
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net8.0\MyUtilityPackage.GeneratedMSBuildEditorConfig.editorconfig
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net8.0\MyUtilityPackage.AssemblyInfoInputs.cache
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net8.0\MyUtilityPackage.AssemblyInfo.cs
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net8.0\MyUtilityPackage.csproj.CoreCompileInputs.cache
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net8.0\MyUtilityPackage.dll
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net8.0\refint\MyUtilityPackage.dll
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net8.0\MyUtilityPackage.pdb
+H:\ИСРПО\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net8.0\ref\MyUtilityPackage.dll

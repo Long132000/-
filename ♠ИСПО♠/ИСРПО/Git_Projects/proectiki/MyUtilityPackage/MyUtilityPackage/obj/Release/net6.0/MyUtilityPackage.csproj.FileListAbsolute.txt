@@ -1,0 +1,11 @@
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\bin\Release\net6.0\MyUtilityPackage.deps.json
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\bin\Release\net6.0\MyUtilityPackage.dll
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\bin\Release\net6.0\MyUtilityPackage.pdb
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net6.0\MyUtilityPackage.GeneratedMSBuildEditorConfig.editorconfig
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net6.0\MyUtilityPackage.AssemblyInfoInputs.cache
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net6.0\MyUtilityPackage.AssemblyInfo.cs
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net6.0\MyUtilityPackage.csproj.CoreCompileInputs.cache
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net6.0\MyUtilityPackage.dll
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net6.0\refint\MyUtilityPackage.dll
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net6.0\MyUtilityPackage.pdb
+H:\ISRPO\proectiki\MyUtilityPackage\MyUtilityPackage\obj\Release\net6.0\ref\MyUtilityPackage.dll

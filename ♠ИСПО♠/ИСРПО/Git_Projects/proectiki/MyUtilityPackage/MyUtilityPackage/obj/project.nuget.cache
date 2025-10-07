@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "mFqxU/2B8cg=",
+  "success": true,
+  "projectFilePath": "H:\\ISRPO\\proectiki\\MyUtilityPackage\\MyUtilityPackage\\MyUtilityPackage.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\222909072091-5\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.36\\microsoft.windowsdesktop.app.ref.6.0.36.nupkg.sha512",
+    "C:\\Users\\222909072091-5\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.36\\microsoft.netcore.app.ref.6.0.36.nupkg.sha512",
+    "C:\\Users\\222909072091-5\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.36\\microsoft.aspnetcore.app.ref.6.0.36.nupkg.sha512"
+  ],
+  "logs": []
+}
