@@ -1,0 +1,4 @@
+Исходная строка: "Hello World!"
+Измененная строка: "Hello World!"
+Исходная строка: "New String Value"
+Измененная строка: "New String Value"
