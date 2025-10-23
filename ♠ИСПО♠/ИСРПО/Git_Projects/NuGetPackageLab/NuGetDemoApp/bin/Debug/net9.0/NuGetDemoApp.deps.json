@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "NuGetDemoApp/1.0.0": {
+        "dependencies": {
+          "MathOperationsLab.Denis": "1.0.0"
+        },
+        "runtime": {
+          "NuGetDemoApp.dll": {}
+        }
+      },
+      "MathOperationsLab.Denis/1.0.0": {
+        "runtime": {
+          "lib/net8.0/MathOperations.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "NuGetDemoApp/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MathOperationsLab.Denis/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1fDWqxt2Lst8BSV9BK/HO9AoNjmTs9m43eE6Wh3H4o0sAMzbs9m8nXBTsozHkgeHx/pfRskKRf6HLoC3G/u/Ow==",
+      "path": "mathoperationslab.denis/1.0.0",
+      "hashPath": "mathoperationslab.denis.1.0.0.nupkg.sha512"
+    }
+  }
+}

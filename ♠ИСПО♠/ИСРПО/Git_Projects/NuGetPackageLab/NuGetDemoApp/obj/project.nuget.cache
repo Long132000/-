@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "S0UidFhlofY=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\denis\\Desktop\\NuGetPackageLab\\NuGetDemoApp\\NuGetDemoApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\denis\\.nuget\\packages\\mathoperationslab.denis\\1.0.0\\mathoperationslab.denis.1.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,11 @@
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\bin\Debug\net8.0\MathOperations.deps.json
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\bin\Debug\net8.0\MathOperations.dll
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\bin\Debug\net8.0\MathOperations.pdb
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\obj\Debug\net8.0\MathOperations.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\obj\Debug\net8.0\MathOperations.AssemblyInfoInputs.cache
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\obj\Debug\net8.0\MathOperations.AssemblyInfo.cs
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\obj\Debug\net8.0\MathOperations.csproj.CoreCompileInputs.cache
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\obj\Debug\net8.0\MathOperations.dll
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\obj\Debug\net8.0\refint\MathOperations.dll
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\obj\Debug\net8.0\MathOperations.pdb
+C:\Users\denis\Desktop\NuGetPackageLab\MathOperations\obj\Debug\net8.0\ref\MathOperations.dll

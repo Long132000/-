@@ -1,0 +1,17 @@
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\NuGetDemoApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\NuGetDemoApp.AssemblyInfoInputs.cache
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\NuGetDemoApp.AssemblyInfo.cs
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\NuGetDemoApp.csproj.CoreCompileInputs.cache
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\bin\Debug\net9.0\NuGetDemoApp.exe
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\bin\Debug\net9.0\NuGetDemoApp.deps.json
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\bin\Debug\net9.0\NuGetDemoApp.runtimeconfig.json
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\bin\Debug\net9.0\NuGetDemoApp.dll
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\bin\Debug\net9.0\NuGetDemoApp.pdb
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\bin\Debug\net9.0\MathOperations.dll
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\NuGetDemoApp.csproj.AssemblyReference.cache
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\NuGetDem.7C2496DD.Up2Date
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\NuGetDemoApp.dll
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\refint\NuGetDemoApp.dll
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\NuGetDemoApp.pdb
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\NuGetDemoApp.genruntimeconfig.cache
+C:\Users\denis\Desktop\NuGetPackageLab\NuGetDemoApp\obj\Debug\net9.0\ref\NuGetDemoApp.dll
