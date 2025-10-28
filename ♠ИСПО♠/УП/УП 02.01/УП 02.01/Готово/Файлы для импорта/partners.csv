@@ -1,0 +1,4 @@
+name	type_id	address	director	phone	email	rating	inn	legal_address
+ООО Чистый Мир	1	ул. Ленина, 15	Иванов П.С.	79991234567	cleanworld@mail.ru	8	1234567890	ул. Ленина, 15
+СтиркаПрофи	2	пр. Мира, 28	Петрова А.И.	79992345678	stirka@yandex.ru	9	987654321	пр. Мира, 28
+АггрегатУслуг	3	ул. Центральная, 5	Сидоров В.К.	79993456789	aggregate@gmail.com	7	1122334455	ул. Центральная, 5
