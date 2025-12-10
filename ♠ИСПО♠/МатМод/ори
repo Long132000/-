@@ -1,0 +1,230 @@
+# делаю лабу по 
+
+
+import pandas as pd
+import numpy as np
+from matplotlib import pyplot as 
+try:
+    # это для гугл колаба
+    from google.colab import files
+    files.upload()
+    df = pd.read_csv(list(files.upload().keys())[0])
+except:
+    # или просто с компа
+    df = pd.read_csv('0 steam.csv')
+
+
+print('всего игр:', df.shape[0])
+
+
+
+
+df['price'] = pd.to_numeric(df['price'], errors='coerce')
+df['price'] = df['price'].fillna(0)
+platnie = df[df['price'] > 0]
+srednaya_cena = platnie['price'].mean()
+print('средняя цена платных:', round(srednaya_cena, 2))
+
+
+
+
+ang = df['english'].fillna(0)
+s_angl = (ang == 1).sum()
+
+
+bez_angl = (ang == 0).sum()
+
+
+fig = plt.figure()
+plt.bar(['нет англ', 'есть англ'], [bez_angl, s_angl])
+plt.show()
+print('с английским:', s_angl, 'без:', bez_angl)
+
+
+
+
+besplatno = (df['price'] == 0).sum()
+platno = (df['price'] > 0).sum()
+
+
+plt.bar(['бесплатно', 'платно'], [besplatno, platno])
+plt.show()
+print('бесплатных:', besplatno)
+
+
+if 'release_date' in df.columns:
+    df['god'] = pd.to_datetime(df['release_date'], errors='coerce').dt.year
+    god_counts = df['god'].dropna().astype(int).value_counts()
+    god_counts = god_counts.sort_index()
+    
+    plt.figure(figsize=(12,6))
+    god_counts.plot(kind='bar')
+    plt.xticks(rotation=45)
+    plt.show()
+    
+  
+    print('\nпо годам:')
+    for g, cnt in list(god_counts.items())[:15]:
+        print(g, '-', cnt, 'игр')
+
+
+
+
+    if 'god' in df.columns:
+        posle_2017 = df[df['god'] >= 2017]
+    
+    razrab = posle_2017['developer'].value_counts().head(10)
+    izdat = posle_2017['publisher'].value_counts().head(10)
+    
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,6))
+    
+    
+    ax1.barh(range(10), razrab.values)
+    ax1.set_yticks(range(10))
+    ax1.set_yticklabels([str(x)[:20] for x in razrab.index])
+    ax1.invert_yaxis()
+    ax1.set_title('разработчики топ 10')
+    
+    
+    ax2.barh(range(10), izdat.values)
+    ax2.set_yticks(range(10))
+    ax2.set_yticklabels([str(x)[:20] for x in izdat.index])
+    ax2.invert_yaxis()
+    ax2.set_title('издатели топ 10')
+    
+    plt.tight_layout()
+    plt.show()
+
+
+
+
+if 'owners' in df.columns:
+    def skolko_kupili(x):
+        try:
+            if '-' in str(x):
+                a, b = str(x).split('-')
+                return (float(a) + float(b)) / 2
+        except:
+            pass
+        return 0
+    
+    df['vladelcy'] = df['owners'].apply(skolko_kupili)
+    top6 = df.nlargest(6, 'vladelcy')[['name', 'vladelcy', 'price']]
+    
+    print('\nтоп 6 по покпкам:')
+    for idx, row in top6.iterrows():
+        cena = 'бесплатно' if row['price'] == 0 else f'{row["price"]}$'
+        print(f'{row["name"][:30]}... - {int(row["vladelcy"]):,} ({cena})')
+
+
+
+
+if 'genres' in df.columns and 'god' in df.columns:
+    s_2015 = df[df['god'] >= 2015]
+    
+    
+    genres_platnie = {}
+    for g in s_2015[s_2015['price'] > 0]['genres']:
+        if pd.notna(g):
+            for zhanr in str(g).split(';'):
+                z = zhanr.strip()
+                genres_platnie[z] = genres_platnie.get(z, 0) + 1
+    
+    
+    genres_besplatnie = {}
+    for g in s_2015[s_2015['price'] == 0]['genres']:
+        if pd.notna(g):
+            for zhanr in str(g).split(';'):
+                z = zhanr.strip()
+                genres_besplatnie[z] = genres_besplatnie.get(z, 0) + 1
+    
+    
+    top_platnie = sorted(genres_platnie.items(), key=lambda x: x[1], reverse=True)[:10]
+    top_besplatnie = sorted(genres_besplatnie.items(), key=lambda x: x[1], reverse=True)[:10]
+    
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,6))
+    
+    ax1.barh([x[0] for x in top_platnie], [x[1] for x in top_platnie])
+    ax1.invert_yaxis()
+    ax1.set_title('платные жанры')
+    
+    ax2.barh([x[0] for x in top_besplatnie], [x[1] for x in top_besplatnie])
+    ax2.invert_yaxis()
+    ax2.set_title('бесплатные жанры')
+    
+    plt.tight_layout()
+    plt.show()
+
+
+
+
+if 'positive_ratings' in df.columns:
+    df['otzivov_vsego'] = df['positive_ratings'] + df['negative_ratings']
+    df['procent_horoshih'] = 0
+    
+    maska = df['otzivov_vsego'] > 0
+    df.loc[maska, 'procent_horoshih'] = df.loc[maska, 'positive_ratings'] / df.loc[maska, 'otzivov_vsego']
+    
+    otlichnie = df[(df['procent_horoshih'] >= 0.99) & (df['negative_ratings'] > 0)]
+    
+    if len(otlichnie) > 0:
+        otlichnie = otlichnie.sort_values('procent_horoshih', ascending=False).head(15)
+        
+        plt.figure(figsize=(10,6))
+        plt.barh(range(len(otlichnie)), otlichnie['procent_horoshih'] * 100)
+        plt.yticks(range(len(otlichnie)), otlichnie['name'].str[:25])
+        plt.gca().invert_yaxis()
+        plt.title('игры с 99%+ хороших отзывов')
+        plt.show()
+
+
+
+
+if 'platforms' in df.columns:
+    platforms_count = {}
+    
+    for p in df['platforms'].dropna():
+        if isinstance(p, str):
+            if ';' in p:
+                parts = p.split(';')
+                for part in parts:
+                    pt = part.strip()
+                    platforms_count[pt] = platforms_count.get(pt, 0) + 1
+            else:
+                pt = p.strip()
+                platforms_count[pt] = platforms_count.get(pt, 0) + 1
+    
+    top_platforms = sorted(platforms_count.items(), key=lambda x: x[1], reverse=True)[:10]
+    
+    plt.figure(figsize=(10,5))
+    plt.bar([x[0] for x in top_platforms], [x[1] for x in top_platforms])
+    plt.xticks(rotation=45)
+    plt.title('поддерживаемые платформы')
+    plt.show()
+
+
+# 10. игры по заданию: 18+, 2019, симулятор
+if all(x in df.columns for x in ['required_age', 'god', 'genres']):
+    po_zadaniu = df[
+        (df['required_age'] >= 18) &
+        (df['god'] == 2019) &
+        (df['genres'].str.contains('simulator', case=False, na=False))
+    ]
+    
+    print('\nигры по условию (18+, 2019, симулятор):')
+    if len(po_zadaniu) > 0:
+        for i, row in po_zadaniu.head(8).iterrows():
+            print(f'- {row["name"]}')
+    else:
+        print('ничего не нашлось')
+
+
+
+
+print('\n=== что получилось ===')
+print(f'всего игр: {len(df)}')
+print(f'бесплатных: {(df["price"] == 0).sum()} ({(df["price"] == 0).sum()/len(df)*100:.1f}%)')
+print(f'с англ: {s_angl} ({(s_angl/len(df)*100):.1f}%)')
+
+
+print('\nвсе, сдаю лабу!')
