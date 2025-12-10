@@ -1,0 +1,296 @@
+Дз3
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from google.colab import files
+import io
+
+plt.style.use('ggplot')
+plt.rcParams['figure.figsize'] = (14, 8)
+sns.set_palette("husl")
+
+print("="*60)
+print("АНАЛИЗ ДАННЫХ STEAM")
+print("="*60)
+
+print("\n1. Загрузка данных...")
+uploaded = files.upload()
+filename = list(uploaded.keys())[0]
+df = pd.read_csv(io.BytesIO(uploaded[filename]), encoding='utf-8', errors='ignore')
+print(f"Данные загружены: {df.shape[0]} строк, {df.shape[1]} столбцов")
+
+print("\n2. Предобработка данных...")
+if 'release_date' in df.columns:
+    df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
+    df['year'] = df['release_date'].dt.year
+
+df['price'] = pd.to_numeric(df['price'], errors='coerce').fillna(0)
+df['english'] = df['english'].fillna(0).astype(int)
+
+for col in ['positive_ratings', 'negative_ratings', 'required_age']:
+    if col in df.columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+
+for col in ['developer', 'publisher', 'platforms', 'genres']:
+    if col in df.columns:
+        df[col] = df[col].fillna('Unknown')
+
+df['is_free'] = df['price'] == 0
+df['total_ratings'] = df['positive_ratings'] + df['negative_ratings']
+df['positive_ratio'] = np.where(df['total_ratings'] > 0, 
+                                 df['positive_ratings'] / df['total_ratings'], 0)
+
+if 'owners' in df.columns:
+    def parse_owners(val):
+        if isinstance(val, str) and '-' in val:
+            try:
+                parts = val.split('-')
+                return (int(parts[0]) + int(parts[1])) / 2
+            except:
+                return 0
+        return 0
+    df['owners_numeric'] = df['owners'].apply(parse_owners)
+
+print("\n3. Средняя стоимость игр...")
+avg_price = df[df['price'] > 0]['price'].mean()
+print(f"Средняя стоимость платных игр: ${avg_price:.2f}")
+
+print("\n4. Поддержка английского языка...")
+english_counts = df['english'].value_counts()
+plt.figure(figsize=(10, 6))
+english_labels = {0: 'Нет', 1: 'Да'}
+english_counts.index = english_counts.index.map(lambda x: english_labels.get(x, x))
+bars = plt.bar(english_counts.index, english_counts.values, color=['red', 'green'])
+plt.title('Поддержка английского языка в играх Steam')
+plt.ylabel('Количество игр')
+for bar in bars:
+    height = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2., height + 10, f'{int(height):,}', ha='center')
+plt.tight_layout()
+plt.show()
+print(f"Игр с английским: {english_counts.get(1, 0)}")
+print(f"Игр без английского: {english_counts.get(0, 0)}")
+
+print("\n5. Бесплатные vs платные игры...")
+free_counts = df['is_free'].value_counts()
+free_labels = {True: 'Бесплатные', False: 'Платные'}
+free_counts.index = free_counts.index.map(lambda x: free_labels.get(x, x))
+plt.figure(figsize=(10, 6))
+bars = plt.bar(free_counts.index, free_counts.values, color=['blue', 'orange'])
+plt.title('Распределение бесплатных и платных игр')
+plt.ylabel('Количество игр')
+for bar in bars:
+    height = bar.get_height()
+    plt.text(bar.get_x() + bar.get_width()/2., height + 10, f'{int(height):,}', ha='center')
+plt.tight_layout()
+plt.show()
+print(f"Бесплатных игр: {free_counts.get('Бесплатные', 0)}")
+print(f"Платных игр: {free_counts.get('Платные', 0)}")
+
+print("\n6. Количество игр по годам...")
+if 'year' in df.columns:
+    df_year = df.dropna(subset=['year'])
+    df_year['year'] = df_year['year'].astype(int)
+    games_per_year = df_year['year'].value_counts().sort_index()
+    
+    print("\nСводная таблица по годам:")
+    year_table = pd.DataFrame({
+        'Год': games_per_year.index,
+        'Количество игр': games_per_year.values
+    }).sort_values('Год', ascending=False)
+    print(year_table.head(20).to_string(index=False))
+    
+    plt.figure(figsize=(14, 6))
+    games_per_year.plot(kind='bar')
+    plt.title('Количество выпущенных игр по годам')
+    plt.xlabel('Год')
+    plt.ylabel('Количество игр')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.show()
+
+print("\n7. Топ-10 разработчиков и издателей с 2017...")
+if 'year' in df.columns:
+    df_2017 = df[df['year'] >= 2017]
+    
+    fig, axes = plt.subplots(1, 2, figsize=(16, 8))
+    
+    top_devs = df_2017['developer'].value_counts().head(10)
+    axes[0].barh(range(len(top_devs)), top_devs.values, color='green')
+    axes[0].set_yticks(range(len(top_devs)))
+    axes[0].set_yticklabels([str(d)[:25] for d in top_devs.index])
+    axes[0].invert_yaxis()
+    axes[0].set_title('Топ-10 разработчиков (с 2017)')
+    axes[0].set_xlabel('Количество игр')
+    
+    top_pubs = df_2017['publisher'].value_counts().head(10)
+    axes[1].barh(range(len(top_pubs)), top_pubs.values, color='orange')
+    axes[1].set_yticks(range(len(top_pubs)))
+    axes[1].set_yticklabels([str(p)[:25] for p in top_pubs.index])
+    axes[1].invert_yaxis()
+    axes[1].set_title('Топ-10 издателей (с 2017)')
+    axes[1].set_xlabel('Количество игр')
+    
+    plt.tight_layout()
+    plt.show()
+    
+    print("Топ-3 разработчика:", list(top_devs.head(3).index))
+    print("Топ-3 издателя:", list(top_pubs.head(3).index))
+
+print("\n8. Топ-6 игр по количеству владельцев...")
+if 'owners_numeric' in df.columns:
+    top_owners = df.nlargest(6, 'owners_numeric')[['name', 'owners_numeric', 'price']]
+    print("\nТоп-6 игр по владельцам:")
+    for i, row in top_owners.iterrows():
+        owners_val = f"{int(row['owners_numeric']):,}"
+        price_info = "Бесплатно" if row['price'] == 0 else f"${row['price']:.2f}"
+        print(f"{row['name'][:50]:50} - {owners_val} владельцев ({price_info})")
+    
+    plt.figure(figsize=(12, 6))
+    top_owners_sorted = top_owners.sort_values('owners_numeric', ascending=True)
+    bars = plt.barh(range(len(top_owners_sorted)), top_owners_sorted['owners_numeric'], color='skyblue')
+    plt.yticks(range(len(top_owners_sorted)), [str(name)[:40] for name in top_owners_sorted['name']])
+    plt.xlabel('Количество владельцев')
+    plt.title('Топ-6 игр по количеству владельцев')
+    for i, v in enumerate(top_owners_sorted['owners_numeric']):
+        plt.text(v + v*0.01, i, f'{int(v):,}', va='center')
+    plt.tight_layout()
+    plt.show()
+
+print("\n9. Топ-10 жанров с 2015 (платные и бесплатные)...")
+if 'year' in df.columns and 'genres' in df.columns:
+    df_2015 = df[df['year'] >= 2015]
+    
+    def get_genres_count(data):
+        all_genres = []
+        for genres in data['genres'].dropna():
+            if isinstance(genres, str):
+                if ';' in genres:
+                    all_genres.extend([g.strip() for g in genres.split(';')])
+                else:
+                    all_genres.append(genres.strip())
+        return pd.Series(all_genres).value_counts()
+    
+    paid_genres = get_genres_count(df_2015[df_2015['price'] > 0]).head(10)
+    free_genres = get_genres_count(df_2015[df_2015['price'] == 0]).head(10)
+    
+    fig, axes = plt.subplots(1, 2, figsize=(16, 8))
+    
+    axes[0].barh(range(len(paid_genres)), paid_genres.values, color='purple', alpha=0.7)
+    axes[0].set_yticks(range(len(paid_genres)))
+    axes[0].set_yticklabels(paid_genres.index)
+    axes[0].invert_yaxis()
+    axes[0].set_title('Топ-10 жанров платных игр (с 2015)')
+    axes[0].set_xlabel('Количество игр')
+    
+    axes[1].barh(range(len(free_genres)), free_genres.values, color='cyan', alpha=0.7)
+    axes[1].set_yticks(range(len(free_genres)))
+    axes[1].set_yticklabels(free_genres.index)
+    axes[1].invert_yaxis()
+    axes[1].set_title('Топ-10 жанров бесплатных игр (с 2015)')
+    axes[1].set_xlabel('Количество игр')
+    
+    plt.tight_layout()
+    plt.show()
+    
+    print("Топ-3 платных жанра:", list(paid_genres.head(3).index))
+    print("Топ-3 бесплатных жанра:", list(free_genres.head(3).index))
+
+print("\n10. Игры с ≥99% положительных отзывов...")
+if 'positive_ratio' in df.columns and 'negative_ratings' in df.columns:
+    high_rating = df[
+        (df['positive_ratio'] >= 0.99) & 
+        (df['negative_ratings'] > 0) &
+        (df['total_ratings'] >= 10)
+    ].sort_values(['positive_ratio', 'total_ratings'], ascending=[False, False])
+    
+    print(f"\nНайдено {len(high_rating)} игр с рейтингом ≥99%")
+    if len(high_rating) > 0:
+        print("\nТоп-5 игр:")
+        for i, row in high_rating.head(5).iterrows():
+            print(f"{row['name'][:50]:50} - {row['positive_ratio']*100:.2f}% ({int(row['total_ratings'])} оценок)")
+        
+        plt.figure(figsize=(12, 6))
+        top_10 = high_rating.head(10)
+        bars = plt.barh(range(len(top_10)), top_10['positive_ratio'] * 100, color='gold')
+        plt.yticks(range(len(top_10)), [str(name)[:40] for name in top_10['name']])
+        plt.gca().invert_yaxis()
+        plt.xlabel('Процент положительных отзывов (%)')
+        plt.title('Игры с ≥99% положительных отзывов')
+        plt.xlim(98, 101)
+        for i, (bar, ratio) in enumerate(zip(bars, top_10['positive_ratio'])):
+            plt.text(bar.get_width() + 0.05, bar.get_y() + bar.get_height()/2,
+                    f'{ratio*100:.2f}%', va='center')
+        plt.tight_layout()
+        plt.show()
+
+print("\n11. Распределение игр по платформам...")
+if 'platforms' in df.columns:
+    all_platforms = []
+    for platforms in df['platforms'].dropna():
+        if isinstance(platforms, str):
+            if ';' in platforms:
+                all_platforms.extend([p.strip() for p in platforms.split(';')])
+            else:
+                all_platforms.append(platforms.strip())
+    
+    platform_counts = pd.Series(all_platforms).value_counts().head(10)
+    
+    print("\nТоп-5 платформ:")
+    for platform, count in platform_counts.head(5).items():
+        print(f"{platform:15} - {count:,} игр")
+    
+    plt.figure(figsize=(12, 6))
+    bars = plt.bar(range(len(platform_counts)), platform_counts.values, color='lightblue')
+    plt.xticks(range(len(platform_counts)), platform_counts.index, rotation=45, ha='right')
+    plt.ylabel('Количество игр')
+    plt.title('Топ платформ по количеству игр')
+    for bar, count in zip(bars, platform_counts.values):
+        plt.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 5,
+                f'{count:,}', ha='center')
+    plt.tight_layout()
+    plt.show()
+
+print("\n12. Фильтр: возраст +18, год 2019, жанр симулятор...")
+if all(col in df.columns for col in ['required_age', 'year', 'genres']):
+    filtered = df[
+        (df['required_age'] >= 18) &
+        (df['year'] == 2019) &
+        (df['genres'].str.contains('simulator', case=False, na=False))
+    ]
+    
+    print(f"\nНайдено {len(filtered)} игр:")
+    if len(filtered) > 0:
+        print("\n" + "-"*80)
+        for i, row in filtered.head(10).iterrows():
+            price_info = "Бесплатно" if row['price'] == 0 else f"${row['price']:.2f}"
+            print(f"• {row['name']}")
+            print(f"  Разработчик: {row['developer']}")
+            print(f"  Цена: {price_info}")
+            print(f"  Жанры: {row['genres']}")
+            print()
+        if len(filtered) > 10:
+            print(f"... и еще {len(filtered) - 10} игр")
+    else:
+        print("Не найдено игр по заданным критериям")
+
+print("\n" + "="*60)
+print("ОБЩИЕ ВЫВОДЫ:")
+print("="*60)
+
+print(f"1. Всего проанализировано {len(df):,} игр")
+print(f"2. Средняя цена платных игр: ${avg_price:.2f}")
+print(f"3. {df['is_free'].mean()*100:.1f}% игр бесплатные")
+print(f"4. {df['english'].mean()*100:.1f}% игр поддерживают английский")
+
+if 'year' in df.columns:
+    latest_year = df['year'].max()
+    print(f"5. Последний год в данных: {int(latest_year)}")
+
+if 'owners_numeric' in df.columns:
+    max_owners = df['owners_numeric'].max()
+    print(f"6. Максимальное количество владельцев: {int(max_owners):,}")
+
+print("\nАнализ завершен!")
