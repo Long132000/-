@@ -1,0 +1,184 @@
+import pandas
+import numpy
+from matplotlib import pyplot as plt
+
+from google.colab import files
+files.upload()
+
+try:
+    df = pandas.read_csv(list(files.upload().keys())[0])
+except:
+    df = pandas.read_csv('0 steam.csv')
+
+print('игр всего ->', len(df))
+
+
+
+
+df['price'] = pandas.to_numeric(df['price'], errors='coerce')
+df['price'].fillna(0, inplace=True)
+
+platnye = df[df['price'] > 0]
+
+print('средня цена', platnye['price'].mean())
+
+
+engl = df['english'].fillna(0)
+ang_da = (engl == 1).sum()
+
+
+ang_net = (engl == 0).sum()
+
+plt.bar(['нет', 'да (англ)'], [ang_net, ang_da])
+plt.show()
+
+free = (df['price'] == 0).sum()
+paid = (df['price'] > 0).sum()
+plt.bar(['free', 'paid'], [free, paid])
+plt.show()
+
+
+if 'release_date' in df.columns:
+    df['year'] = pandas.to_datetime(df['release_date'], errors='coerce').dt.year
+    god_counts = df['year'].value_counts().sort_index()
+
+    god_counts.plot(kind='bar', figsize=(10,5))
+
+    plt.show()
+
+
+if 'year' in df.columns:
+    new_games = df[df['year'] >= 2017]
+    devs_top = new_games['developer'].value_counts().head(10)
+    pubs_top = new_games['publisher'].value_counts().head(10)
+    
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,5))
+    ax1.barh(range(10), devs_top.values)
+    ax1.set_yticks(range(10))
+
+    ax1.set_yticklabels(devs_top.index)
+    ax1.invert_yaxis()
+    
+
+    ax2.barh(range(10), pubs_top.values)
+    ax2.set_yticks(range(10))
+
+    ax2.set_yticklabels(pubs_top.index)
+    ax2.invert_yaxis()
+    
+    plt.tight_layout()
+    plt.show()
+
+
+if 'owners' in df.columns:
+    def parse_owners(val):
+        try:
+            if '-' in str(val):
+                a,b = str(val).split('-')
+
+                return (int(a) + int(b)) / 2
+        except:
+            return 0
+        return 0
+    
+    df['owners_num'] = df['owners'].apply(parse_owners)
+    top_games = df.sort_values('owners_num', ascending=False).head(6)
+    
+    print('топ игр:')
+    for i,row in top_games.iterrows():
+        print(row['name'][:30], '-', int(row['owners_num']))
+
+
+if 'genres' in df.columns:
+    if 'year' in df.columns:
+        recent = df[df['year'] >= 2015]
+    else:
+        recent = df
+    
+    plat_genres = {}
+    free_genres = {}
+    
+    for idx, row in recent.iterrows():
+        if pandas.isna(row['genres']):
+            continue
+            
+
+
+        genres_list = str(row['genres']).split(';')
+        for g in genres_list:
+            g = g.strip()
+            if row['price'] > 0:
+                plat_genres[g] = plat_genres.get(g, 0) + 1
+            else:
+                free_genres[g] = free_genres.get(g, 0) + 1
+    
+
+
+    top_plat = sorted(plat_genres.items(), key=lambda x: x[1], reverse=True)[:10]
+    top_free = sorted(free_genres.items(), key=lambda x: x[1], reverse=True)[:10]
+    
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,5))
+    ax1.barh([x[0] for x in top_plat], [x[1] for x in top_plat])
+    ax1.invert_yaxis()
+    
+    ax2.barh([x[0] for x in top_free], [x[1] for x in top_free])
+    ax2.invert_yaxis()
+    plt.show()
+
+
+if 'positive_ratings' in df.columns:
+    df['total_reviews'] = df['positive_ratings'] + df['negative_ratings']
+    mask = df['total_reviews'] > 0
+    df['good_percent'] = 0
+    df.loc[mask, 'good_percent'] = df.loc[mask, 'positive_ratings'] / df.loc[mask, 'total_reviews']
+    
+    best = df[(df['good_percent'] >= 0.99) & (df['negative_ratings'] > 0)]
+    if len(best) > 0:
+        best = best.sort_values('good_percent', ascending=False).head(10)
+        plt.figure(figsize=(8,5))
+        plt.barh(range(len(best)), best['good_percent'] * 100)
+
+
+        plt.yticks(range(len(best)), best['name'].str[:20])
+
+
+        plt.gca().invert_yaxis()
+        plt.show()
+
+
+if 'platforms' in df.columns:
+    plat_counts = {}
+    for p in df['platforms']:
+        if pandas.isna(p):
+            continue
+        platforms = str(p).split(';')
+        for plat in platforms:
+            plat = plat.strip()
+            plat_counts[plat] = plat_counts.get(plat, 0) + 1
+    
+    top_plats = sorted(plat_counts.items(), key=lambda x: x[1], reverse=True)[:8]
+    plt.figure(figsize=(8,4))
+
+    plt.bar([x[0] for x in top_plats], [x[1] for x in top_plats])
+    plt.xticks(rotation=45)
+    plt.show()
+
+
+if all(col in df.columns for col in ['required_age', 'year', 'genres']):
+    filtered = df[
+        (df['required_age'] >= 18) & 
+        (df['year'] == 2019) & 
+        (df['genres'].str.contains('simulator', na=False))
+    ]
+    
+    print('игры по филтру:')
+    if len(filtered) > 0:
+        for i,row in filtered.head(5).iterrows():
+            print('-', row['name'])
+    else:
+
+        print('нет таких хихи')
+
+print('\nготово')
