@@ -1,0 +1,4 @@
+[autorun]
+open=install.bat
+icon=setup.ico
+label=My Remote Control
