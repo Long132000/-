@@ -1,0 +1,156 @@
+II. Практические задания (три кода из файла Voprosy_po_teorii_Mdk_01)
+
+Код 1. MessageBox с текущим временем и датой + вывод имени пользователя и компьютера в консоль
+
+#include <windows.h>
+#include <iostream>
+#include <ctime>
+
+int main()
+{
+    // 1. Получение текущей даты и времени
+    SYSTEMTIME st;
+    GetLocalTime(&st);
+    char timeStr[100];
+    sprintf_s(timeStr, sizeof(timeStr),
+        "Текущие дата и время:\n%d.%02d.%04d %02d:%02d:%02d",
+        st.wDay, st.wMonth, st.wYear, st.wHour, st.wMinute, st.wSecond);
+
+    // MessageBox с двумя кнопками (OK/Cancel) и пиктограммой информации
+    int result = MessageBoxA(NULL, timeStr, "Дата и время", MB_OKCANCEL | MB_ICONINFORMATION);
+
+    // 2. Имя пользователя
+    char userName[256];
+    DWORD size = sizeof(userName);
+    GetUserNameA(userName, &size);
+    std::cout << "Имя пользователя: " << userName << std::endl;
+
+    // 3. Имя компьютера
+    char compName[256];
+    size = sizeof(compName);
+    GetComputerNameA(compName, &size);
+    std::cout << "Имя компьютера: " << compName << std::endl;
+
+    // Обработка выбора в MessageBox
+    if (result == IDOK)
+        std::cout << "Нажата кнопка OK" << std::endl;
+    else if (result == IDCANCEL)
+        std::cout << "Нажата кнопка CANCEL" << std::endl;
+
+    return 0;
+}
+
+Код 2. Создание файла, дублирование описателя, запись через оба, контроль счётчика ссылок
+
+
+#include <windows.h>
+#include <iostream>
+
+int main()
+{
+    HANDLE hFile = CreateFileA(
+        "test.txt",                      // имя файла
+        GENERIC_WRITE,                   // доступ на запись
+        0,                               // монопольный доступ
+        NULL,                            // атрибуты безопасности по умолчанию
+        CREATE_ALWAYS,                   // создать новый (перезаписать)
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+    if (hFile == INVALID_HANDLE_VALUE) {
+        std::cerr << "Ошибка CreateFile: " << GetLastError() << std::endl;
+        return 1;
+    }
+    std::cout << "Исходный описатель: " << hFile << std::endl;
+
+    // Получить информацию об описателе (флаги)
+    DWORD flags = 0;
+    if (!GetHandleInformation(hFile, &flags)) {
+        std::cerr << "GetHandleInformation failed" << std::endl;
+    } else {
+        std::cout << "Флаги описателя: " << flags << std::endl;
+    }
+
+    // Дублирование описателя
+    HANDLE hDup = NULL;
+    BOOL dupRes = DuplicateHandle(
+        GetCurrentProcess(), hFile,
+        GetCurrentProcess(), &hDup,
+        0,                     // тот же доступ
+        FALSE,                 // не наследуемый
+        DUPLICATE_SAME_ACCESS
+    );
+    if (!dupRes) {
+        std::cerr << "DuplicateHandle error: " << GetLastError() << std::endl;
+        CloseHandle(hFile);
+        return 1;
+    }
+    std::cout << "Дублированный описатель: " << hDup << std::endl;
+
+    // Запись через исходный описатель
+    const char* data1 = "Первая строка от исходного хендла\n";
+    DWORD written1;
+    WriteFile(hFile, data1, (DWORD)strlen(data1), &written1, NULL);
+
+    // Запись через дублированный описатель (позиция файла общая)
+    const char* data2 = "Вторая строка от дублированного хендла\n";
+    DWORD written2;
+    WriteFile(hDup, data2, (DWORD)strlen(data2), &written2, NULL);
+
+    std::cout << "Запись выполнена. Закрываем описатели..." << std::endl;
+
+    // Закрытие описателей
+    CloseHandle(hFile);
+    CloseHandle(hDup);
+
+    // Попытка записи через закрытый описатель (должна провалиться)
+    DWORD written3;
+    BOOL ok = WriteFile(hFile, "test", 4, &written3, NULL);
+    if (!ok)
+        std::cout << "Запись через закрытый описатель невозможна (ошибка " << GetLastError() << ")" << std::endl;
+
+    return 0;
+}
+
+Код 3. Создание потока, который выводит два MessageBox с интервалом 5 секунд, основной поток ждёт и выводит сообщение
+
+#include <windows.h>
+#include <iostream>
+
+DWORD WINAPI ThreadProc(LPVOID lpParam)
+{
+    // Первое сообщение
+    MessageBoxA(NULL, "Сообщение 1: Поток начал работу", "Поток", MB_OK);
+    Sleep(5000); // 5 секунд
+    // Второе сообщение
+    MessageBoxA(NULL, "Сообщение 2: Поток завершается", "Поток", MB_OK);
+    return 0;
+}
+
+int main()
+{
+    // Создание потока
+    HANDLE hThread = CreateThread(
+        NULL,          // атрибуты безопасности
+        0,             // размер стека по умолчанию
+        ThreadProc,    // функция потока
+        NULL,          // параметр
+        0,             // флаги (сразу запускать)
+        NULL           // идентификатор потока (не нужен)
+    );
+    if (hThread == NULL) {
+        std::cerr << "Ошибка CreateThread: " << GetLastError() << std::endl;
+        return 1;
+    }
+
+    std::cout << "Ожидание завершения потока..." << std::endl;
+
+    // Ожидание завершения потока
+    WaitForSingleObject(hThread, INFINITE);
+
+    // После завершения потока
+    std::cout << "Поток завершён, основной поток продолжает работу." << std::endl;
+
+    CloseHandle(hThread);
+    return 0;
+}

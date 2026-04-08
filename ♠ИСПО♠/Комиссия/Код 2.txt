@@ -1,0 +1,70 @@
+Создание файла, дублирование описателя, запись через оба, контроль счётчика ссылок
+
+#include <windows.h>
+#include <iostream>
+
+int main()
+{
+    HANDLE hFile = CreateFileA(
+        "test.txt",                      // имя файла
+        GENERIC_WRITE,                   // доступ на запись
+        0,                               // монопольный доступ
+        NULL,                            // атрибуты безопасности по умолчанию
+        CREATE_ALWAYS,                   // создать новый (перезаписать)
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+    if (hFile == INVALID_HANDLE_VALUE) {
+        std::cerr << "Ошибка CreateFile: " << GetLastError() << std::endl;
+        return 1;
+    }
+    std::cout << "Исходный описатель: " << hFile << std::endl;
+
+    // Получить информацию об описателе (флаги)
+    DWORD flags = 0;
+    if (!GetHandleInformation(hFile, &flags)) {
+        std::cerr << "GetHandleInformation failed" << std::endl;
+    } else {
+        std::cout << "Флаги описателя: " << flags << std::endl;
+    }
+
+    // Дублирование описателя
+    HANDLE hDup = NULL;
+    BOOL dupRes = DuplicateHandle(
+        GetCurrentProcess(), hFile,
+        GetCurrentProcess(), &hDup,
+        0,                     // тот же доступ
+        FALSE,                 // не наследуемый
+        DUPLICATE_SAME_ACCESS
+    );
+    if (!dupRes) {
+        std::cerr << "DuplicateHandle error: " << GetLastError() << std::endl;
+        CloseHandle(hFile);
+        return 1;
+    }
+    std::cout << "Дублированный описатель: " << hDup << std::endl;
+
+    // Запись через исходный описатель
+    const char* data1 = "Первая строка от исходного хендла\n";
+    DWORD written1;
+    WriteFile(hFile, data1, (DWORD)strlen(data1), &written1, NULL);
+
+    // Запись через дублированный описатель (позиция файла общая)
+    const char* data2 = "Вторая строка от дублированного хендла\n";
+    DWORD written2;
+    WriteFile(hDup, data2, (DWORD)strlen(data2), &written2, NULL);
+
+    std::cout << "Запись выполнена. Закрываем описатели..." << std::endl;
+
+    // Закрытие описателей
+    CloseHandle(hFile);
+    CloseHandle(hDup);
+
+    // Попытка записи через закрытый описатель (должна провалиться)
+    DWORD written3;
+    BOOL ok = WriteFile(hFile, "test", 4, &written3, NULL);
+    if (!ok)
+        std::cout << "Запись через закрытый описатель невозможна (ошибка " << GetLastError() << ")" << std::endl;
+
+    return 0;
+}

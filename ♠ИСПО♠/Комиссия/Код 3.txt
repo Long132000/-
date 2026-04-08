@@ -1,0 +1,42 @@
+Создание потока, который выводит два MessageBox с интервалом 5 секунд, основной поток ждёт и выводит сообщение
+
+#include <windows.h>
+#include <iostream>
+
+DWORD WINAPI ThreadProc(LPVOID lpParam)
+{
+    // Первое сообщение
+    MessageBoxA(NULL, "Сообщение 1: Поток начал работу", "Поток", MB_OK);
+    Sleep(5000); // 5 секунд
+    // Второе сообщение
+    MessageBoxA(NULL, "Сообщение 2: Поток завершается", "Поток", MB_OK);
+    return 0;
+}
+
+int main()
+{
+    // Создание потока
+    HANDLE hThread = CreateThread(
+        NULL,          // атрибуты безопасности
+        0,             // размер стека по умолчанию
+        ThreadProc,    // функция потока
+        NULL,          // параметр
+        0,             // флаги (сразу запускать)
+        NULL           // идентификатор потока (не нужен)
+    );
+    if (hThread == NULL) {
+        std::cerr << "Ошибка CreateThread: " << GetLastError() << std::endl;
+        return 1;
+    }
+
+    std::cout << "Ожидание завершения потока..." << std::endl;
+
+    // Ожидание завершения потока
+    WaitForSingleObject(hThread, INFINITE);
+
+    // После завершения потока
+    std::cout << "Поток завершён, основной поток продолжает работу." << std::endl;
+
+    CloseHandle(hThread);
+    return 0;
+}

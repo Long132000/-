@@ -1,0 +1,39 @@
+MessageBox с текущим временем и датой + вывод имени пользователя и компьютера в консоль
+
+#include <windows.h>
+#include <iostream>
+#include <ctime>
+
+int main()
+{
+    // 1. Получение текущей даты и времени
+    SYSTEMTIME st;
+    GetLocalTime(&st);
+    char timeStr[100];
+    sprintf_s(timeStr, sizeof(timeStr),
+        "Текущие дата и время:\n%d.%02d.%04d %02d:%02d:%02d",
+        st.wDay, st.wMonth, st.wYear, st.wHour, st.wMinute, st.wSecond);
+
+    // MessageBox с двумя кнопками (OK/Cancel) и пиктограммой информации
+    int result = MessageBoxA(NULL, timeStr, "Дата и время", MB_OKCANCEL | MB_ICONINFORMATION);
+
+    // 2. Имя пользователя
+    char userName[256];
+    DWORD size = sizeof(userName);
+    GetUserNameA(userName, &size);
+    std::cout << "Имя пользователя: " << userName << std::endl;
+
+    // 3. Имя компьютера
+    char compName[256];
+    size = sizeof(compName);
+    GetComputerNameA(compName, &size);
+    std::cout << "Имя компьютера: " << compName << std::endl;
+
+    // Обработка выбора в MessageBox
+    if (result == IDOK)
+        std::cout << "Нажата кнопка OK" << std::endl;
+    else if (result == IDCANCEL)
+        std::cout << "Нажата кнопка CANCEL" << std::endl;
+
+    return 0;
+}
