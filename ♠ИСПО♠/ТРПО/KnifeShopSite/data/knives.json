@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "Кухонный нож Santoku",
+        "category": "Кухонные",
+        "price": 2500,
+        "description": "Профессиональный японский нож для нарезки, шинковки и измельчения",
+        "image": "images/santoku.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Туристический нож Scout",
+        "category": "Туристические",
+        "price": 3500,
+        "description": "Надёжный нож для походов с фиксированным клинком",
+        "image": "images/scout.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Коллекционный нож Damascus",
+        "category": "Коллекционные",
+        "price": 15000,
+        "description": "Эксклюзивный нож с клинком из дамасской стали",
+        "image": "images/damascus.jpg"
+    },
+    {
+        "id": 4,
+        "name": "Нож для стейка",
+        "category": "Кухонные",
+        "price": 1800,
+        "description": "Острый нож для идеальной нарезки стейков",
+        "image": "images/steak.jpg"
+    },
+    {
+        "id": 5,
+        "name": "Нож охотничий",
+        "category": "Туристические",
+        "price": 4200,
+        "description": "Универсальный охотничий нож с удобной рукоятью",
+        "image": "images/hunter.jpg"
+    }
+]
