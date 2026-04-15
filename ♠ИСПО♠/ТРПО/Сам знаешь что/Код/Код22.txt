@@ -1,0 +1,103 @@
+Билет №22 (Склад – приход товара, список пополнения, XML)
+Python (ticket22.py)
+python
+import sqlite3
+import xml.etree.ElementTree as ET
+
+def process_receipt(supplier_id, items):  # items = [(product_id, quantity), ...]
+    with sqlite3.connect('warehouse.db') as conn:
+        cur = conn.cursor()
+        cur.execute("INSERT INTO ReceiptNote (supplier_id, receipt_date) VALUES (?, date('now'))", (supplier_id,))
+        receipt_id = cur.lastrowid
+        for product_id, quantity in items:
+            cur.execute("INSERT INTO ReceiptItem (receipt_id, product_id, quantity) VALUES (?,?,?)",
+                        (receipt_id, product_id, quantity))
+            cur.execute("UPDATE Stock SET quantity = quantity + ? WHERE product_id=?", (quantity, product_id))
+        conn.commit()
+
+def get_products_to_reorder():
+    with sqlite3.connect('warehouse.db') as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            SELECT p.id, p.name, s.quantity, p.reorder_threshold
+            FROM Product p JOIN Stock s ON p.id = s.product_id
+            WHERE s.quantity <= p.reorder_threshold
+        ''')
+        return cur.fetchall()
+
+def export_to_xml(filename):
+    products = get_products_to_reorder()
+    root = ET.Element("ProductsToReorder")
+    for p in products:
+        prod = ET.SubElement(root, "Product", id=str(p[0]))
+        ET.SubElement(prod, "Name").text = p[1]
+        ET.SubElement(prod, "CurrentQuantity").text = str(p[2])
+        ET.SubElement(prod, "Threshold").text = str(p[3])
+    tree = ET.ElementTree(root)
+    tree.write(filename, encoding='utf-8', xml_declaration=True)
+C# (Ticket22.cs)
+csharp
+using System;
+using System.Data.SQLite;
+using System.Xml;
+using System.Collections.Generic;
+
+class Ticket22
+{
+    static string connStr = "Data Source=warehouse.db";
+
+    static void ProcessReceipt(int supplierId, List<(int productId, int quantity)> items)
+    {
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("INSERT INTO ReceiptNote (supplier_id, receipt_date) VALUES (@sid, date('now')); SELECT last_insert_rowid();", conn);
+        cmd.Parameters.AddWithValue("@sid", supplierId);
+        int receiptId = Convert.ToInt32(cmd.ExecuteScalar());
+        foreach (var item in items)
+        {
+            cmd = new SQLiteCommand("INSERT INTO ReceiptItem (receipt_id, product_id, quantity) VALUES (@rid, @pid, @qty)", conn);
+            cmd.Parameters.AddWithValue("@rid", receiptId);
+            cmd.Parameters.AddWithValue("@pid", item.productId);
+            cmd.Parameters.AddWithValue("@qty", item.quantity);
+            cmd.ExecuteNonQuery();
+            cmd = new SQLiteCommand("UPDATE Stock SET quantity = quantity + @qty WHERE product_id = @pid", conn);
+            cmd.Parameters.AddWithValue("@qty", item.quantity);
+            cmd.Parameters.AddWithValue("@pid", item.productId);
+            cmd.ExecuteNonQuery();
+        }
+    }
+
+    static List<object[]> GetProductsToReorder()
+    {
+        var result = new List<object[]>();
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("SELECT p.id, p.name, s.quantity, p.reorder_threshold FROM Product p JOIN Stock s ON p.id = s.product_id WHERE s.quantity <= p.reorder_threshold", conn);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            var row = new object[reader.FieldCount];
+            reader.GetValues(row);
+            result.Add(row);
+        }
+        return result;
+    }
+
+    static void ExportToXml(string filename)
+    {
+        var products = GetProductsToReorder();
+        var doc = new XmlDocument();
+        var root = doc.CreateElement("ProductsToReorder");
+        doc.AppendChild(root);
+        foreach (var p in products)
+        {
+            var prod = doc.CreateElement("Product");
+            prod.SetAttribute("id", p[0].ToString());
+            prod.AppendChild(doc.CreateElement("Name")).InnerText = p[1].ToString();
+            prod.AppendChild(doc.CreateElement("CurrentQuantity")).InnerText = p[2].ToString();
+            prod.AppendChild(doc.CreateElement("Threshold")).InnerText = p[3].ToString();
+            root.AppendChild(prod);
+        }
+        doc.Save(filename);
+    }
+}

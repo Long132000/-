@@ -1,0 +1,127 @@
+Билет №14 (Банк – кредиты, просмотр по типам)
+Python (ticket14.py)
+python
+import sqlite3
+from datetime import datetime
+
+def create_client(client_type, name, inn, passport, phone, email):
+    with sqlite3.connect('bank.db') as conn:
+        cur = conn.cursor()
+        cur.execute('''INSERT INTO Client (type, name, inn, passport_data, phone, email)
+                       VALUES (?,?,?,?,?,?)''',
+                    (client_type, name, inn, passport, phone, email))
+        return cur.lastrowid
+
+def create_application(client_id, amount, term_months, interest_rate):
+    with sqlite3.connect('bank.db') as conn:
+        cur = conn.cursor()
+        cur.execute('''INSERT INTO CreditApplication (client_id, amount, term_months, interest_rate, status, application_date)
+                       VALUES (?,?,?,?,?,?)''',
+                    (client_id, amount, term_months, interest_rate, 'new', datetime.now().date()))
+        return cur.lastrowid
+
+def update_status(app_id, new_status, decision_date=None):
+    with sqlite3.connect('bank.db') as conn:
+        cur = conn.cursor()
+        if new_status in ('approved', 'rejected'):
+            cur.execute('UPDATE CreditApplication SET status=?, decision_date=? WHERE id=?',
+                        (new_status, decision_date or datetime.now().date(), app_id))
+        else:
+            cur.execute('UPDATE CreditApplication SET status=? WHERE id=?', (new_status, app_id))
+
+def issue_credit(application_id, issue_date, total_amount, monthly_payment):
+    with sqlite3.connect('bank.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT status FROM CreditApplication WHERE id=?', (application_id,))
+        if cur.fetchone()[0] != 'approved':
+            raise ValueError('Заявка не одобрена')
+        cur.execute('''INSERT INTO CreditContract (application_id, issue_date, total_amount, monthly_payment, remaining_debt)
+                       VALUES (?,?,?,?,?)''',
+                    (application_id, issue_date, total_amount, monthly_payment, total_amount))
+        contract_id = cur.lastrowid
+        cur.execute('UPDATE CreditApplication SET status="issued" WHERE id=?', (application_id,))
+        return contract_id
+
+def add_payment(contract_id, amount, payment_date=None):
+    with sqlite3.connect('bank.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT remaining_debt FROM CreditContract WHERE id=?', (contract_id,))
+        remaining = cur.fetchone()[0]
+        new_remaining = max(remaining - amount, 0)
+        cur.execute('''INSERT INTO Payment (contract_id, payment_date, amount, remaining_debt)
+                       VALUES (?,?,?,?)''',
+                    (contract_id, payment_date or datetime.now().date(), amount, new_remaining))
+        cur.execute('UPDATE CreditContract SET remaining_debt=? WHERE id=?', (new_remaining, contract_id))
+        if new_remaining == 0:
+            cur.execute('''UPDATE CreditApplication SET status="closed"
+                           WHERE id=(SELECT application_id FROM CreditContract WHERE id=?)''', (contract_id,))
+        return new_remaining
+
+def view_credits_by_status(status, start_date, end_date):
+    with sqlite3.connect('bank.db') as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            SELECT ca.id, c.name, ca.amount, ca.application_date, ca.decision_date, ca.status
+            FROM CreditApplication ca JOIN Client c ON ca.client_id = c.id
+            WHERE ca.status=? AND ca.application_date BETWEEN ? AND ?
+        ''', (status, start_date, end_date))
+        return cur.fetchall()
+C# (Ticket14.cs)
+csharp
+using System;
+using System.Data.SQLite;
+using System.Collections.Generic;
+
+class Ticket14
+{
+    static string connStr = "Data Source=bank.db";
+
+    static int CreateApplication(int clientId, decimal amount, int termMonths, decimal interestRate)
+    {
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand(@"INSERT INTO CreditApplication (client_id, amount, term_months, interest_rate, status, application_date)
+                                      VALUES (@cid, @amt, @term, @rate, 'new', date('now')); SELECT last_insert_rowid();", conn);
+        cmd.Parameters.AddWithValue("@cid", clientId);
+        cmd.Parameters.AddWithValue("@amt", amount);
+        cmd.Parameters.AddWithValue("@term", termMonths);
+        cmd.Parameters.AddWithValue("@rate", interestRate);
+        return Convert.ToInt32(cmd.ExecuteScalar());
+    }
+
+    static void UpdateStatus(int appId, string newStatus, DateTime? decisionDate = null)
+    {
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("UPDATE CreditApplication SET status=@status WHERE id=@id", conn);
+        cmd.Parameters.AddWithValue("@status", newStatus);
+        cmd.Parameters.AddWithValue("@id", appId);
+        if (newStatus == "approved" || newStatus == "rejected")
+        {
+            cmd.CommandText = "UPDATE CreditApplication SET status=@status, decision_date=@decdate WHERE id=@id";
+            cmd.Parameters.AddWithValue("@decdate", (decisionDate ?? DateTime.Now).ToString("yyyy-MM-dd"));
+        }
+        cmd.ExecuteNonQuery();
+    }
+
+    static List<object[]> ViewCreditsByStatus(string status, DateTime start, DateTime end)
+    {
+        var result = new List<object[]>();
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand(@"SELECT ca.id, c.name, ca.amount, ca.application_date, ca.decision_date, ca.status
+                                      FROM CreditApplication ca JOIN Client c ON ca.client_id = c.id
+                                      WHERE ca.status = @status AND ca.application_date BETWEEN @start AND @end", conn);
+        cmd.Parameters.AddWithValue("@status", status);
+        cmd.Parameters.AddWithValue("@start", start.ToString("yyyy-MM-dd"));
+        cmd.Parameters.AddWithValue("@end", end.ToString("yyyy-MM-dd"));
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            var row = new object[reader.FieldCount];
+            reader.GetValues(row);
+            result.Add(row);
+        }
+        return result;
+    }
+}

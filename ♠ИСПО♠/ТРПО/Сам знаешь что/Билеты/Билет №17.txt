@@ -1,0 +1,88 @@
+Билет №17 (Начисление зарплаты – расчёт за месяц, выгрузка XML)
+Предметная область: Сотрудники, отделы, тарифы, отработанное время, премия.
+
+1. Диаграмма вариантов использования
+Акторы: Администратор, Сотрудник (для просмотра), Руководитель.
+Варианты использования:
+
+Ввести данные о сотруднике
+
+Назначить тариф и процент премии
+
+Заполнить карточку отработанного времени
+
+Рассчитать зарплату за месяц
+
+Сформировать отчёты (по отделам, по компании)
+
+Выгрузить расчёт в XML
+
+2. Диаграмма последовательности для «Расчёт зарплаты за месяц»
+Администратор → Система: выбрать сотрудника и месяц
+
+Система → БД: получить тариф, часы, процент премии
+
+БД → Система: данные
+
+Система: salary = hours * rate * (1 + bonus_percent/100)
+
+Система → БД: сохранить расчёт (в таблицу Payroll)
+
+Система → Администратор: показать сумму
+
+3. Модель данных
+sql
+CREATE TABLE Department (
+    id INTEGER PRIMARY KEY, name TEXT
+);
+CREATE TABLE Employee (
+    id INTEGER PRIMARY KEY,
+    last_name TEXT, first_name TEXT, address TEXT,
+    department_id INTEGER,
+    hourly_rate DECIMAL(10,2),
+    bonus_percent INTEGER CHECK(bonus_percent IN (10,15,25,35)),
+    FOREIGN KEY(department_id) REFERENCES Department(id)
+);
+CREATE TABLE TimeCard (
+    id INTEGER PRIMARY KEY,
+    employee_id INTEGER,
+    work_date DATE,
+    hours INTEGER,
+    FOREIGN KEY(employee_id) REFERENCES Employee(id)
+);
+CREATE TABLE Payroll (
+    id INTEGER PRIMARY KEY,
+    employee_id INTEGER,
+    year_month TEXT, -- 'YYYY-MM'
+    total_hours INTEGER,
+    calculated_salary DECIMAL(10,2),
+    FOREIGN KEY(employee_id) REFERENCES Employee(id)
+);
+4. Приложение (расчёт зарплаты за месяц, выгрузка в XML)
+Python:
+
+python
+def calculate_salary(employee_id, year_month):
+    conn = sqlite3.connect('salary.db')
+    cur = conn.cursor()
+    cur.execute("SELECT hourly_rate, bonus_percent FROM Employee WHERE id=?", (employee_id,))
+    rate, bonus = cur.fetchone()
+    cur.execute("SELECT SUM(hours) FROM TimeCard WHERE employee_id=? AND strftime('%Y-%m', work_date)=?", (employee_id, year_month))
+    total_hours = cur.fetchone()[0] or 0
+    salary = total_hours * rate * (1 + bonus/100)
+    cur.execute("INSERT OR REPLACE INTO Payroll (employee_id, year_month, total_hours, calculated_salary) VALUES (?,?,?,?)",
+                (employee_id, year_month, total_hours, salary))
+    conn.commit()
+    conn.close()
+    return salary
+
+def export_to_xml(employee_id, year_month, filename):
+    # Получить данные сотрудника и расчёт, создать XML
+    pass
+C#: аналогично, использовать XmlWriter.
+
+5. Тест-кейсы
+| TC1 | Расчёт зарплаты для сотрудника с часами 160, rate 100, bonus 10% | 160*100*1.1 = 17600 |
+| TC2 | Сотрудник без часов за месяц | зарплата = 0 |
+| TC3 | Выгрузка XML содержит правильные теги | Файл валиден |
+| TC4 | Изменение процента премии – пересчёт | Новая зарплата |

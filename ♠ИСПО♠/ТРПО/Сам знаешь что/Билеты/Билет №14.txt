@@ -1,0 +1,311 @@
+Билет №14 (Банк – кредитование: поддержка клиентов и кредитов, просмотр по типам за интервал)
+1. Диаграмма вариантов использования
+Акторы:
+
+Клиент (физическое или юридическое лицо)
+
+Референт по кредитованию
+
+Инспектор по кредитам
+
+Банковская система управления счетами (внешняя)
+
+Варианты использования:
+
+Подать заявку на кредит
+
+Проверить достоверность документов (референт)
+
+Запросить кредитную историю
+
+Проверить финансовое положение и доход
+
+Оценить кредитную заявку (инспектор)
+
+Одобрить/отказать в кредите
+
+Оформить кредит
+
+Закрыть кредит после последней выплаты
+
+Просмотреть кредиты по статусу (выданные, одобренные, отказанные, закрытые) за период
+
+2. Диаграмма последовательности для «Анализ кредитных заявок»
+text
+Клиент -> Референт: подать заявку и документы
+Референт -> Система: создать заявку (статус "на проверке")
+Референт -> Система: проверить документы (если ошибки -> статус "отказано")
+Система -> Отдел кредитования: запрос отчета о кредитных операциях
+Отдел кредитования -> Система: отчет
+Референт -> Система управления счетами: запрос состояния счета и предыдущих кредитов
+Система управления счетами -> Референт: данные
+Референт -> Система: комплектовать кредитный запрос (статус "на оценке")
+Инспектор -> Система: оценить заявку
+alt [одобрено] Инспектор -> Система: утвердить, определить условия
+      Инспектор -> Клиент: уведомление об условиях
+      Клиент -> Инспектор: принятие условий
+      Инспектор -> Система: оформить кредит (статус "выдан")
+else [отказано] Инспектор -> Система: отказать (статус "отказано")
+3. Модель данных (логическая + физическая)
+Логическая модель:
+
+Клиент (ID, тип (физическое/юридическое), ФИО/название, ИНН, паспортные данные, контакты)
+
+Кредитная заявка (ID, клиент_ID, сумма, срок, процентная ставка, статус, дата подачи, дата решения)
+
+Кредитный договор (ID, заявка_ID, дата выдачи, общая сумма, ежемесячный платеж, остаток долга)
+
+Платеж (ID, договор_ID, дата, сумма, остаток после платежа)
+
+Физическая модель (SQLite):
+
+sql
+CREATE TABLE Client (
+    id INTEGER PRIMARY KEY,
+    type TEXT CHECK(type IN ('individual', 'organization')),
+    name TEXT NOT NULL,                -- для юрлица – название, для физлица – ФИО
+    inn TEXT,
+    passport_data TEXT,
+    phone TEXT,
+    email TEXT
+);
+
+CREATE TABLE CreditApplication (
+    id INTEGER PRIMARY KEY,
+    client_id INTEGER NOT NULL,
+    amount DECIMAL(12,2) NOT NULL,
+    term_months INTEGER NOT NULL,
+    interest_rate DECIMAL(5,2) NOT NULL,
+    status TEXT CHECK(status IN ('new','verified','rejected','approved','issued','closed')),
+    application_date DATE NOT NULL,
+    decision_date DATE,
+    FOREIGN KEY (client_id) REFERENCES Client(id)
+);
+
+CREATE TABLE CreditContract (
+    id INTEGER PRIMARY KEY,
+    application_id INTEGER NOT NULL UNIQUE,
+    issue_date DATE NOT NULL,
+    total_amount DECIMAL(12,2) NOT NULL,
+    monthly_payment DECIMAL(12,2) NOT NULL,
+    remaining_debt DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (application_id) REFERENCES CreditApplication(id)
+);
+
+CREATE TABLE Payment (
+    id INTEGER PRIMARY KEY,
+    contract_id INTEGER NOT NULL,
+    payment_date DATE NOT NULL,
+    amount DECIMAL(12,2) NOT NULL,
+    remaining_debt DECIMAL(12,2) NOT NULL,
+    FOREIGN KEY (contract_id) REFERENCES CreditContract(id)
+);
+4. Приложение (Python + C#)
+Функционал:
+
+Добавление/редактирование клиента
+
+Создание кредитной заявки
+
+Изменение статуса заявки (одобрена, выдана, закрыта, отказана)
+
+Просмотр кредитов по статусу и интервалу дат
+
+Python (Flask CLI или консоль, sqlite3)
+python
+import sqlite3
+from datetime import datetime
+
+DB_PATH = 'bank.db'
+
+def init_db():
+    with sqlite3.connect(DB_PATH) as conn:
+        conn.executescript(''' ... (создание таблиц) ... ''')
+
+def create_client(client_type, name, inn, passport, phone, email):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            INSERT INTO Client (type, name, inn, passport_data, phone, email)
+            VALUES (?,?,?,?,?,?)
+        ''', (client_type, name, inn, passport, phone, email))
+        return cur.lastrowid
+
+def create_application(client_id, amount, term_months, interest_rate):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            INSERT INTO CreditApplication (client_id, amount, term_months, interest_rate, status, application_date)
+            VALUES (?,?,?,?,?,?)
+        ''', (client_id, amount, term_months, interest_rate, 'new', datetime.now().date()))
+        return cur.lastrowid
+
+def update_application_status(app_id, new_status, decision_date=None):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        if new_status in ('approved', 'rejected'):
+            cur.execute('UPDATE CreditApplication SET status=?, decision_date=? WHERE id=?',
+                        (new_status, decision_date or datetime.now().date(), app_id))
+        else:
+            cur.execute('UPDATE CreditApplication SET status=? WHERE id=?', (new_status, app_id))
+
+def issue_credit(application_id, issue_date, total_amount, monthly_payment):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        # Проверим, что заявка одобрена
+        cur.execute('SELECT status FROM CreditApplication WHERE id=?', (application_id,))
+        if cur.fetchone()[0] != 'approved':
+            raise ValueError('Заявка не одобрена')
+        # Создаем договор
+        cur.execute('''
+            INSERT INTO CreditContract (application_id, issue_date, total_amount, monthly_payment, remaining_debt)
+            VALUES (?,?,?,?,?)
+        ''', (application_id, issue_date, total_amount, monthly_payment, total_amount))
+        contract_id = cur.lastrowid
+        # Меняем статус заявки на 'issued'
+        cur.execute('UPDATE CreditApplication SET status="issued" WHERE id=?', (application_id,))
+        return contract_id
+
+def add_payment(contract_id, amount, payment_date=None):
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        # Получаем текущий остаток
+        cur.execute('SELECT remaining_debt FROM CreditContract WHERE id=?', (contract_id,))
+        remaining = cur.fetchone()[0]
+        new_remaining = remaining - amount
+        if new_remaining < 0:
+            new_remaining = 0
+        cur.execute('''
+            INSERT INTO Payment (contract_id, payment_date, amount, remaining_debt)
+            VALUES (?,?,?,?)
+        ''', (contract_id, payment_date or datetime.now().date(), amount, new_remaining))
+        cur.execute('UPDATE CreditContract SET remaining_debt=? WHERE id=?', (new_remaining, contract_id))
+        if new_remaining == 0:
+            cur.execute('''
+                UPDATE CreditApplication SET status="closed"
+                WHERE id=(SELECT application_id FROM CreditContract WHERE id=?)
+            ''', (contract_id,))
+        return new_remaining
+
+def view_credits_by_status(status, start_date, end_date):
+    """status: 'issued', 'approved', 'rejected', 'closed'"""
+    with sqlite3.connect(DB_PATH) as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            SELECT ca.id, c.name, ca.amount, ca.application_date, ca.decision_date, ca.status
+            FROM CreditApplication ca
+            JOIN Client c ON ca.client_id = c.id
+            WHERE ca.status = ? AND ca.application_date BETWEEN ? AND ?
+        ''', (status, start_date, end_date))
+        return cur.fetchall()
+C# (консоль, System.Data.Sqlite)
+csharp
+using System;
+using System.Data.SQLite;
+using System.Collections.Generic;
+
+namespace BankCreditApp
+{
+    class Program
+    {
+        static string connectionString = "Data Source=bank.db";
+
+        static void Main() { /* пример вызовов */ }
+
+        static int CreateClient(string type, string name, string inn, string passport, string phone, string email)
+        {
+            using var conn = new SQLiteConnection(connectionString);
+            conn.Open();
+            var cmd = new SQLiteCommand(@"INSERT INTO Client (type, name, inn, passport_data, phone, email) 
+                                          VALUES (@type, @name, @inn, @pass, @phone, @email);
+                                          SELECT last_insert_rowid();", conn);
+            cmd.Parameters.AddWithValue("@type", type);
+            cmd.Parameters.AddWithValue("@name", name);
+            // ... остальные параметры
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        static int CreateApplication(int clientId, decimal amount, int termMonths, decimal interestRate)
+        {
+            using var conn = new SQLiteConnection(connectionString);
+            conn.Open();
+            var cmd = new SQLiteCommand(@"INSERT INTO CreditApplication (client_id, amount, term_months, interest_rate, status, application_date)
+                                          VALUES (@cid, @amt, @term, @rate, 'new', date('now'));
+                                          SELECT last_insert_rowid();", conn);
+            cmd.Parameters.AddWithValue("@cid", clientId);
+            cmd.Parameters.AddWithValue("@amt", amount);
+            cmd.Parameters.AddWithValue("@term", termMonths);
+            cmd.Parameters.AddWithValue("@rate", interestRate);
+            return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        static void UpdateStatus(int appId, string newStatus, DateTime? decisionDate = null)
+        {
+            using var conn = new SQLiteConnection(connectionString);
+            conn.Open();
+            var cmd = new SQLiteCommand("UPDATE CreditApplication SET status=@status WHERE id=@id", conn);
+            cmd.Parameters.AddWithValue("@status", newStatus);
+            cmd.Parameters.AddWithValue("@id", appId);
+            if (newStatus == "approved" || newStatus == "rejected")
+            {
+                cmd.CommandText = "UPDATE CreditApplication SET status=@status, decision_date=@decdate WHERE id=@id";
+                cmd.Parameters.AddWithValue("@decdate", decisionDate ?? DateTime.Now);
+            }
+            cmd.ExecuteNonQuery();
+        }
+
+        static int IssueCredit(int applicationId, DateTime issueDate, decimal totalAmount, decimal monthlyPayment)
+        {
+            using var conn = new SQLiteConnection(connectionString);
+            conn.Open();
+            // проверка статуса
+            var checkCmd = new SQLiteCommand("SELECT status FROM CreditApplication WHERE id=@id", conn);
+            checkCmd.Parameters.AddWithValue("@id", applicationId);
+            if (checkCmd.ExecuteScalar().ToString() != "approved")
+                throw new Exception("Заявка не одобрена");
+            var cmd = new SQLiteCommand(@"INSERT INTO CreditContract (application_id, issue_date, total_amount, monthly_payment, remaining_debt)
+                                          VALUES (@appid, @issuedate, @total, @monthly, @total);
+                                          SELECT last_insert_rowid();", conn);
+            cmd.Parameters.AddWithValue("@appid", applicationId);
+            cmd.Parameters.AddWithValue("@issuedate", issueDate);
+            cmd.Parameters.AddWithValue("@total", totalAmount);
+            cmd.Parameters.AddWithValue("@monthly", monthlyPayment);
+            int contractId = Convert.ToInt32(cmd.ExecuteScalar());
+            // обновить статус заявки
+            var updCmd = new SQLiteCommand("UPDATE CreditApplication SET status='issued' WHERE id=@id", conn);
+            updCmd.Parameters.AddWithValue("@id", applicationId);
+            updCmd.ExecuteNonQuery();
+            return contractId;
+        }
+
+        static List<object[]> ViewCreditsByStatus(string status, DateTime start, DateTime end)
+        {
+            var result = new List<object[]>();
+            using var conn = new SQLiteConnection(connectionString);
+            conn.Open();
+            var cmd = new SQLiteCommand(@"SELECT ca.id, c.name, ca.amount, ca.application_date, ca.decision_date, ca.status
+                                          FROM CreditApplication ca
+                                          JOIN Client c ON ca.client_id = c.id
+                                          WHERE ca.status = @status AND ca.application_date BETWEEN @start AND @end", conn);
+            cmd.Parameters.AddWithValue("@status", status);
+            cmd.Parameters.AddWithValue("@start", start.ToString("yyyy-MM-dd"));
+            cmd.Parameters.AddWithValue("@end", end.ToString("yyyy-MM-dd"));
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+                result.Add(new object[] { reader[0], reader[1], reader[2], reader[3], reader[4], reader[5] });
+            return result;
+        }
+    }
+}
+5. Тест-кейсы
+ID	Действие	Ожидаемый результат
+TC1	Создать клиента (физ. лицо)	Запись появляется в таблице Client
+TC2	Создать кредитную заявку со статусом 'new'	Заявка создана, статус 'new'
+TC3	Одобрить заявку, изменить статус на 'approved'	Статус изменён, decision_date заполнена
+TC4	Отказать в заявке	Статус 'rejected'
+TC5	Выдать кредит по одобренной заявке	Создан договор, статус заявки 'issued'
+TC6	Попытка выдать кредит по неодобренной заявке	Исключение/ошибка
+TC7	Внести платеж по кредиту, уменьшить остаток	Остаток уменьшается, запись в Payment
+TC8	Внести последний платеж (остаток = 0)	Статус заявки становится 'closed'
+TC9	Просмотр выданных кредитов за период	Только кредиты со статусом 'issued' и датой в интервале
+TC10	Просмотр закрытых кредитов за период	Аналогично

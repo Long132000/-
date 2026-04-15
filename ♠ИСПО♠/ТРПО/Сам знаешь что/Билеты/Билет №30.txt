@@ -1,0 +1,86 @@
+Билет №30 (Служба занятости – подбор вакансий, вакансии без кандидатов)
+Предметная область: Безработные, вакансии, пособие, предложение вакансий, контроль «вакансия без кандидата 3 месяца».
+
+1. Диаграмма вариантов использования
+Акторы: Сотрудник службы, Безработный, Предприятие.
+Варианты использования:
+
+Поставить на учёт безработного
+
+Добавить вакансию
+
+Выполнить выборку вакансий для безработного
+
+Отметить вакансию как «без кандидата» (3 месяца)
+
+Связаться с предприятием для изменения требований
+
+2. Диаграмма последовательности для «Выборка имеющихся вакансий»
+Сотрудник → Система: запустить подбор для безработного
+
+Система → БД: получить данные безработного (образование, стаж, требования)
+
+Система → БД: найти вакансии, где требования соответствуют
+
+БД → Система: список вакансий
+
+Система → Сотрудник: показать список
+
+Сотрудник → Система: предложить вакансию (запись в предложения)
+
+3. Модель данных
+sql
+CREATE TABLE Unemployed (
+    id INTEGER PRIMARY KEY,
+    fio TEXT,
+    reg_address TEXT, fact_address TEXT, phone TEXT,
+    family_status TEXT, family_composition TEXT,
+    education TEXT, total_experience INTEGER,
+    last_job_place TEXT, last_job_position TEXT,
+    desired_activity TEXT, desired_salary INTEGER, desired_fulltime BOOLEAN,
+    registration_date DATE, last_salary INTEGER, is_first_job BOOLEAN
+);
+CREATE TABLE Vacancy (
+    id INTEGER PRIMARY KEY,
+    company_name TEXT, legal_address TEXT, fact_address TEXT,
+    position TEXT, fulltime BOOLEAN,
+    req_education TEXT, req_age_min INTEGER, req_age_max INTEGER,
+    req_experience_total INTEGER, req_experience_field INTEGER,
+    salary INTEGER, bonuses TEXT,
+    created_date DATE, last_offer_date DATE
+);
+CREATE TABLE JobOffer (
+    id INTEGER PRIMARY KEY,
+    unemployed_id INTEGER,
+    vacancy_id INTEGER,
+    offer_date DATE,
+    is_accepted BOOLEAN,
+    FOREIGN KEY(unemployed_id) REFERENCES Unemployed(id),
+    FOREIGN KEY(vacancy_id) REFERENCES Vacancy(id)
+);
+4. Приложение (подбор вакансий, поиск вакансий без кандидатов за указанное время)
+Python:
+
+python
+def find_vacancies_for_unemployed(unemployed_id):
+    # получить требования безработного
+    # SELECT * FROM Vacancy WHERE req_education <= unemployed.education ...
+    pass
+
+def find_vacancies_without_candidates(days=90):
+    conn = sqlite3.connect('employment.db')
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT v.* FROM Vacancy v
+        WHERE NOT EXISTS (
+            SELECT 1 FROM JobOffer jo WHERE jo.vacancy_id = v.id
+        ) AND julianday('now') - julianday(v.created_date) > ?
+    """, (days,))
+    return cur.fetchall()
+C#: аналогично.
+
+5. Тест-кейсы
+| TC1 | Поиск вакансий для безработного, которому ничего не подходит | Пустой список |
+| TC2 | Подходящая вакансия есть – возвращается | Непустой список |
+| TC3 | Найти вакансии без кандидатов за 90 дней | Только те, где нет предложений и возраст >90 дней |
+| TC4 | Вакансия, на которую было предложение, не попадает | Не включается в результат |

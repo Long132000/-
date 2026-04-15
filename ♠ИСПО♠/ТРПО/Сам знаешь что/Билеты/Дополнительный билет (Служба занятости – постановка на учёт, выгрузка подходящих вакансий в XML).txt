@@ -1,0 +1,30 @@
+Дополнительный билет (Служба занятости – постановка на учёт, выгрузка подходящих вакансий в XML)
+Предметная область: та же, но задание: поставить на учёт безработного, отобразить все подходящие вакансии и выгрузить в XML.
+
+Модель данных – аналогично билету №30, плюс таблица Unemployed.
+Приложение (Python):
+python
+def register_unemployed(data):
+    # INSERT INTO Unemployed ...
+    pass
+
+def find_matching_vacancies(unemployed_id):
+    # как в билете №30
+    pass
+
+def export_vacancies_to_xml(unemployed_id, filename):
+    vacancies = find_matching_vacancies(unemployed_id)
+    root = ET.Element("Vacancies")
+    for v in vacancies:
+        vac = ET.SubElement(root, "Vacancy")
+        ET.SubElement(vac, "Company").text = v[1]
+        ET.SubElement(vac, "Position").text = v[2]
+        # ...
+    ET.ElementTree(root).write(filename)
+Тест-кейсы: проверка регистрации, подбор, выгрузка.
+Общие рекомендации для экзамена
+Для каждого билета будьте готовы объяснить выбор диаграмм, акторов.
+
+SQL-запросы: покажите JOIN, подзапросы, агрегацию.
+
+Код: покажите основные функции, подключение к БД, обработку ошибок.

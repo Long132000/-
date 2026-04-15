@@ -1,0 +1,233 @@
+Билет №29 (Служба занятости – постановка на учет безработного, вывод подходящих вакансий в XML)
+1. Диаграмма вариантов использования
+Акторы:
+
+Сотрудник службы занятости
+
+Безработный гражданин
+
+Предприятие (работодатель)
+
+Варианты использования:
+
+Поставить на учет безработного
+
+Добавить/редактировать вакансию
+
+Подобрать вакансии для безработного
+
+Выгрузить подходящие вакансии в XML
+
+Изменить требования к вакансии (если 3 месяца нет кандидатов)
+
+Предложить курсы повышения квалификации (если месяц без предложений)
+
+2. Диаграмма последовательности для «Постановка на учет безработного»
+text
+Сотрудник -> Система: выбрать "Постановка на учет"
+Сотрудник -> Система: ввести данные безработного (ФИО, адрес, телефон, образование, стаж, последнее место работы, желаемую работу)
+Система -> БД: сохранить запись в таблицу Unemployed
+Система -> Сотрудник: запросить данные о зарплате на последнем месте (для расчета пособия)
+Сотрудник -> Система: ввести среднюю зарплату (или признак "не работал ранее")
+Система -> БД: рассчитать пособие (80%/70%/50% или фиксированное) и сохранить
+Система -> Сотрудник: показать ID учетной карточки
+3. Модель данных
+sql
+CREATE TABLE Unemployed (
+    id INTEGER PRIMARY KEY,
+    fio TEXT NOT NULL,
+    reg_address TEXT,
+    fact_address TEXT,
+    phone TEXT,
+    family_status TEXT,
+    family_composition TEXT,
+    education TEXT,
+    total_experience INTEGER,
+    last_job_place TEXT,
+    last_job_position TEXT,
+    last_salary DECIMAL(10,2),      -- средняя зарплата на последнем месте
+    is_first_job BOOLEAN DEFAULT 0,
+    desired_activity TEXT,
+    desired_min_salary DECIMAL(10,2),
+    desired_fulltime BOOLEAN,
+    registration_date DATE,
+    benefit_amount DECIMAL(10,2),
+    benefit_expiry_date DATE
+);
+
+CREATE TABLE Vacancy (
+    id INTEGER PRIMARY KEY,
+    company_name TEXT,
+    legal_address TEXT,
+    fact_address TEXT,
+    position TEXT,
+    fulltime BOOLEAN,
+    req_education TEXT,
+    req_age_min INTEGER,
+    req_age_max INTEGER,
+    req_experience_total INTEGER,
+    req_experience_field INTEGER,
+    salary DECIMAL(10,2),
+    bonuses TEXT,
+    created_date DATE,
+    last_offer_date DATE
+);
+
+CREATE TABLE JobOffer (
+    id INTEGER PRIMARY KEY,
+    unemployed_id INTEGER,
+    vacancy_id INTEGER,
+    offer_date DATE,
+    is_accepted BOOLEAN,
+    FOREIGN KEY (unemployed_id) REFERENCES Unemployed(id),
+    FOREIGN KEY (vacancy_id) REFERENCES Vacancy(id)
+);
+4. Приложение (Python + C#)
+Функционал:
+
+Постановка на учет безработного (ввод данных, автоматический расчет пособия)
+
+Поиск подходящих вакансий для безработного (по образованию, стажу, возрасту, желаемой зарплате, типу занятости)
+
+Выгрузка списка подходящих вакансий в XML-файл
+
+Python
+python
+import sqlite3
+from datetime import datetime, timedelta
+import xml.etree.ElementTree as ET
+
+DB = 'employment.db'
+
+def register_unemployed(data):
+    """data: dict с полями fio, reg_address, fact_address, phone, family_status,
+       family_composition, education, total_experience, last_job_place, last_job_position,
+       last_salary, is_first_job, desired_activity, desired_min_salary, desired_fulltime"""
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    # Расчет пособия
+    if data['is_first_job']:
+        benefit = get_min_wage()   # например, 15000
+        expiry = datetime.now().date() + timedelta(days=365)  # на год
+    else:
+        # в зависимости от стажа на учете (упрощенно: при регистрации назначаем 80% на 3 месяца)
+        benefit = data['last_salary'] * 0.8
+        expiry = datetime.now().date() + timedelta(days=90)
+    cur.execute('''
+        INSERT INTO Unemployed (
+            fio, reg_address, fact_address, phone, family_status, family_composition,
+            education, total_experience, last_job_place, last_job_position,
+            last_salary, is_first_job, desired_activity, desired_min_salary,
+            desired_fulltime, registration_date, benefit_amount, benefit_expiry_date
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    ''', (
+        data['fio'], data['reg_address'], data['fact_address'], data['phone'],
+        data['family_status'], data['family_composition'], data['education'],
+        data['total_experience'], data['last_job_place'], data['last_job_position'],
+        data['last_salary'], data['is_first_job'], data['desired_activity'],
+        data['desired_min_salary'], data['desired_fulltime'],
+        datetime.now().date(), benefit, expiry
+    ))
+    unemployed_id = cur.lastrowid
+    conn.commit()
+    conn.close()
+    return unemployed_id
+
+def find_matching_vacancies(unemployed_id):
+    conn = sqlite3.connect(DB)
+    cur = conn.cursor()
+    # Получить данные безработного
+    cur.execute('SELECT education, total_experience, desired_min_salary, desired_fulltime, (strftime("%Y") - substr(registration_date,1,4)) as age FROM Unemployed WHERE id=?', (unemployed_id,))
+    u = cur.fetchone()
+    education, exp, min_salary, fulltime, age = u
+    # Поиск вакансий
+    cur.execute('''
+        SELECT * FROM Vacancy
+        WHERE (req_education IS NULL OR req_education <= ?)
+          AND (req_experience_total IS NULL OR req_experience_total <= ?)
+          AND (req_age_min IS NULL OR ? >= req_age_min)
+          AND (req_age_max IS NULL OR ? <= req_age_max)
+          AND salary >= ?
+          AND (fulltime = ? OR ? = 0)  -- если безработный хочет полную, то только полные; если частичную – подходят обе
+    ''', (education, exp, age, age, min_salary, fulltime, fulltime))
+    vacancies = cur.fetchall()
+    conn.close()
+    return vacancies
+
+def export_vacancies_to_xml(unemployed_id, filename):
+    vacancies = find_matching_vacancies(unemployed_id)
+    root = ET.Element("Vacancies")
+    root.set("unemployed_id", str(unemployed_id))
+    for v in vacancies:
+        vac = ET.SubElement(root, "Vacancy")
+        ET.SubElement(vac, "Company").text = v[1]
+        ET.SubElement(vac, "Position").text = v[4]
+        ET.SubElement(vac, "Salary").text = str(v[11])
+        ET.SubElement(vac, "Requirements").text = f"Образование: {v[5]}, стаж: {v[8]}, возраст: {v[6]}-{v[7]}"
+    tree = ET.ElementTree(root)
+    tree.write(filename, encoding='utf-8', xml_declaration=True)
+C#
+csharp
+using System;
+using System.Data.SQLite;
+using System.Xml;
+using System.Collections.Generic;
+
+class EmploymentService
+{
+    static string connStr = "Data Source=employment.db";
+
+    public static int RegisterUnemployed(Dictionary<string, object> data)
+    {
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        decimal benefit = (bool)data["is_first_job"] ? GetMinWage() : (decimal)data["last_salary"] * 0.8m;
+        DateTime expiry = DateTime.Now.AddDays(90);
+        var cmd = new SQLiteCommand(@"INSERT INTO Unemployed (fio, reg_address, fact_address, phone, family_status, family_composition, education, total_experience, last_job_place, last_job_position, last_salary, is_first_job, desired_activity, desired_min_salary, desired_fulltime, registration_date, benefit_amount, benefit_expiry_date) VALUES (@fio, @reg, @fact, @phone, @fs, @fc, @edu, @exp, @ljp, @ljpos, @ls, @first, @da, @dms, @dft, date('now'), @ben, @expd); SELECT last_insert_rowid();", conn);
+        // заполнить параметры...
+        return Convert.ToInt32(cmd.ExecuteScalar());
+    }
+
+    public static List<object[]> FindMatchingVacancies(int unemployedId)
+    {
+        var result = new List<object[]>();
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand(@"SELECT * FROM Vacancy WHERE ...", conn); // аналогично Python
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            var row = new object[reader.FieldCount];
+            reader.GetValues(row);
+            result.Add(row);
+        }
+        return result;
+    }
+
+    public static void ExportToXml(int unemployedId, string filename)
+    {
+        var vacancies = FindMatchingVacancies(unemployedId);
+        var doc = new XmlDocument();
+        var root = doc.CreateElement("Vacancies");
+        root.SetAttribute("unemployed_id", unemployedId.ToString());
+        doc.AppendChild(root);
+        foreach (var v in vacancies)
+        {
+            var vac = doc.CreateElement("Vacancy");
+            vac.AppendChild(doc.CreateElement("Company")).InnerText = v[1].ToString();
+            vac.AppendChild(doc.CreateElement("Position")).InnerText = v[4].ToString();
+            vac.AppendChild(doc.CreateElement("Salary")).InnerText = v[11].ToString();
+            root.AppendChild(vac);
+        }
+        doc.Save(filename);
+    }
+}
+5. Тест-кейсы
+ID	Действие	Ожидаемый результат
+TC1	Постановка на учет впервые работающего (is_first_job=1)	Пособие = минимальная зарплата, срок 1 год
+TC2	Постановка на учет работавшего с зарплатой 30000	Пособие = 24000 (80%), срок 3 месяца
+TC3	Поиск вакансий для безработного с высшим образованием, стажем 5 лет, желаемой зарплатой 50000	Возвращены вакансии, где требования соответствуют
+TC4	Если нет подходящих вакансий – пустой список	find_matching_vacancies возвращает []
+TC5	Выгрузка в XML – файл создается, содержит теги <Vacancies><Vacancy>...	Проверка существования файла и структуры
+TC6	Вакансия с требованием возраста 30-40, безработному 50 – не подходит	Не включается в результат
+TC7	Вакансия с частичной занятостью, безработный хочет полную – не подходит	Не включается

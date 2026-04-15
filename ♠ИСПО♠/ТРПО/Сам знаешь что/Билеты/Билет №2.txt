@@ -1,0 +1,91 @@
+Билет №2 (Туристическая компания – CRUD туров, фильтрация)
+Отличие: вместо заявок – поддержка базы туров (добавление, удаление, редактирование, фильтрация по стране и срокам).
+
+1. Диаграмма вариантов использования
+Акторы: Менеджер.
+Варианты использования:
+
+Добавить тур
+
+Удалить тур
+
+Редактировать тур
+
+Просмотреть список туров
+
+Фильтровать туры по стране
+
+Фильтровать туры по датам
+
+2. Диаграмма последовательности для «Подбор тура»
+Менеджер → Система: выбрать страну
+
+Система → БД: запрос туров по стране
+
+БД → Система: список туров
+
+Система → Менеджер: отобразить туры
+
+Менеджер → Система: задать интервал дат
+
+Система → БД: фильтрация по датам
+
+БД → Система: отфильтрованные туры
+
+3. Модель данных
+Таблицы: Country, Manager, Tour (как в билете №1, но без Application и Client).
+
+4. Приложение
+Python (Flask + SQLite или консоль):
+
+python
+def add_tour(name, country_id, start, end, seats, manager_id):
+    conn = sqlite3.connect('tourism.db')
+    cur = conn.cursor()
+    cur.execute("INSERT INTO Tour (name, country_id, start_date, end_date, seats, manager_id) VALUES (?,?,?,?,?,?)",
+                (name, country_id, start, end, seats, manager_id))
+    conn.commit(); conn.close()
+
+def filter_tours(country_name=None, start_from=None, start_to=None):
+    conn = sqlite3.connect('tourism.db')
+    cur = conn.cursor()
+    query = "SELECT t.*, c.name FROM Tour t JOIN Country c ON t.country_id = c.id WHERE 1=1"
+    params = []
+    if country_name:
+        query += " AND c.name = ?"; params.append(country_name)
+    if start_from:
+        query += " AND t.start_date >= ?"; params.append(start_from)
+    if start_to:
+        query += " AND t.start_date <= ?"; params.append(start_to)
+    cur.execute(query, params)
+    return cur.fetchall()
+C# (WinForms/Console):
+
+csharp
+static void AddTour(string name, int countryId, DateTime start, DateTime end, int seats, int managerId)
+{
+    using var conn = new SqliteConnection("Data Source=tourism.db");
+    conn.Open();
+    var cmd = new SqliteCommand("INSERT INTO Tour (name, country_id, start_date, end_date, seats, manager_id) VALUES (@n, @cid, @s, @e, @seats, @mid)", conn);
+    // добавление параметров
+    cmd.ExecuteNonQuery();
+}
+
+static DataTable FilterTours(string countryName = null, DateTime? from = null, DateTime? to = null)
+{
+    var dt = new DataTable();
+    using var conn = new SqliteConnection("Data Source=tourism.db");
+    conn.Open();
+    var cmd = new SqliteCommand("SELECT t.*, c.name as country FROM Tour t JOIN Country c ON t.country_id = c.id WHERE (c.name = @cn OR @cn IS NULL) AND (t.start_date >= @from OR @from IS NULL) AND (t.start_date <= @to OR @to IS NULL)", conn);
+    cmd.Parameters.AddWithValue("@cn", (object)countryName ?? DBNull.Value);
+    cmd.Parameters.AddWithValue("@from", (object)from ?? DBNull.Value);
+    cmd.Parameters.AddWithValue("@to", (object)to ?? DBNull.Value);
+    using var reader = cmd.ExecuteReader();
+    dt.Load(reader);
+    return dt;
+}
+5. Тест-кейсы
+| TC1 | Добавить новый тур | Запись появляется в таблице |
+| TC2 | Отфильтровать по стране "Турция" | Только туры с country='Турция' |
+| TC3 | Отфильтровать по дате начала > 2026-06-01 | Туры с start_date > даты |
+| TC4 | Удалить существующий тур | Запись удаляется, нет внешних ключей |

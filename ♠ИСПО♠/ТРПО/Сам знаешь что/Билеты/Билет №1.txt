@@ -1,0 +1,154 @@
+Билет №1 (Туристическая компания – оформление заявки, вывод в текстовый файл)
+Предметная область: Турфирма, заявки на тур, проверка мест, бронирование.
+
+1. Диаграмма вариантов использования
+Акторы: Менеджер, Компания-организатор (внешняя система).
+Варианты использования:
+
+Оформить заявку (включает: ввод данных клиента, выбор тура)
+
+Передать заявку организатору
+
+Проверить наличие мест (организатор)
+
+Подтвердить бронирование
+
+Отказать в бронировании
+
+Предложить альтернативу (менеджер)
+
+2. Диаграмма последовательности для «Оформление заявки»
+Менеджер → Система: создать заявку(данные клиента, тур)
+
+Система → Менеджер: сохранить заявку со статусом «новая»
+
+Менеджер → Система: отправить заявку организатору
+
+Система → Организатор: запрос на бронирование
+
+Организатор → Система: ответ (есть места / нет мест)
+
+Система → Менеджер: уведомление
+
+Менеджер → Система: обновить статус заявки
+
+3. Модель данных
+Логическая модель:
+
+Страна (id, название)
+
+Тур (id, название, страна_id, дата_начала, дата_конца, кол-во_мест, менеджер_id)
+
+Менеджер (id, ФИО)
+
+Клиент (id, ФИО, возраст, паспортные_данные, запрашивающий_орган)
+
+Заявка (id, тур_id, клиент_id, дата_заявки, статус, ответ_организатора)
+
+Физическая модель (SQLite):
+
+sql
+CREATE TABLE Country (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+);
+CREATE TABLE Manager (
+    id INTEGER PRIMARY KEY,
+    full_name TEXT NOT NULL
+);
+CREATE TABLE Tour (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    country_id INTEGER,
+    start_date DATE,
+    end_date DATE,
+    seats INTEGER,
+    manager_id INTEGER,
+    FOREIGN KEY(country_id) REFERENCES Country(id),
+    FOREIGN KEY(manager_id) REFERENCES Manager(id)
+);
+CREATE TABLE Client (
+    id INTEGER PRIMARY KEY,
+    full_name TEXT,
+    age INTEGER,
+    passport_data TEXT,
+    requesting_authority TEXT
+);
+CREATE TABLE Application (
+    id INTEGER PRIMARY KEY,
+    tour_id INTEGER,
+    client_id INTEGER,
+    application_date DATE,
+    status TEXT, -- 'new', 'sent', 'confirmed', 'rejected'
+    organizer_response TEXT,
+    FOREIGN KEY(tour_id) REFERENCES Tour(id),
+    FOREIGN KEY(client_id) REFERENCES Client(id)
+);
+4. Приложение (Python + C#)
+Python (консоль + sqlite3):
+
+python
+import sqlite3, datetime
+
+def create_app(tour_id, client_data):
+    conn = sqlite3.connect('tourism.db')
+    cur = conn.cursor()
+    cur.execute("INSERT INTO Client (full_name, age, passport_data, requesting_authority) VALUES (?,?,?,?)",
+                (client_data['fio'], client_data['age'], client_data['passport'], client_data['authority']))
+    client_id = cur.lastrowid
+    cur.execute("INSERT INTO Application (tour_id, client_id, application_date, status) VALUES (?,?,?,?)",
+                (tour_id, client_id, datetime.date.today(), 'new'))
+    conn.commit()
+    conn.close()
+
+def export_applications_for_tour(tour_id, filename):
+    conn = sqlite3.connect('tourism.db')
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT a.id, c.full_name, c.age, a.application_date, a.status
+        FROM Application a JOIN Client c ON a.client_id = c.id
+        WHERE a.tour_id = ?
+    """, (tour_id,))
+    rows = cur.fetchall()
+    with open(filename, 'w', encoding='utf-8') as f:
+        for row in rows:
+            f.write(f"Заявка {row[0]}: {row[1]}, возраст {row[2]}, дата {row[3]}, статус {row[4]}\n")
+    conn.close()
+C# (консоль, ADO.NET):
+
+csharp
+using System.Data.Sqlite; // или System.Data.SQLite
+
+static void CreateApplication(int tourId, string fio, int age, string passport, string authority)
+{
+    using var conn = new SqliteConnection("Data Source=tourism.db");
+    conn.Open();
+    var cmd = new SqliteCommand("INSERT INTO Client (full_name, age, passport_data, requesting_authority) VALUES (@fio, @age, @pass, @auth); SELECT last_insert_rowid();", conn);
+    cmd.Parameters.AddWithValue("@fio", fio);
+    cmd.Parameters.AddWithValue("@age", age);
+    cmd.Parameters.AddWithValue("@pass", passport);
+    cmd.Parameters.AddWithValue("@auth", authority);
+    long clientId = (long)cmd.ExecuteScalar();
+    cmd = new SqliteCommand("INSERT INTO Application (tour_id, client_id, application_date, status) VALUES (@tid, @cid, date('now'), 'new')", conn);
+    cmd.Parameters.AddWithValue("@tid", tourId);
+    cmd.Parameters.AddWithValue("@cid", clientId);
+    cmd.ExecuteNonQuery();
+}
+
+static void ExportApplications(int tourId, string filename)
+{
+    using var conn = new SqliteConnection("Data Source=tourism.db");
+    conn.Open();
+    var cmd = new SqliteCommand("SELECT a.id, c.full_name, c.age, a.application_date, a.status FROM Application a JOIN Client c ON a.client_id = c.id WHERE a.tour_id = @tid", conn);
+    cmd.Parameters.AddWithValue("@tid", tourId);
+    using var reader = cmd.ExecuteReader();
+    using var sw = new StreamWriter(filename);
+    while(reader.Read())
+        sw.WriteLine($"Заявка {reader[0]}: {reader[1]}, возраст {reader[2]}, дата {reader[3]}, статус {reader[4]}");
+}
+5. Тест-кейсы
+ID	Действие	Ожидаемый результат
+TC1	Создать заявку с корректными данными	Запись в БД, статус 'new'
+TC2	Выгрузить заявки для тура, где есть заявки	Файл содержит строки с данными
+TC3	Выгрузить для тура без заявок	Файл пуст или нет записей
+TC4	Попытка создать заявку с несуществующим tour_id	Ошибка внешнего ключа

@@ -1,0 +1,113 @@
+Билет №22 (Продуктовый склад – приход товара, список для пополнения, выгрузка XML)
+Предметная область: Товары, поставщики, покупатели, приходные/расходные накладные, инвентаризация.
+
+1. Диаграмма вариантов использования
+Акторы: Кладовщик, Менеджер.
+Варианты использования:
+
+Добавить/изменить/удалить товар
+
+Оформить приход товара (увеличить остаток)
+
+Оформить расход (уменьшить остаток)
+
+Просмотреть инвентаризационную опись
+
+Получить список товаров для пополнения (ниже порога)
+
+Выгрузить список для пополнения в XML
+
+2. Диаграмма последовательности для «Приход товара»
+Кладовщик → Система: ввести данные накладной (поставщик, позиции)
+
+Система → БД: проверить существование товара
+
+Система → БД: для каждой позиции UPDATE Stock SET quantity = quantity + amount
+
+Система → БД: записать приходную накладную
+
+Система → Кладовщик: подтверждение
+
+3. Модель данных
+sql
+CREATE TABLE Product (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    unit TEXT, -- 'шт', 'кг', 'коробка'
+    reorder_threshold INTEGER -- минимальное количество для пополнения
+);
+CREATE TABLE Stock (
+    product_id INTEGER PRIMARY KEY,
+    shelf TEXT, -- место хранения
+    quantity INTEGER,
+    FOREIGN KEY(product_id) REFERENCES Product(id)
+);
+CREATE TABLE Supplier (
+    id INTEGER PRIMARY KEY,
+    name TEXT, address TEXT, phone TEXT
+);
+CREATE TABLE ReceiptNote (
+    id INTEGER PRIMARY KEY,
+    supplier_id INTEGER,
+    receipt_date DATE,
+    FOREIGN KEY(supplier_id) REFERENCES Supplier(id)
+);
+CREATE TABLE ReceiptItem (
+    id INTEGER PRIMARY KEY,
+    receipt_id INTEGER,
+    product_id INTEGER,
+    quantity INTEGER,
+    FOREIGN KEY(receipt_id) REFERENCES ReceiptNote(id),
+    FOREIGN KEY(product_id) REFERENCES Product(id)
+);
+-- аналогично для расходных накладных (Customer, ExpenseNote, ExpenseItem)
+4. Приложение (приход товара, список для пополнения, выгрузка XML)
+Python (XML export):
+
+python
+import xml.etree.ElementTree as ET
+
+def get_products_to_reorder():
+    conn = sqlite3.connect('warehouse.db')
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT p.id, p.name, s.quantity, p.reorder_threshold
+        FROM Product p JOIN Stock s ON p.id = s.product_id
+        WHERE s.quantity <= p.reorder_threshold
+    """)
+    return cur.fetchall()
+
+def export_to_xml(filename):
+    products = get_products_to_reorder()
+    root = ET.Element("ProductsToReorder")
+    for p in products:
+        prod = ET.SubElement(root, "Product", id=str(p[0]))
+        ET.SubElement(prod, "Name").text = p[1]
+        ET.SubElement(prod, "CurrentQuantity").text = str(p[2])
+        ET.SubElement(prod, "Threshold").text = str(p[3])
+    tree = ET.ElementTree(root)
+    tree.write(filename, encoding='utf-8', xml_declaration=True)
+C# (XmlDocument):
+
+csharp
+static void ExportToXml(string filename)
+{
+    var products = GetProductsToReorder();
+    var doc = new XmlDocument();
+    var root = doc.CreateElement("ProductsToReorder");
+    doc.AppendChild(root);
+    foreach(var p in products)
+    {
+        var prod = doc.CreateElement("Product");
+        prod.SetAttribute("id", p.Id.ToString());
+        prod.AppendChild(doc.CreateElement("Name")).InnerText = p.Name;
+        // ...
+        root.AppendChild(prod);
+    }
+    doc.Save(filename);
+}
+5. Тест-кейсы
+| TC1 | Оформить приход нового товара | Stock.quantity увеличивается |
+| TC2 | Список для пополнения: товар с quantity <= threshold | Включается в список |
+| TC3 | Выгрузка XML – файл создаётся, содержит правильные теги | Проверка схемы |
+| TC4 | Приход с несуществующим товаром – ошибка | Внешний ключ |

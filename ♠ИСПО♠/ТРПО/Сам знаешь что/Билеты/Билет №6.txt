@@ -1,0 +1,84 @@
+Билет №6 (Авиакомпания – рейсы, отчёт за период)
+Предметная область: Рейсы, бригады летчиков, типы самолётов, ограничение на назначение бригады (1 раз в 3 суток).
+
+1. Диаграмма вариантов использования
+Акторы: Диспетчер, Пилот (как член бригады), Система.
+Варианты использования:
+
+Создать рейс
+
+Назначить бригаду
+
+Проверить доступность бригады (ограничение)
+
+Отклонить заявку
+
+Сформировать отчёт по выполненным рейсам за период
+
+2. Диаграмма последовательности для «Отчёт по выполненным рейсам за период»
+Диспетчер → Система: запросить отчёт(дата_начала, дата_конца)
+
+Система → БД: SELECT рейсов за период с JOIN бригад и самолётов
+
+БД → Система: набор данных
+
+Система → Диспетчер: вывести отчёт (таблица/файл)
+
+3. Модель данных
+sql
+CREATE TABLE AircraftType (id INTEGER PRIMARY KEY, name TEXT);
+CREATE TABLE Crew (
+    id INTEGER PRIMARY KEY,
+    name TEXT,
+    aircraft_type_id INTEGER, -- специализация
+    FOREIGN KEY(aircraft_type_id) REFERENCES AircraftType(id)
+);
+CREATE TABLE Flight (
+    id INTEGER PRIMARY KEY,
+    departure TEXT,
+    destination TEXT,
+    flight_date DATE,
+    flight_time TIME,
+    aircraft_type_id INTEGER,
+    crew_id INTEGER, -- назначенная бригада
+    status TEXT, -- 'planned', 'completed', 'rejected'
+    FOREIGN KEY(aircraft_type_id) REFERENCES AircraftType(id),
+    FOREIGN KEY(crew_id) REFERENCES Crew(id)
+);
+-- Журнал назначений бригад для проверки "не чаще 1 раза в 3 суток"
+CREATE TABLE CrewAssignment (
+    id INTEGER PRIMARY KEY,
+    crew_id INTEGER,
+    flight_date DATE,
+    FOREIGN KEY(crew_id) REFERENCES Crew(id)
+);
+4. Приложение (просмотр и редактирование рейсов за период, полная информация по рейсу)
+Python:
+
+python
+def get_flights_period(start_date, end_date):
+    conn = sqlite3.connect('avia.db')
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT f.id, f.departure, f.destination, f.flight_date, c.name, at.name, f.status
+        FROM Flight f
+        LEFT JOIN Crew c ON f.crew_id = c.id
+        LEFT JOIN AircraftType at ON f.aircraft_type_id = at.id
+        WHERE f.flight_date BETWEEN ? AND ?
+    """, (start_date, end_date))
+    return cur.fetchall()
+
+def get_flight_details(flight_id):
+    cur.execute("SELECT * FROM Flight WHERE id=?", (flight_id,))
+    flight = cur.fetchone()
+    cur.execute("SELECT * FROM CrewAssignment WHERE crew_id=? AND flight_date=?", (flight[5], flight[3]))
+    # ... собрать детали
+    return details
+C#: аналогично, с использованием SqliteCommand и DataTable.
+
+5. Тест-кейсы
+| TC1 | Добавить рейс с корректными данными | Рейс появляется в БД |
+| TC2 | Получить отчёт за период, в котором есть рейсы | Список не пуст, содержит все поля |
+| TC3 | Получить отчёт за пустой период | Пустой результат |
+| TC4 | Редактировать рейс (изменить пункт назначения) | Данные обновляются |
+| TC5 | Назначить бригаду, которая уже летала менее 3 суток назад | Ошибка валидации (не реализовано в приложении, но должно быть правило) |

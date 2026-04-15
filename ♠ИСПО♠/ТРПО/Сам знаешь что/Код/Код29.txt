@@ -1,0 +1,132 @@
+Билет №29 (Служба занятости – постановка на учёт, подбор вакансий, XML)
+Python (ticket29.py)
+python
+import sqlite3
+from datetime import datetime, timedelta
+import xml.etree.ElementTree as ET
+
+def get_min_wage():
+    return 15000  # условно
+
+def register_unemployed(data):
+    with sqlite3.connect('employment.db') as conn:
+        cur = conn.cursor()
+        if data['is_first_job']:
+            benefit = get_min_wage()
+            expiry = datetime.now().date() + timedelta(days=365)
+        else:
+            benefit = data['last_salary'] * 0.8
+            expiry = datetime.now().date() + timedelta(days=90)
+        cur.execute('''
+            INSERT INTO Unemployed (
+                fio, reg_address, fact_address, phone, family_status, family_composition,
+                education, total_experience, last_job_place, last_job_position,
+                last_salary, is_first_job, desired_activity, desired_min_salary,
+                desired_fulltime, registration_date, benefit_amount, benefit_expiry_date
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+        ''', (
+            data['fio'], data['reg_address'], data['fact_address'], data['phone'],
+            data['family_status'], data['family_composition'], data['education'],
+            data['total_experience'], data['last_job_place'], data['last_job_position'],
+            data['last_salary'], data['is_first_job'], data['desired_activity'],
+            data['desired_min_salary'], data['desired_fulltime'],
+            datetime.now().date(), benefit, expiry
+        ))
+        return cur.lastrowid
+
+def find_matching_vacancies(unemployed_id):
+    with sqlite3.connect('employment.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT education, total_experience, desired_min_salary, desired_fulltime FROM Unemployed WHERE id=?', (unemployed_id,))
+        u = cur.fetchone()
+        education, exp, min_salary, fulltime = u
+        cur.execute('''
+            SELECT * FROM Vacancy
+            WHERE (req_education IS NULL OR req_education <= ?)
+              AND (req_experience_total IS NULL OR req_experience_total <= ?)
+              AND salary >= ?
+              AND (fulltime = ? OR ? = 0)
+        ''', (education, exp, min_salary, fulltime, fulltime))
+        return cur.fetchall()
+
+def export_vacancies_to_xml(unemployed_id, filename):
+    vacancies = find_matching_vacancies(unemployed_id)
+    root = ET.Element("Vacancies")
+    root.set("unemployed_id", str(unemployed_id))
+    for v in vacancies:
+        vac = ET.SubElement(root, "Vacancy")
+        ET.SubElement(vac, "Company").text = v[1]
+        ET.SubElement(vac, "Position").text = v[4]
+        ET.SubElement(vac, "Salary").text = str(v[11])
+    tree = ET.ElementTree(root)
+    tree.write(filename, encoding='utf-8', xml_declaration=True)
+C# (Ticket29.cs)
+csharp
+using System;
+using System.Data.SQLite;
+using System.Xml;
+using System.Collections.Generic;
+
+class Ticket29
+{
+    static string connStr = "Data Source=employment.db";
+    static decimal MinWage = 15000m;
+
+    static int RegisterUnemployed(Dictionary<string, object> data)
+    {
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        decimal benefit = (bool)data["is_first_job"] ? MinWage : (decimal)data["last_salary"] * 0.8m;
+        DateTime expiry = DateTime.Now.AddDays((bool)data["is_first_job"] ? 365 : 90);
+        var cmd = new SQLiteCommand(@"INSERT INTO Unemployed (fio, reg_address, fact_address, phone, family_status, family_composition, education, total_experience, last_job_place, last_job_position, last_salary, is_first_job, desired_activity, desired_min_salary, desired_fulltime, registration_date, benefit_amount, benefit_expiry_date) VALUES (@fio, @reg, @fact, @phone, @fs, @fc, @edu, @exp, @ljp, @ljpos, @ls, @first, @da, @dms, @dft, date('now'), @ben, @expd); SELECT last_insert_rowid();", conn);
+        // Добавление параметров...
+        return Convert.ToInt32(cmd.ExecuteScalar());
+    }
+
+    static List<object[]> FindMatchingVacancies(int unemployedId)
+    {
+        var result = new List<object[]>();
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("SELECT education, total_experience, desired_min_salary, desired_fulltime FROM Unemployed WHERE id=@id", conn);
+        cmd.Parameters.AddWithValue("@id", unemployedId);
+        using var reader = cmd.ExecuteReader();
+        reader.Read();
+        string education = reader[0].ToString();
+        int exp = Convert.ToInt32(reader[1]);
+        decimal minSalary = Convert.ToDecimal(reader[2]);
+        int fulltime = Convert.ToInt32(reader[3]);
+        reader.Close();
+        cmd = new SQLiteCommand("SELECT * FROM Vacancy WHERE (@edu IS NULL OR req_education <= @edu) AND (@exp IS NULL OR req_experience_total <= @exp) AND salary >= @sal AND (fulltime = @ft OR @ft = 0)", conn);
+        cmd.Parameters.AddWithValue("@edu", education);
+        cmd.Parameters.AddWithValue("@exp", exp);
+        cmd.Parameters.AddWithValue("@sal", minSalary);
+        cmd.Parameters.AddWithValue("@ft", fulltime);
+        using var reader2 = cmd.ExecuteReader();
+        while (reader2.Read())
+        {
+            var row = new object[reader2.FieldCount];
+            reader2.GetValues(row);
+            result.Add(row);
+        }
+        return result;
+    }
+
+    static void ExportToXml(int unemployedId, string filename)
+    {
+        var vacancies = FindMatchingVacancies(unemployedId);
+        var doc = new XmlDocument();
+        var root = doc.CreateElement("Vacancies");
+        root.SetAttribute("unemployed_id", unemployedId.ToString());
+        doc.AppendChild(root);
+        foreach (var v in vacancies)
+        {
+            var vac = doc.CreateElement("Vacancy");
+            vac.AppendChild(doc.CreateElement("Company")).InnerText = v[1].ToString();
+            vac.AppendChild(doc.CreateElement("Position")).InnerText = v[4].ToString();
+            vac.AppendChild(doc.CreateElement("Salary")).InnerText = v[11].ToString();
+            root.AppendChild(vac);
+        }
+        doc.Save(filename);
+    }
+}

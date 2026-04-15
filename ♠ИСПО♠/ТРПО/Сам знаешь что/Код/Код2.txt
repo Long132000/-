@@ -1,0 +1,90 @@
+Билет №2 (Турфирма – CRUD туров, фильтрация)
+Python (ticket2.py)
+python
+import sqlite3
+
+def add_tour(name, country_id, start, end, seats, manager_id):
+    conn = sqlite3.connect('tourism.db')
+    cur = conn.cursor()
+    cur.execute('''INSERT INTO Tour (name, country_id, start_date, end_date, seats, manager_id)
+                   VALUES (?,?,?,?,?,?)''',
+                (name, country_id, start, end, seats, manager_id))
+    conn.commit()
+    conn.close()
+
+def delete_tour(tour_id):
+    conn = sqlite3.connect('tourism.db')
+    cur = conn.cursor()
+    cur.execute("DELETE FROM Tour WHERE id=?", (tour_id,))
+    conn.commit()
+    conn.close()
+
+def update_tour(tour_id, **kwargs):
+    conn = sqlite3.connect('tourism.db')
+    cur = conn.cursor()
+    for key, value in kwargs.items():
+        cur.execute(f"UPDATE Tour SET {key}=? WHERE id=?", (value, tour_id))
+    conn.commit()
+    conn.close()
+
+def filter_tours(country_name=None, start_from=None, start_to=None):
+    conn = sqlite3.connect('tourism.db')
+    cur = conn.cursor()
+    query = "SELECT t.*, c.name as country FROM Tour t JOIN Country c ON t.country_id = c.id WHERE 1=1"
+    params = []
+    if country_name:
+        query += " AND c.name = ?"
+        params.append(country_name)
+    if start_from:
+        query += " AND t.start_date >= ?"
+        params.append(start_from)
+    if start_to:
+        query += " AND t.start_date <= ?"
+        params.append(start_to)
+    cur.execute(query, params)
+    result = cur.fetchall()
+    conn.close()
+    return result
+C# (Ticket2.cs)
+csharp
+using System;
+using System.Data.SQLite;
+using System.Collections.Generic;
+
+class Ticket2
+{
+    static string connStr = "Data Source=tourism.db";
+
+    static void AddTour(string name, int countryId, DateTime start, DateTime end, int seats, int managerId)
+    {
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("INSERT INTO Tour (name, country_id, start_date, end_date, seats, manager_id) VALUES (@n, @cid, @s, @e, @seats, @mid)", conn);
+        cmd.Parameters.AddWithValue("@n", name);
+        cmd.Parameters.AddWithValue("@cid", countryId);
+        cmd.Parameters.AddWithValue("@s", start.ToString("yyyy-MM-dd"));
+        cmd.Parameters.AddWithValue("@e", end.ToString("yyyy-MM-dd"));
+        cmd.Parameters.AddWithValue("@seats", seats);
+        cmd.Parameters.AddWithValue("@mid", managerId);
+        cmd.ExecuteNonQuery();
+    }
+
+    static List<object[]> FilterTours(string countryName = null, DateTime? from = null, DateTime? to = null)
+    {
+        var result = new List<object[]>();
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("SELECT t.*, c.name FROM Tour t JOIN Country c ON t.country_id = c.id WHERE (@cn IS NULL OR c.name = @cn) AND (@from IS NULL OR t.start_date >= @from) AND (@to IS NULL OR t.start_date <= @to)", conn);
+        cmd.Parameters.AddWithValue("@cn", (object)countryName ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("@from", from.HasValue ? from.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@to", to.HasValue ? to.Value.ToString("yyyy-MM-dd") : (object)DBNull.Value);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            var row = new object[reader.FieldCount];
+            reader.GetValues(row);
+            result.Add(row);
+        }
+        return result;
+    }
+}

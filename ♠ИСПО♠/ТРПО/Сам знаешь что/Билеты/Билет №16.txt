@@ -1,0 +1,82 @@
+Билет №16 (Банк – кредитование, платежи, остаток)
+Предметная область: Кредитные заявки, платежи, расчёт оставшейся суммы.
+
+1. Диаграмма вариантов использования
+Акторы: Клиент, Референт, Инспектор.
+Варианты использования:
+
+Подать заявку на кредит
+
+Анализировать заявку (проверка документов)
+
+Запросить кредитную историю
+
+Одобрить/отказать
+
+Оформить кредит
+
+Внести платеж
+
+Рассчитать остаток
+
+2. Диаграмма деятельности для «Оформление заявки на кредит» (вместо последовательности)
+Начало → Заполнение формы → Приложение документов → Проверка референтом → (ошибки → возврат) → Запрос кредитной истории → Проверка инспектором → (одобрено → оформление) / (отказано) → Конец.
+
+3. Модель данных
+sql
+CREATE TABLE Client (
+    id INTEGER PRIMARY KEY,
+    type TEXT CHECK(type IN ('individual','organization')),
+    name TEXT, inn TEXT, ...
+);
+CREATE TABLE CreditApplication (
+    id INTEGER PRIMARY KEY,
+    client_id INTEGER,
+    amount DECIMAL(10,2),
+    term_months INTEGER,
+    interest_rate DECIMAL(5,2),
+    status TEXT, -- 'new','approved','rejected','issued','closed'
+    application_date DATE,
+    decision_date DATE
+);
+CREATE TABLE CreditContract (
+    id INTEGER PRIMARY KEY,
+    application_id INTEGER,
+    issue_date DATE,
+    total_amount DECIMAL(10,2),
+    monthly_payment DECIMAL(10,2)
+);
+CREATE TABLE Payment (
+    id INTEGER PRIMARY KEY,
+    contract_id INTEGER,
+    payment_date DATE,
+    amount DECIMAL(10,2),
+    remaining_debt DECIMAL(10,2) -- можно вычислять
+);
+4. Приложение (оформление обработки заявки, внесение платежей, расчёт остатка)
+Python:
+
+python
+def add_payment(contract_id, amount, date):
+    conn = sqlite3.connect('bank.db')
+    cur = conn.cursor()
+    # получить текущий остаток
+    cur.execute("SELECT remaining_debt FROM Payment WHERE contract_id=? ORDER BY payment_date DESC LIMIT 1", (contract_id,))
+    row = cur.fetchone()
+    current_debt = row[0] if row else get_initial_debt(contract_id)
+    new_debt = current_debt - amount
+    cur.execute("INSERT INTO Payment (contract_id, payment_date, amount, remaining_debt) VALUES (?,?,?,?)",
+                (contract_id, date, amount, new_debt))
+    conn.commit()
+    if new_debt <= 0:
+        cur.execute("UPDATE CreditContract SET status='closed' WHERE id=?", (contract_id,))
+        conn.commit()
+    conn.close()
+    return new_debt
+C#: аналогично.
+
+5. Тест-кейсы
+| TC1 | Создать заявку, одобрить, выдать кредит | Статус меняется на 'issued' |
+| TC2 | Внести платёж, превышающий остаток | Остаток становится 0, статус 'closed' |
+| TC3 | Рассчитать остаток после нескольких платежей | Остаток = сумма кредита - сумма платежей |
+| TC4 | Платёж за указанный месяц | Выбрать все платежи за месяц |

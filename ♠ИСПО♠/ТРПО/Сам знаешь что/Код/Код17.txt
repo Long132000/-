@@ -1,0 +1,96 @@
+Билет №17 (Начисление зарплаты – расчёт, выгрузка XML)
+Python (ticket17.py)
+python
+import sqlite3
+import xml.etree.ElementTree as ET
+
+def calculate_salary(employee_id, year_month):
+    with sqlite3.connect('salary.db') as conn:
+        cur = conn.cursor()
+        cur.execute("SELECT hourly_rate, bonus_percent FROM Employee WHERE id=?", (employee_id,))
+        rate, bonus = cur.fetchone()
+        cur.execute("SELECT SUM(hours) FROM TimeCard WHERE employee_id=? AND strftime('%Y-%m', work_date)=?", 
+                    (employee_id, year_month))
+        total_hours = cur.fetchone()[0] or 0
+        salary = total_hours * rate * (1 + bonus / 100)
+        cur.execute('''INSERT OR REPLACE INTO Payroll (employee_id, year_month, total_hours, calculated_salary)
+                       VALUES (?,?,?,?)''', (employee_id, year_month, total_hours, salary))
+        conn.commit()
+        return salary
+
+def export_salary_to_xml(employee_id, year_month, filename):
+    with sqlite3.connect('salary.db') as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            SELECT e.last_name, e.first_name, d.name, p.total_hours, p.calculated_salary
+            FROM Employee e
+            JOIN Department d ON e.department_id = d.id
+            JOIN Payroll p ON e.id = p.employee_id
+            WHERE e.id=? AND p.year_month=?
+        ''', (employee_id, year_month))
+        emp = cur.fetchone()
+        if not emp:
+            raise ValueError("Данные не найдены")
+        root = ET.Element("SalaryReport")
+        ET.SubElement(root, "Employee").text = f"{emp[0]} {emp[1]}"
+        ET.SubElement(root, "Department").text = emp[2]
+        ET.SubElement(root, "Hours").text = str(emp[3])
+        ET.SubElement(root, "Salary").text = str(emp[4])
+        ET.SubElement(root, "Month").text = year_month
+        tree = ET.ElementTree(root)
+        tree.write(filename, encoding='utf-8', xml_declaration=True)
+C# (Ticket17.cs)
+csharp
+using System;
+using System.Data.SQLite;
+using System.Xml;
+
+class Ticket17
+{
+    static string connStr = "Data Source=salary.db";
+
+    static decimal CalculateSalary(int employeeId, string yearMonth)
+    {
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("SELECT hourly_rate, bonus_percent FROM Employee WHERE id=@id", conn);
+        cmd.Parameters.AddWithValue("@id", employeeId);
+        using var reader = cmd.ExecuteReader();
+        reader.Read();
+        decimal rate = reader.GetDecimal(0);
+        int bonus = reader.GetInt32(1);
+        reader.Close();
+        cmd = new SQLiteCommand("SELECT COALESCE(SUM(hours), 0) FROM TimeCard WHERE employee_id=@id AND strftime('%Y-%m', work_date)=@ym", conn);
+        cmd.Parameters.AddWithValue("@id", employeeId);
+        cmd.Parameters.AddWithValue("@ym", yearMonth);
+        decimal totalHours = Convert.ToDecimal(cmd.ExecuteScalar());
+        decimal salary = totalHours * rate * (1 + bonus / 100m);
+        cmd = new SQLiteCommand("INSERT OR REPLACE INTO Payroll (employee_id, year_month, total_hours, calculated_salary) VALUES (@id, @ym, @hours, @sal)", conn);
+        cmd.Parameters.AddWithValue("@id", employeeId);
+        cmd.Parameters.AddWithValue("@ym", yearMonth);
+        cmd.Parameters.AddWithValue("@hours", totalHours);
+        cmd.Parameters.AddWithValue("@sal", salary);
+        cmd.ExecuteNonQuery();
+        return salary;
+    }
+
+    static void ExportToXml(int employeeId, string yearMonth, string filename)
+    {
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("SELECT e.last_name, e.first_name, d.name, p.total_hours, p.calculated_salary FROM Employee e JOIN Department d ON e.department_id = d.id JOIN Payroll p ON e.id = p.employee_id WHERE e.id=@id AND p.year_month=@ym", conn);
+        cmd.Parameters.AddWithValue("@id", employeeId);
+        cmd.Parameters.AddWithValue("@ym", yearMonth);
+        using var reader = cmd.ExecuteReader();
+        if (!reader.Read()) throw new Exception("Данные не найдены");
+        var doc = new XmlDocument();
+        var root = doc.CreateElement("SalaryReport");
+        doc.AppendChild(root);
+        root.AppendChild(doc.CreateElement("Employee")).InnerText = $"{reader[0]} {reader[1]}";
+        root.AppendChild(doc.CreateElement("Department")).InnerText = reader[2].ToString();
+        root.AppendChild(doc.CreateElement("Hours")).InnerText = reader[3].ToString();
+        root.AppendChild(doc.CreateElement("Salary")).InnerText = reader[4].ToString();
+        root.AppendChild(doc.CreateElement("Month")).InnerText = yearMonth;
+        doc.Save(filename);
+    }
+}

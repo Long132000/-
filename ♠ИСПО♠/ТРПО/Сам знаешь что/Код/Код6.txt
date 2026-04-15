@@ -1,0 +1,96 @@
+Билет №6 (Авиакомпания – рейсы, отчёт за период)
+Python (ticket6.py)
+python
+import sqlite3
+
+def init_db():
+    conn = sqlite3.connect('avia.db')
+    cur = conn.cursor()
+    cur.executescript('''
+        CREATE TABLE IF NOT EXISTS AircraftType (id INTEGER PRIMARY KEY, name TEXT);
+        CREATE TABLE IF NOT EXISTS Crew (id INTEGER PRIMARY KEY, name TEXT, aircraft_type_id INTEGER);
+        CREATE TABLE IF NOT EXISTS Flight (
+            id INTEGER PRIMARY KEY, departure TEXT, destination TEXT,
+            flight_date DATE, flight_time TIME, aircraft_type_id INTEGER,
+            crew_id INTEGER, status TEXT
+        );
+    ''')
+    conn.commit()
+    conn.close()
+
+def get_flights_by_period(start_date, end_date):
+    conn = sqlite3.connect('avia.db')
+    cur = conn.cursor()
+    cur.execute('''
+        SELECT f.id, f.departure, f.destination, f.flight_date, c.name, at.name, f.status
+        FROM Flight f
+        LEFT JOIN Crew c ON f.crew_id = c.id
+        LEFT JOIN AircraftType at ON f.aircraft_type_id = at.id
+        WHERE f.flight_date BETWEEN ? AND ?
+    ''', (start_date, end_date))
+    result = cur.fetchall()
+    conn.close()
+    return result
+
+def get_flight_details(flight_id):
+    conn = sqlite3.connect('avia.db')
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM Flight WHERE id=?", (flight_id,))
+    flight = cur.fetchone()
+    conn.close()
+    return flight
+
+def update_flight(flight_id, **kwargs):
+    conn = sqlite3.connect('avia.db')
+    cur = conn.cursor()
+    for key, value in kwargs.items():
+        cur.execute(f"UPDATE Flight SET {key}=? WHERE id=?", (value, flight_id))
+    conn.commit()
+    conn.close()
+C# (Ticket6.cs)
+csharp
+using System;
+using System.Data.SQLite;
+using System.Collections.Generic;
+
+class Ticket6
+{
+    static string connStr = "Data Source=avia.db";
+
+    static List<object[]> GetFlightsByPeriod(DateTime start, DateTime end)
+    {
+        var result = new List<object[]>();
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand(@"SELECT f.id, f.departure, f.destination, f.flight_date, c.name, at.name, f.status
+                                      FROM Flight f LEFT JOIN Crew c ON f.crew_id = c.id
+                                      LEFT JOIN AircraftType at ON f.aircraft_type_id = at.id
+                                      WHERE f.flight_date BETWEEN @s AND @e", conn);
+        cmd.Parameters.AddWithValue("@s", start.ToString("yyyy-MM-dd"));
+        cmd.Parameters.AddWithValue("@e", end.ToString("yyyy-MM-dd"));
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            var row = new object[reader.FieldCount];
+            reader.GetValues(row);
+            result.Add(row);
+        }
+        return result;
+    }
+
+    static object[] GetFlightDetails(int flightId)
+    {
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("SELECT * FROM Flight WHERE id=@id", conn);
+        cmd.Parameters.AddWithValue("@id", flightId);
+        using var reader = cmd.ExecuteReader();
+        if (reader.Read())
+        {
+            var row = new object[reader.FieldCount];
+            reader.GetValues(row);
+            return row;
+        }
+        return null;
+    }
+}

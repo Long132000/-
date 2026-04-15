@@ -1,0 +1,98 @@
+Билет №30 (Служба занятости – подбор вакансий, вакансии без кандидатов)
+Python (ticket30.py)
+python
+import sqlite3
+from datetime import datetime, timedelta
+
+def find_vacancies_for_unemployed(unemployed_id):
+    with sqlite3.connect('employment.db') as conn:
+        cur = conn.cursor()
+        cur.execute('SELECT education, total_experience, desired_min_salary, desired_fulltime FROM Unemployed WHERE id=?', (unemployed_id,))
+        u = cur.fetchone()
+        if not u:
+            return []
+        education, exp, min_salary, fulltime = u
+        cur.execute('''
+            SELECT * FROM Vacancy
+            WHERE (req_education IS NULL OR req_education <= ?)
+              AND (req_experience_total IS NULL OR req_experience_total <= ?)
+              AND salary >= ?
+              AND (fulltime = ? OR ? = 0)
+        ''', (education, exp, min_salary, fulltime, fulltime))
+        return cur.fetchall()
+
+def find_vacancies_without_candidates(days=90):
+    with sqlite3.connect('employment.db') as conn:
+        cur = conn.cursor()
+        cur.execute('''
+            SELECT v.* FROM Vacancy v
+            WHERE NOT EXISTS (
+                SELECT 1 FROM JobOffer jo WHERE jo.vacancy_id = v.id
+            ) AND julianday('now') - julianday(v.created_date) > ?
+        ''', (days,))
+        return cur.fetchall()
+
+def update_vacancy_requirements(vacancy_id, new_req_education=None, new_req_experience=None):
+    with sqlite3.connect('employment.db') as conn:
+        cur = conn.cursor()
+        if new_req_education:
+            cur.execute("UPDATE Vacancy SET req_education=? WHERE id=?", (new_req_education, vacancy_id))
+        if new_req_experience:
+            cur.execute("UPDATE Vacancy SET req_experience_total=? WHERE id=?", (new_req_experience, vacancy_id))
+        conn.commit()
+C# (Ticket30.cs)
+csharp
+using System;
+using System.Data.SQLite;
+using System.Collections.Generic;
+
+class Ticket30
+{
+    static string connStr = "Data Source=employment.db";
+
+    static List<object[]> FindVacanciesForUnemployed(int unemployedId)
+    {
+        var result = new List<object[]>();
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand("SELECT education, total_experience, desired_min_salary, desired_fulltime FROM Unemployed WHERE id=@id", conn);
+        cmd.Parameters.AddWithValue("@id", unemployedId);
+        using var reader = cmd.ExecuteReader();
+        if (!reader.Read()) return result;
+        string education = reader[0].ToString();
+        int exp = Convert.ToInt32(reader[1]);
+        decimal minSalary = Convert.ToDecimal(reader[2]);
+        int fulltime = Convert.ToInt32(reader[3]);
+        reader.Close();
+        cmd = new SQLiteCommand("SELECT * FROM Vacancy WHERE (@edu IS NULL OR req_education <= @edu) AND (@exp IS NULL OR req_experience_total <= @exp) AND salary >= @sal AND (fulltime = @ft OR @ft = 0)", conn);
+        cmd.Parameters.AddWithValue("@edu", education);
+        cmd.Parameters.AddWithValue("@exp", exp);
+        cmd.Parameters.AddWithValue("@sal", minSalary);
+        cmd.Parameters.AddWithValue("@ft", fulltime);
+        using var reader2 = cmd.ExecuteReader();
+        while (reader2.Read())
+        {
+            var row = new object[reader2.FieldCount];
+            reader2.GetValues(row);
+            result.Add(row);
+        }
+        return result;
+    }
+
+    static List<object[]> FindVacanciesWithoutCandidates(int days = 90)
+    {
+        var result = new List<object[]>();
+        using var conn = new SQLiteConnection(connStr);
+        conn.Open();
+        var cmd = new SQLiteCommand(@"SELECT v.* FROM Vacancy v WHERE NOT EXISTS (SELECT 1 FROM JobOffer jo WHERE jo.vacancy_id = v.id) AND julianday('now') - julianday(v.created_date) > @days", conn);
+        cmd.Parameters.AddWithValue("@days", days);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            var row = new object[reader.FieldCount];
+            reader.GetValues(row);
+            result.Add(row);
+        }
+        return result;
+    }
+}
