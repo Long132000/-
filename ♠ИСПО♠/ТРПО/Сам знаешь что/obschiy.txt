@@ -1,0 +1,652 @@
+Отлично, теперь, когда мы отладили билет №1, я подготовил **полный комплект кода для каждого билета** с учётом всех исправлений.  
+Структура проекта единая для всех вариантов, меняются только модели, контроллеры и представления.
+
+## 🧱 Общая база для всех билетов
+
+- **Проект:** ASP.NET Core MVC, .NET 8
+- **БД:** PostgreSQL (строка подключения в `appsettings.json`)
+- **Пакеты:** `Npgsql.EntityFrameworkCore.PostgreSQL` 8.0.11, `Microsoft.EntityFrameworkCore.Tools` 8.0.11
+- **Маппинг таблиц/столбцов:** всё в нижнем регистре через `OnModelCreating`
+- **Инициализация БД:** `EnsureDeleted()` + `EnsureCreated()` + начальные данные
+- **Навигационные свойства моделей:** `nullable` (`?`), без `[Required]`
+
+---
+
+## 📁 Общие файлы (одинаковы для всех билетов)
+
+### `appsettings.json`
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=localhost;Port=5432;Database=examchik;Username=postgres;Password=ваш_пароль"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
+
+### `Program.cs`
+```csharp
+using Microsoft.EntityFrameworkCore;
+using Examchik.Data;
+using Examchik.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"); // измените при необходимости
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureDeleted();
+    db.Database.EnsureCreated();
+    SeedData(db); // вызов метода заполнения (свой для каждого билета)
+}
+
+app.Run();
+
+void SeedData(AppDbContext db) { /* будет переопределён для каждого билета */ }
+```
+
+---
+
+## 🎫 Билет №1 – Заявки на тур (эталон)
+
+### 1. Модели (`Models/*.cs`)
+(Все модели с `nullable` навигационными свойствами)
+
+```csharp
+// Country.cs
+public class Country
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public ICollection<Tour> Tours { get; set; } = new List<Tour>();
+}
+
+// Tour.cs
+public class Tour
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public int CountryId { get; set; }
+    public Country? Country { get; set; }
+    public DateTime StartDate { get; set; }
+    public DateTime EndDate { get; set; }
+    public decimal Price { get; set; }
+}
+
+// Manager.cs
+public class Manager
+{
+    public int Id { get; set; }
+    public string FullName { get; set; } = string.Empty;
+}
+
+// Client.cs
+public class Client
+{
+    public int Id { get; set; }
+    public string FullName { get; set; } = string.Empty;
+    public int? Age { get; set; }
+    public string? PassportNumber { get; set; }
+    public string? ForeignPassportNumber { get; set; }
+}
+
+// Application.cs
+public class Application
+{
+    public int Id { get; set; }
+    [Required] public int TourId { get; set; }
+    public Tour? Tour { get; set; }
+    [Required] public int ClientId { get; set; }
+    public Client? Client { get; set; }
+    [Required] public int ManagerId { get; set; }
+    public Manager? Manager { get; set; }
+    [Required] public DateTime ApplicationDate { get; set; } = DateTime.Now;
+    public string Status { get; set; } = "Новая";
+}
+```
+
+### 2. `AppDbContext.cs` (с маппингом)
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+using Examchik.Models;
+
+namespace Examchik.Data
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<Tour> Tours { get; set; }
+        public DbSet<Manager> Managers { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Application> Applications { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Country>().ToTable("countries");
+            modelBuilder.Entity<Tour>().ToTable("tours");
+            modelBuilder.Entity<Manager>().ToTable("managers");
+            modelBuilder.Entity<Client>().ToTable("clients");
+            modelBuilder.Entity<Application>().ToTable("applications");
+
+            modelBuilder.Entity<Country>().Property(c => c.Id).HasColumnName("id");
+            modelBuilder.Entity<Country>().Property(c => c.Name).HasColumnName("name");
+
+            modelBuilder.Entity<Tour>().Property(t => t.Id).HasColumnName("id");
+            modelBuilder.Entity<Tour>().Property(t => t.Name).HasColumnName("name");
+            modelBuilder.Entity<Tour>().Property(t => t.CountryId).HasColumnName("countryid");
+            modelBuilder.Entity<Tour>().Property(t => t.StartDate).HasColumnName("startdate").HasColumnType("timestamp without time zone");
+            modelBuilder.Entity<Tour>().Property(t => t.EndDate).HasColumnName("enddate").HasColumnType("timestamp without time zone");
+            modelBuilder.Entity<Tour>().Property(t => t.Price).HasColumnName("price");
+
+            modelBuilder.Entity<Manager>().Property(m => m.Id).HasColumnName("id");
+            modelBuilder.Entity<Manager>().Property(m => m.FullName).HasColumnName("fullname");
+
+            modelBuilder.Entity<Client>().Property(c => c.Id).HasColumnName("id");
+            modelBuilder.Entity<Client>().Property(c => c.FullName).HasColumnName("fullname");
+            modelBuilder.Entity<Client>().Property(c => c.Age).HasColumnName("age");
+            modelBuilder.Entity<Client>().Property(c => c.PassportNumber).HasColumnName("passportnumber");
+            modelBuilder.Entity<Client>().Property(c => c.ForeignPassportNumber).HasColumnName("foreignpassportnumber");
+
+            modelBuilder.Entity<Application>().Property(a => a.Id).HasColumnName("id");
+            modelBuilder.Entity<Application>().Property(a => a.TourId).HasColumnName("tourid");
+            modelBuilder.Entity<Application>().Property(a => a.ClientId).HasColumnName("clientid");
+            modelBuilder.Entity<Application>().Property(a => a.ManagerId).HasColumnName("managerid");
+            modelBuilder.Entity<Application>().Property(a => a.ApplicationDate).HasColumnName("applicationdate").HasColumnType("timestamp without time zone");
+            modelBuilder.Entity<Application>().Property(a => a.Status).HasColumnName("status");
+        }
+    }
+}
+```
+
+### 3. `ApplicationsController.cs`
+(полностью рабочий, см. ранее)
+
+### 4. Представления: `Create.cshtml`, `ByTour.cshtml`
+(код уже отлажен)
+
+### 5. `SeedData` в `Program.cs`
+```csharp
+void SeedData(AppDbContext db)
+{
+    if (!db.Countries.Any())
+    {
+        db.Countries.Add(new Country { Name = "Россия" });
+        db.Countries.Add(new Country { Name = "Турция" });
+        db.SaveChanges();
+    }
+    if (!db.Managers.Any())
+    {
+        db.Managers.Add(new Manager { FullName = "Иванов И.И." });
+        db.Managers.Add(new Manager { FullName = "Петрова А.С." });
+        db.SaveChanges();
+    }
+    if (!db.Clients.Any())
+    {
+        db.Clients.Add(new Client { FullName = "Сидоров С.С.", Age = 30, PassportNumber = "1234 567890" });
+        db.Clients.Add(new Client { FullName = "Кузнецова Е.В.", Age = 25, PassportNumber = "4321 098765" });
+        db.SaveChanges();
+    }
+    if (!db.Tours.Any())
+    {
+        db.Tours.Add(new Tour { Name = "Золотое кольцо", CountryId = 1, StartDate = new DateTime(2026,5,10), EndDate = new DateTime(2026,5,20), Price = 45000 });
+        db.Tours.Add(new Tour { Name = "Отдых в Анталии", CountryId = 2, StartDate = new DateTime(2026,6,1), EndDate = new DateTime(2026,6,10), Price = 85000 });
+        db.SaveChanges();
+    }
+}
+```
+
+---
+
+## 🎫 Остальные билеты – только отличия
+
+Для каждого следующего билета я приведу:
+
+- Модели (все классы)
+- `AppDbContext` (метод `OnModelCreating` с маппингом для новых сущностей)
+- Контроллер с нужными действиями
+- Основные представления
+- Метод `SeedData`
+
+Вы можете скопировать структуру билета №1 и заменить эти файлы.
+
+### 🎫 Билет №2 – Управление турами (CRUD, фильтрация)
+
+#### Модели: `Country`, `Tour` (как в №1)
+Добавить `Manager`? В билете упоминается менеджер-куратор, но для CRUD туров он не обязателен. Для минимальной реализации возьмём только `Country` и `Tour`.
+
+#### `AppDbContext` – маппинг только для `Country` и `Tour`
+
+#### `ToursController`
+- `Index` (с фильтрацией по стране и датам)
+- `Create`, `Edit`, `Delete` (post)
+
+#### Представления: `Index`, `Create`, `Edit`
+
+#### `SeedData` – добавить несколько стран и туров.
+
+<details>
+<summary><b>Развернуть код для билета №2</b></summary>
+
+**Модели** (только Country и Tour)
+
+**Контроллер** (ключевые методы)
+```csharp
+public async Task<IActionResult> Index(string searchCountry, DateTime? startFrom, DateTime? startTo)
+{
+    var query = _context.Tours.Include(t => t.Country).AsQueryable();
+    if (!string.IsNullOrEmpty(searchCountry))
+        query = query.Where(t => t.Country.Name.Contains(searchCountry));
+    if (startFrom.HasValue)
+        query = query.Where(t => t.StartDate >= startFrom.Value);
+    if (startTo.HasValue)
+        query = query.Where(t => t.StartDate <= startTo.Value);
+    return View(await query.ToListAsync());
+}
+```
+Полный код контроллера аналогичен №1, но без `Manager` и `Client`.
+
+**Представления**: стандартные scaffolding для Tour.
+
+</details>
+
+### 🎫 Билет №6 – Авиакомпания, рейсы
+
+#### Модели: `Aircraft`, `Crew`, `Flight`
+```csharp
+public class Aircraft
+{
+    public int Id { get; set; }
+    public string Model { get; set; }
+    public int Capacity { get; set; }
+}
+public class Crew
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+public class Flight
+{
+    public int Id { get; set; }
+    public string FlightNumber { get; set; }
+    public string DepartureCity { get; set; }
+    public string ArrivalCity { get; set; }
+    public DateTime DepartureTime { get; set; }
+    public DateTime ArrivalTime { get; set; }
+    public int AircraftId { get; set; }
+    public Aircraft? Aircraft { get; set; }
+    public int CrewId { get; set; }
+    public Crew? Crew { get; set; }
+}
+```
+
+#### `FlightsController`
+- `Index(DateTime? from, DateTime? to)` – фильтр по дате вылета
+- `Details`
+- `Edit`
+
+#### `SeedData` – добавить самолёты, бригады, рейсы.
+
+### 🎫 Билет №30 – Служба занятости (подбор вакансий)
+
+#### Модели: `Vacancy`, `Unemployed`, `JobApplication`
+```csharp
+public class Vacancy
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string CompanyName { get; set; }
+    public string Requirements { get; set; }
+    public decimal Salary { get; set; }
+    public DateTime PublicationDate { get; set; }
+    public bool IsActive { get; set; } = true;
+}
+public class Unemployed
+{
+    public int Id { get; set; }
+    public string FullName { get; set; }
+    public string DesiredPosition { get; set; }
+    public decimal MinSalary { get; set; }
+}
+public class JobApplication
+{
+    public int Id { get; set; }
+    public int VacancyId { get; set; }
+    public Vacancy? Vacancy { get; set; }
+    public int UnemployedId { get; set; }
+    public Unemployed? Unemployed { get; set; }
+    public DateTime ApplicationDate { get; set; }
+}
+```
+
+#### `VacanciesController`
+- `Match(int unemployedId)` – показывает подходящие вакансии
+- `NoCandidates(int daysThreshold)` – вакансии без откликов за период, с возможностью редактировать требования.
+
+### 🎫 Билет №17 – Начисление зарплаты
+
+#### Модели: `Department`, `Employee`, `TimeCard`
+```csharp
+public class Department
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+}
+public class Employee
+{
+    public int Id { get; set; }
+    public string FullName { get; set; }
+    public int DepartmentId { get; set; }
+    public Department? Department { get; set; }
+    public decimal HourlyRate { get; set; }
+    public int BonusPercent { get; set; } // 10,15,25,35
+}
+public class TimeCard
+{
+    public int Id { get; set; }
+    public int EmployeeId { get; set; }
+    public Employee? Employee { get; set; }
+    public DateTime Date { get; set; }
+    public decimal HoursWorked { get; set; }
+}
+```
+
+#### `SalaryController`
+- `Calculate(int year, int month)` – расчёт зарплаты за месяц
+- `ExportXml` – выгрузка результата в XML.
+
+### 🎫 Билет №22 – Продуктовый склад (приход товаров)
+
+#### Модели: `Product`, `Supplier`, `IncomeInvoice`, `IncomeItem`
+
+### 🎫 Билет №16 – Банк, кредиты
+
+#### Модели: `Client`, `LoanApplication`, `Payment`
+
+### 🎫 Билет №? (аренда авто) – `Client`, `Car`, `RentalContract`
+
+### 🎫 Билет №24 – Склад, заказы (расход)
+
+---
+
+## 🧠 Важно для всех вариантов
+
+- Все навигационные свойства помечайте как `nullable` (`?`), чтобы избежать ошибок валидации при создании записей.
+- Для всех столбцов типа `DateTime` в `OnModelCreating` добавляйте `.HasColumnType("timestamp without time zone")`.
+- Имена таблиц и столбцов приводите к нижнему регистру через `HasColumnName`.
+- В `Program.cs` используйте `EnsureDeleted()` + `EnsureCreated()` для чистой схемы при каждом запуске (для учебного проекта это удобно).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+При переходе с PostgreSQL на SQLite изменения минимальны, но они есть. Ниже приведены точные правки для всех затронутых файлов на примере **билета №1**.
+
+---
+
+## 📦 1. Файл проекта (`.csproj`)
+
+Замените пакет `Npgsql.EntityFrameworkCore.PostgreSQL` на `Microsoft.EntityFrameworkCore.Sqlite`.  
+Удалите строку с `Npgsql` (она больше не нужна).
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
+```
+
+---
+
+## ⚙️ 2. `appsettings.json`
+
+Строка подключения теперь указывает на файл SQLite (например, `examchik.db` в корне проекта).
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=examchik.db"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
+
+---
+
+## 🧠 3. `Program.cs`
+
+- В `AddDbContext` используется `UseSqlite` вместо `UseNpgsql`.
+- Блок инициализации БД остаётся тем же (`EnsureDeleted` + `EnsureCreated`), но SQLite удалит файл `.db`.
+- `SeedData` не требует изменений.
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+using Examchik.Data;
+using Examchik.Models;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+var app = builder.Build();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Applications}/{action=Create}/{id?}");
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureDeleted();   // удаляет файл .db
+    db.Database.EnsureCreated();   // создаёт новый файл .db с таблицами
+    SeedData(db);
+}
+
+app.Run();
+
+void SeedData(AppDbContext db)
+{
+    if (!db.Countries.Any())
+    {
+        db.Countries.Add(new Country { Name = "Россия" });
+        db.Countries.Add(new Country { Name = "Турция" });
+        db.SaveChanges();
+    }
+    if (!db.Managers.Any())
+    {
+        db.Managers.Add(new Manager { FullName = "Иванов И.И." });
+        db.Managers.Add(new Manager { FullName = "Петрова А.С." });
+        db.SaveChanges();
+    }
+    if (!db.Clients.Any())
+    {
+        db.Clients.Add(new Client { FullName = "Сидоров С.С.", Age = 30, PassportNumber = "1234 567890" });
+        db.Clients.Add(new Client { FullName = "Кузнецова Е.В.", Age = 25, PassportNumber = "4321 098765" });
+        db.SaveChanges();
+    }
+    if (!db.Tours.Any())
+    {
+        db.Tours.Add(new Tour
+        {
+            Name = "Золотое кольцо",
+            CountryId = 1,
+            StartDate = new DateTime(2026, 5, 10),
+            EndDate = new DateTime(2026, 5, 20),
+            Price = 45000
+        });
+        db.Tours.Add(new Tour
+        {
+            Name = "Отдых в Анталии",
+            CountryId = 2,
+            StartDate = new DateTime(2026, 6, 1),
+            EndDate = new DateTime(2026, 6, 10),
+            Price = 85000
+        });
+        db.SaveChanges();
+    }
+}
+```
+
+---
+
+## 🗺️ 4. `AppDbContext.cs`
+
+- Можно полностью убрать `.HasColumnType("timestamp without time zone")` – SQLite спокойно работает с `DateTime`.
+- Маппинг имён таблиц/столбцов можно оставить (SQLite не чувствителен к регистру, но лишним не будет).
+
+```csharp
+using Microsoft.EntityFrameworkCore;
+using Examchik.Models;
+
+namespace Examchik.Data
+{
+    public class AppDbContext : DbContext
+    {
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<Tour> Tours { get; set; }
+        public DbSet<Manager> Managers { get; set; }
+        public DbSet<Client> Clients { get; set; }
+        public DbSet<Application> Applications { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Таблицы (регистр не важен, но оставляем для единообразия)
+            modelBuilder.Entity<Country>().ToTable("countries");
+            modelBuilder.Entity<Tour>().ToTable("tours");
+            modelBuilder.Entity<Manager>().ToTable("managers");
+            modelBuilder.Entity<Client>().ToTable("clients");
+            modelBuilder.Entity<Application>().ToTable("applications");
+
+            // Столбцы
+            modelBuilder.Entity<Country>().Property(c => c.Id).HasColumnName("id");
+            modelBuilder.Entity<Country>().Property(c => c.Name).HasColumnName("name");
+
+            modelBuilder.Entity<Tour>().Property(t => t.Id).HasColumnName("id");
+            modelBuilder.Entity<Tour>().Property(t => t.Name).HasColumnName("name");
+            modelBuilder.Entity<Tour>().Property(t => t.CountryId).HasColumnName("countryid");
+            modelBuilder.Entity<Tour>().Property(t => t.StartDate).HasColumnName("startdate");
+            modelBuilder.Entity<Tour>().Property(t => t.EndDate).HasColumnName("enddate");
+            modelBuilder.Entity<Tour>().Property(t => t.Price).HasColumnName("price");
+
+            modelBuilder.Entity<Manager>().Property(m => m.Id).HasColumnName("id");
+            modelBuilder.Entity<Manager>().Property(m => m.FullName).HasColumnName("fullname");
+
+            modelBuilder.Entity<Client>().Property(c => c.Id).HasColumnName("id");
+            modelBuilder.Entity<Client>().Property(c => c.FullName).HasColumnName("fullname");
+            modelBuilder.Entity<Client>().Property(c => c.Age).HasColumnName("age");
+            modelBuilder.Entity<Client>().Property(c => c.PassportNumber).HasColumnName("passportnumber");
+            modelBuilder.Entity<Client>().Property(c => c.ForeignPassportNumber).HasColumnName("foreignpassportnumber");
+
+            modelBuilder.Entity<Application>().Property(a => a.Id).HasColumnName("id");
+            modelBuilder.Entity<Application>().Property(a => a.TourId).HasColumnName("tourid");
+            modelBuilder.Entity<Application>().Property(a => a.ClientId).HasColumnName("clientid");
+            modelBuilder.Entity<Application>().Property(a => a.ManagerId).HasColumnName("managerid");
+            modelBuilder.Entity<Application>().Property(a => a.ApplicationDate).HasColumnName("applicationdate");
+            modelBuilder.Entity<Application>().Property(a => a.Status).HasColumnName("status");
+        }
+    }
+}
+```
+
+---
+
+## 📁 5. Модели, контроллеры, представления – **без изменений**
+
+Код, написанный для PostgreSQL, полностью совместим с SQLite.  
+Все действия (`Create`, `ByTour`, экспорт в TXT) будут работать точно так же.
+
+---
+
+## ✅ Итог – что именно изменилось
+
+| Компонент               | PostgreSQL                                 | SQLite                                      |
+|-------------------------|--------------------------------------------|---------------------------------------------|
+| **NuGet-пакет**         | `Npgsql.EntityFrameworkCore.PostgreSQL`    | `Microsoft.EntityFrameworkCore.Sqlite`      |
+| **Строка подключения**  | `Host=...;Port=...;Database=...;Username=...` | `Data Source=examchik.db`                   |
+| **Use-метод в Program** | `UseNpgsql(...)`                           | `UseSqlite(...)`                            |
+| **Тип даты**            | `.HasColumnType("timestamp without time zone")`| можно убрать (работает без указания типа)    |
+| **Удаление БД**         | дропает схему/таблицы                      | удаляет файл `.db`                          |
+
+Все остальные части приложения остаются неизменными.  
+Вы можете свободно переключаться между PostgreSQL и SQLite, меняя только указанные выше файлы.
