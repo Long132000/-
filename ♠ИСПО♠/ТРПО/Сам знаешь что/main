@@ -1,0 +1,131 @@
+import database as db
+from datetime import datetime, date
+
+def print_menu():
+    print("\n===== БАНК: Управление кредитами =====")
+    print("1. Добавить нового клиента")
+    print("2. Показать всех клиентов")
+    print("3. Создать кредитную заявку (статус 'одобрен')")
+    print("4. Изменить статус кредита (выдача, отказ, закрытие)")
+    print("5. Показать кредиты по типу и интервалу дат")
+    print("0. Выход")
+
+def input_date(prompt):
+    """Ввод даты в формате ГГГГ-ММ-ДД"""
+    while True:
+        s = input(prompt + " (ГГГГ-ММ-ДД): ")
+        try:
+            datetime.strptime(s, "%Y-%m-%d")
+            return s
+        except ValueError:
+            print("Неверный формат. Пример: 2026-04-01")
+
+def add_client_flow():
+    print("\n--- Добавление клиента ---")
+    name = input("Имя/Название: ")
+    print("Тип: 1 - физическое лицо, 2 - организация")
+    type_choice = input("Выберите (1/2): ")
+    client_type = 'individual' if type_choice == '1' else 'organization'
+    tax_id = input("ИНН (для организации) или паспорт (для физ. лица): ")
+    phone = input("Телефон: ")
+    client_id = db.add_client(name, client_type, tax_id, phone)
+    print(f"Клиент добавлен с ID = {client_id}")
+
+def show_all_clients():
+    clients = db.get_all_clients()
+    if not clients:
+        print("Нет клиентов.")
+        return
+    print("\nСписок клиентов:")
+    for c in clients:
+        print(f"ID:{c[0]} | {c[1]} | {c[2]} | {c[3]} | {c[4]}")
+
+def create_loan_flow():
+    print("\n--- Создание кредитной заявки ---")
+    client_id = input("ID клиента: ")
+    if not client_id.isdigit():
+        print("ID должен быть числом.")
+        return
+    client_id = int(client_id)
+    # Проверим, существует ли клиент
+    client = db.get_client_by_id(client_id)
+    if not client:
+        print("Клиент не найден.")
+        return
+    amount = float(input("Сумма кредита: "))
+    rate = float(input("Процентная ставка (например, 12.5): "))
+    term = int(input("Срок в месяцах: "))
+    app_date = input_date("Дата подачи заявки")
+    loan_id = db.add_loan(client_id, amount, rate, term, app_date)
+    print(f"Кредитная заявка создана с ID = {loan_id}, статус 'одобрен'")
+
+def change_status_flow():
+    print("\n--- Изменение статуса кредита ---")
+    loan_id = input("ID кредита: ")
+    if not loan_id.isdigit():
+        print("ID должен быть числом.")
+        return
+    loan_id = int(loan_id)
+    print("Выберите новый статус:")
+    print("1. выдан")
+    print("2. отказан")
+    print("3. закрыт")
+    choice = input("Ваш выбор (1-3): ")
+    status_map = {'1': 'выдан', '2': 'отказан', '3': 'закрыт'}
+    if choice not in status_map:
+        print("Неверный выбор.")
+        return
+    new_status = status_map[choice]
+    change_date = input_date("Дата изменения статуса")
+    try:
+        db.update_loan_status(loan_id, new_status, change_date)
+        print("Статус обновлён.")
+    except ValueError as e:
+        print(f"Ошибка: {e}")
+
+def show_loans_by_type():
+    print("\n--- Просмотр кредитов по типу и интервалу ---")
+    print("Тип кредитов:")
+    print("1. одобрен")
+    print("2. выдан")
+    print("3. отказан")
+    print("4. закрыт")
+    choice = input("Выберите (1-4): ")
+    status_map = {'1': 'одобрен', '2': 'выдан', '3': 'отказан', '4': 'закрыт'}
+    if choice not in status_map:
+        print("Неверный выбор.")
+        return
+    status = status_map[choice]
+    start_date = input_date("Начальная дата интервала")
+    end_date = input_date("Конечная дата интервала")
+    loans = db.get_loans_by_status_and_interval(status, start_date, end_date)
+    if not loans:
+        print("Нет кредитов с таким статусом в указанном интервале.")
+        return
+    print(f"\nКредиты со статусом '{status}' за период {start_date} - {end_date}:")
+    for l in loans:
+        print(f"ID:{l[0]} | Клиент:{l[1]} | Сумма:{l[2]} | Ставка:{l[3]}% | Срок:{l[4]} мес. | Статус:{l[5]} | Дата статуса:{l[6]} | Дата заявки:{l[7]}")
+
+def main():
+    db.init_db()
+    while True:
+        print_menu()
+        choice = input("Введите номер команды: ")
+        if choice == '1':
+            add_client_flow()
+        elif choice == '2':
+            show_all_clients()
+        elif choice == '3':
+            create_loan_flow()
+        elif choice == '4':
+            change_status_flow()
+        elif choice == '5':
+            show_loans_by_type()
+        elif choice == '0':
+            print("До свидания!")
+            break
+        else:
+            print("Неверная команда, попробуйте снова.")
+
+if __name__ == "__main__":
+    main()
