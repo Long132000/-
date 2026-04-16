@@ -1,0 +1,102 @@
+Билет №3
+МДК 01.01/01.02 – Численное интегрирование методом Симпсона
+Входные данные: подынтегральная функция f(x), пределы a, b, чётное число разбиений n.
+Выходные данные: приближённое значение интеграла.
+
+Функциональные характеристики:
+
+Проверка, что n чётное.
+
+Вычисление шага h = (b-a)/n.
+
+Суммирование: S = f(a) + f(b) + 4·Σ f(x_{нечётные}) + 2·Σ f(x_{чётные}).
+
+Результат = (h/3)·S.
+
+Структура данных:
+
+cpp
+double simpson(double (*f)(double), double a, double b, int n) {
+    if (n % 2 != 0) n++; // делаем чётным
+    double h = (b - a) / n;
+    double sum = f(a) + f(b);
+    for (int i = 1; i < n; i++) {
+        double x = a + i * h;
+        sum += (i % 2 == 0) ? 2 * f(x) : 4 * f(x);
+    }
+    return sum * h / 3.0;
+}
+МДК 01.03 – Вычисление 2*x^2+4*x+1
+activity_main.xml
+
+xml
+<EditText android:id="@+id/etX" android:hint="Введите x" />
+<Button android:id="@+id/btnCalc" android:text="2*x^2+4*x+1" />
+<Button android:id="@+id/btnClear" android:text="Clear" />
+<ListView android:id="@+id/listView" />
+MainActivity.java
+
+java
+public class MainActivity extends AppCompatActivity {
+    private EditText etX;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        etX = findViewById(R.id.etX);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnCalc).setOnClickListener(v -> {
+            String s = etX.getText().toString();
+            if (s.isEmpty()) return;
+            double x = Double.parseDouble(s);
+            double result = 2 * x * x + 4 * x + 1;
+            items.add("2*" + x + "^2+4*" + x + "+1 = " + result);
+            adapter.notifyDataSetChanged();
+        });
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Интерактивный таймер
+Код:
+
+cpp
+#include <windows.h>
+#include <iostream>
+
+int main() {
+    SYSTEMTIME start;
+    GetLocalTime(&start);
+
+    int result = MessageBoxA(NULL, "Программа запущена. Остановить?", "Таймер", MB_OKCANCEL);
+    if (result == IDOK) {
+        SYSTEMTIME end;
+        GetLocalTime(&end);
+        // разница (упрощённо, только секунды)
+        int sec = (end.wSecond - start.wSecond) + 60*(end.wMinute - start.wMinute);
+        std::cout << "Время работы: " << sec << " секунд" << std::endl;
+        return 0;
+    } else if (result == IDCANCEL) {
+        int confirm = MessageBoxA(NULL, "Вы уверены?", "Подтверждение", MB_YESNO);
+        if (confirm == IDYES) {
+            // закрыть программу (можно просто выйти)
+            return 0;
+        } else {
+            // продолжить работу (можно вернуться к началу или просто выйти)
+            MessageBoxA(NULL, "Программа продолжает работу", "Инфо", MB_OK);
+        }
+    }
+    return 0;
+}
+Примечание: для точного измерения времени работы используйте GetTickCount64.
+

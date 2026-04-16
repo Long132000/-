@@ -1,0 +1,63 @@
+Билет №15
+МДК 01.01/01.02 – Зачётная оценка (исключить max и min)
+Код:
+
+cpp
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+using namespace std;
+
+int main() {
+    ifstream fin("scores.txt");
+    vector<int> scores;
+    int s;
+    while (fin >> s) scores.push_back(s);
+    if (scores.size() < 3) { cout << "Недостаточно оценок"; return 0; }
+    auto minIt = min_element(scores.begin(), scores.end());
+    auto maxIt = max_element(scores.begin(), scores.end());
+    scores.erase(maxIt);
+    scores.erase(minIt);
+    int total = accumulate(scores.begin(), scores.end(), 0);
+    cout << "Зачётная сумма: " << total << endl;
+    return 0;
+}
+МДК 01.03 – Переворот строки и добавление (не более 10 раз)
+java
+String text = et1.getText().toString();
+String reversed = new StringBuilder(text).reverse().toString();
+int count = Integer.parseInt(et2.getText().toString());
+if (count > 10) count = 10;
+for (int i = 0; i < count; i++) items.add(reversed);
+МДК 01.04 – Два потока с критической секцией
+cpp
+#include <windows.h>
+CRITICAL_SECTION cs;
+int shared = 0;
+
+DWORD WINAPI Thread1(LPVOID) {
+    for (int i = 0; i < 1000; i++) {
+        EnterCriticalSection(&cs);
+        shared++;
+        LeaveCriticalSection(&cs);
+    }
+    return 0;
+}
+DWORD WINAPI Thread2(LPVOID) {
+    for (int i = 0; i < 1000; i++) {
+        EnterCriticalSection(&cs);
+        shared--;
+        LeaveCriticalSection(&cs);
+    }
+    return 0;
+}
+int main() {
+    InitializeCriticalSection(&cs);
+    CreateThread(NULL, 0, Thread1, NULL, 0, NULL);
+    CreateThread(NULL, 0, Thread2, NULL, 0, NULL);
+    Sleep(100);
+    DeleteCriticalSection(&cs);
+    std::cout << shared << std::endl;
+    return 0;
+}

@@ -1,0 +1,150 @@
+Билет 3 (полностью)
+МДК 01.01/01.02 – Численное интегрирование методом Симпсона
+cpp
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// Пример подынтегральной функции (можно заменить любой)
+double f(double x) {
+    return x * x;  // интеграл от 0 до 1 = 1/3
+}
+
+double simpson(double (*func)(double), double a, double b, int n) {
+    // n должно быть чётным
+    if (n % 2 != 0) n++;
+    double h = (b - a) / n;
+    double sum = func(a) + func(b);
+    for (int i = 1; i < n; i++) {
+        double x = a + i * h;
+        if (i % 2 == 0) {
+            sum += 2 * func(x);
+        } else {
+            sum += 4 * func(x);
+        }
+    }
+    return sum * h / 3.0;
+}
+
+int main() {
+    double a, b;
+    int n;
+    cout << "Введите a, b и число разбиений n (чётное): ";
+    cin >> a >> b >> n;
+    double result = simpson(f, a, b, n);
+    cout << "Интеграл = " << result << endl;
+    return 0;
+}
+МДК 01.03 – Вычисление 2*x^2+4*x+1
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etX"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите x"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/btnCalc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2*x^2+4*x+1" />
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clear" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.polynomial;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etX;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etX = findViewById(R.id.etX);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnCalc).setOnClickListener(v -> {
+            String s = etX.getText().toString();
+            if (s.isEmpty()) return;
+            double x = Double.parseDouble(s);
+            double res = 2 * x * x + 4 * x + 1;
+            items.add("2*" + x + "^2+4*" + x + "+1 = " + res);
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Интерактивный таймер
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    DWORD startTick = GetTickCount();
+
+    int result = MessageBoxA(NULL,
+        "Программа запущена. Остановить?",
+        "Таймер",
+        MB_OKCANCEL);
+
+    if (result == IDOK) {
+        DWORD elapsed = (GetTickCount() - startTick) / 1000;
+        cout << "Время работы: " << elapsed << " секунд" << endl;
+        return 0;
+    }
+    else if (result == IDCANCEL) {
+        int confirm = MessageBoxA(NULL,
+            "Вы уверены?",
+            "Подтверждение",
+            MB_YESNO);
+        if (confirm == IDYES) {
+            return 0;
+        } else {
+            MessageBoxA(NULL, "Программа продолжает работу", "Инфо", MB_OK);
+            // Здесь можно продолжить, но по заданию просто выходим
+            return 0;
+        }
+    }
+    return 0;
+}

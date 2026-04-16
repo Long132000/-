@@ -1,0 +1,41 @@
+Билет №16
+МДК 01.01/01.02 – Стоимость оборудования с амортизацией
+Код:
+
+cpp
+#include <fstream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int main() {
+    ifstream fin("prices.txt");
+    vector<double> prices;
+    double p;
+    fin >> p; // процент амортизации
+    double val;
+    while (fin >> val) prices.push_back(val);
+    double totalCost = 0;
+    for (int year = 0; year < prices.size(); year++) {
+        double current = prices[year];
+        int yearsOld = prices.size() - year;
+        current *= pow(1 - p/100, yearsOld);
+        totalCost += current;
+    }
+    cout << "Общая стоимость с учётом амортизации: " << totalCost << endl;
+    return 0;
+}
+МДК 01.03 – Диапазон чисел с шагом
+java
+int start = Integer.parseInt(et1.getText().toString());
+int end = Integer.parseInt(et2.getText().toString());
+int step = Integer.parseInt(et3.getText().toString());
+for (int i = start; i <= end; i += step) items.add(String.valueOf(i));
+МДК 01.04 – Банковские операции (3 потока, семафоры)
+cpp
+// Создаём семафор с максимальным счётчиком 1
+HANDLE hSem = CreateSemaphore(NULL, 1, 1, NULL);
+// В потоках:
+WaitForSingleObject(hSem, INFINITE);
+// операция
+ReleaseSemaphore(hSem, 1, NULL);

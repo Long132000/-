@@ -1,0 +1,50 @@
+Билет №11
+МДК 01.01/01.02 – Диаграмма активностей для соревнований
+Описание:
+
+Начало → Создать мероприятие → Указать дату, время, вид состязаний → Добавить судей и участников.
+
+Цикл: для каждого участника → Занести показатели → Если нарушение → Дисквалификация → Иначе вывести список в порядке ухудшения результатов.
+
+По окончании → Сформировать список победителей (3 места) → Конец.
+
+МДК 01.03 – Арифметические операции (+, -, *, /) с форматом "8=5+3"
+Код (фрагмент):
+
+java
+private void calculate(String op) {
+    double a = Double.parseDouble(et1.getText().toString());
+    double b = Double.parseDouble(et2.getText().toString());
+    double res = 0;
+    switch (op) {
+        case "+": res = a + b; break;
+        case "-": res = a - b; break;
+        case "*": res = a * b; break;
+        case "/": res = a / b; break;
+    }
+    items.add(res + "=" + a + op + b);
+    adapter.notifyDataSetChanged();
+}
+МДК 01.04 – Работа с файлом (CreateFile, дублирование описателя)
+cpp
+#include <windows.h>
+#include <iostream>
+
+int main() {
+    HANDLE hFile1 = CreateFileA("test.txt", GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+    if (hFile1 == INVALID_HANDLE_VALUE) return 1;
+    HANDLE hFile2;
+    DuplicateHandle(GetCurrentProcess(), hFile1, GetCurrentProcess(), &hFile2, 0, FALSE, DUPLICATE_SAME_ACCESS);
+
+    char data1[] = "Write from first handle\n";
+    WriteFile(hFile1, data1, sizeof(data1)-1, NULL, NULL);
+    char data2[] = "Write from second handle\n";
+    WriteFile(hFile2, data2, sizeof(data2)-1, NULL, NULL);
+
+    CloseHandle(hFile1);
+    // Проверим, что второй описатель ещё работает
+    char data3[] = "After closing first\n";
+    WriteFile(hFile2, data3, sizeof(data3)-1, NULL, NULL);
+    CloseHandle(hFile2);
+    return 0;
+}

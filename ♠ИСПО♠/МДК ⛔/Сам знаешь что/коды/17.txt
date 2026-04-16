@@ -1,0 +1,324 @@
+Билет 17 (полностью)
+МДК 01.01/01.02 – Динамическая библиотека для обработки чисел (DLL)
+Файл NumberUtils.h:
+
+cpp
+#pragma once
+#ifdef NUMBERUTILS_EXPORTS
+#define NUMBERUTILS_API __declspec(dllexport)
+#else
+#define NUMBERUTILS_API __declspec(dllimport)
+#endif
+
+extern "C" {
+    NUMBERUTILS_API int CountDigits(long long n);
+    NUMBERUTILS_API int SumDigits(long long n);
+    NUMBERUTILS_API int MaxDigit(long long n);
+    NUMBERUTILS_API long long RemoveMaxDigit(long long n);
+}
+Файл NumberUtils.cpp (реализация DLL):
+
+cpp
+#define NUMBERUTILS_EXPORTS
+#include "NumberUtils.h"
+#include <vector>
+#include <algorithm>
+
+int CountDigits(long long n) {
+    if (n == 0) return 1;
+    int count = 0;
+    while (n > 0) {
+        count++;
+        n /= 10;
+    }
+    return count;
+}
+
+int SumDigits(long long n) {
+    int sum = 0;
+    while (n > 0) {
+        sum += n % 10;
+        n /= 10;
+    }
+    return sum;
+}
+
+int MaxDigit(long long n) {
+    int maxDigit = 0;
+    while (n > 0) {
+        int digit = n % 10;
+        if (digit > maxDigit) maxDigit = digit;
+        n /= 10;
+    }
+    return maxDigit;
+}
+
+long long RemoveMaxDigit(long long n) {
+    int maxD = MaxDigit(n);
+    long long result = 0;
+    long long multiplier = 1;
+    
+    while (n > 0) {
+        int digit = n % 10;
+        if (digit != maxD) {
+            result = result + digit * multiplier;
+            multiplier *= 10;
+        }
+        n /= 10;
+    }
+    
+    return result;
+}
+Файл main.cpp (программа, подключающая DLL):
+
+cpp
+#include <iostream>
+#include <windows.h>
+using namespace std;
+
+// Типы функций
+typedef int (*CountDigitsFunc)(long long);
+typedef int (*SumDigitsFunc)(long long);
+typedef int (*MaxDigitFunc)(long long);
+typedef long long (*RemoveMaxDigitFunc)(long long);
+
+int main() {
+    // Загружаем DLL
+    HMODULE hDll = LoadLibrary("NumberUtils.dll");
+    if (hDll == NULL) {
+        cout << "Не удалось загрузить NumberUtils.dll" << endl;
+        cout << "Убедитесь, что файл DLL находится в той же папке" << endl;
+        return 1;
+    }
+    
+    // Получаем адреса функций
+    CountDigitsFunc CountDigits = (CountDigitsFunc)GetProcAddress(hDll, "CountDigits");
+    SumDigitsFunc SumDigits = (SumDigitsFunc)GetProcAddress(hDll, "SumDigits");
+    MaxDigitFunc MaxDigit = (MaxDigitFunc)GetProcAddress(hDll, "MaxDigit");
+    RemoveMaxDigitFunc RemoveMaxDigit = (RemoveMaxDigitFunc)GetProcAddress(hDll, "RemoveMaxDigit");
+    
+    if (!CountDigits || !SumDigits || !MaxDigit || !RemoveMaxDigit) {
+        cout << "Ошибка получения функций из DLL" << endl;
+        FreeLibrary(hDll);
+        return 1;
+    }
+    
+    // Работа с пользователем
+    long long number;
+    cout << "Введите натуральное число: ";
+    cin >> number;
+    
+    cout << "\n=== Результаты ===" << endl;
+    cout << "Количество разрядов: " << CountDigits(number) << endl;
+    cout << "Сумма цифр: " << SumDigits(number) << endl;
+    cout << "Максимальная цифра: " << MaxDigit(number) << endl;
+    cout << "Число без максимальных цифр: " << RemoveMaxDigit(number) << endl;
+    
+    // Выгружаем DLL
+    FreeLibrary(hDll);
+    
+    return 0;
+}
+МДК 01.03 – Сумма трёх чисел и темы (меняют цвет EditText)
+activity_main.xml (три EditText, кнопки ADD, CLEAR, Тема1, Тема2, ListView)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/et1" android:hint="Число 1" android:inputType="number" />
+    <EditText android:id="@+id/et2" android:hint="Число 2" android:inputType="number" />
+    <EditText android:id="@+id/et3" android:hint="Число 3" android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnTheme1" android:text="Тема 1" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnTheme2" android:text="Тема 2" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.sumthemes;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText et1, et2, et3;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        et1 = findViewById(R.id.et1);
+        et2 = findViewById(R.id.et2);
+        et3 = findViewById(R.id.et3);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String s1 = et1.getText().toString();
+            String s2 = et2.getText().toString();
+            String s3 = et3.getText().toString();
+            if (s1.isEmpty() || s2.isEmpty() || s3.isEmpty()) return;
+            int a = Integer.parseInt(s1);
+            int b = Integer.parseInt(s2);
+            int c = Integer.parseInt(s3);
+            int sum = a + b + c;
+            items.add(sum + "=" + a + "+" + b + "+" + c);
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnTheme1).setOnClickListener(v -> {
+            int textColor = Color.parseColor("#FF5722");
+            int bgColor = Color.parseColor("#FFF3E0");
+            et1.setTextColor(textColor);
+            et1.setBackgroundColor(bgColor);
+            et2.setTextColor(textColor);
+            et2.setBackgroundColor(bgColor);
+            et3.setTextColor(textColor);
+            et3.setBackgroundColor(bgColor);
+        });
+
+        findViewById(R.id.btnTheme2).setOnClickListener(v -> {
+            int textColor = Color.parseColor("#4CAF50");
+            int bgColor = Color.parseColor("#E8F5E9");
+            et1.setTextColor(textColor);
+            et1.setBackgroundColor(bgColor);
+            et2.setTextColor(textColor);
+            et2.setBackgroundColor(bgColor);
+            et3.setTextColor(textColor);
+            et3.setBackgroundColor(bgColor);
+        });
+    }
+}
+МДК 01.04 – Производитель-Потребитель (буфер 10, семафоры)
+cpp
+#include <windows.h>
+#include <iostream>
+#include <queue>
+using namespace std;
+
+// Параметры буфера
+const int BUFFER_SIZE = 10;
+queue<int> buffer;
+int nextItem = 1;
+int itemsConsumed = 0;
+const int TOTAL_ITEMS = 50;
+
+// Синхронизация
+HANDLE hMutex;
+HANDLE hEmpty;   // счётчик пустых мест
+HANDLE hFull;    // счётчик заполненных мест
+
+// Поток-производитель
+DWORD WINAPI Producer(LPVOID lpParam) {
+    for (int i = 0; i < TOTAL_ITEMS; i++) {
+        WaitForSingleObject(hEmpty, INFINITE);   // ждём пустое место
+        WaitForSingleObject(hMutex, INFINITE);   // захватываем буфер
+        
+        int item = nextItem++;
+        buffer.push(item);
+        cout << "[Производитель] Создал элемент: " << item 
+             << " | В буфере: " << buffer.size() << "/" << BUFFER_SIZE << endl;
+        
+        ReleaseMutex(hMutex);
+        ReleaseSemaphore(hFull, 1, NULL);        // увеличиваем счётчик заполненных
+        Sleep(rand() % 100);  // имитация работы
+    }
+    cout << "Производитель завершил работу" << endl;
+    return 0;
+}
+
+// Поток-потребитель
+DWORD WINAPI Consumer(LPVOID lpParam) {
+    while (itemsConsumed < TOTAL_ITEMS) {
+        WaitForSingleObject(hFull, INFINITE);    // ждём хотя бы один элемент
+        WaitForSingleObject(hMutex, INFINITE);   // захватываем буфер
+        
+        if (!buffer.empty()) {
+            int item = buffer.front();
+            buffer.pop();
+            itemsConsumed++;
+            cout << "[Потребитель]   Забрал элемент: " << item
+                 << " | В буфере: " << buffer.size() << "/" << BUFFER_SIZE << endl;
+        }
+        
+        ReleaseMutex(hMutex);
+        ReleaseSemaphore(hEmpty, 1, NULL);       // увеличиваем счётчик пустых мест
+        Sleep(rand() % 150);  // имитация работы
+    }
+    cout << "Потребитель завершил работу" << endl;
+    return 0;
+}
+
+int main() {
+    srand(GetTickCount());
+    
+    // Создаём объекты синхронизации
+    hMutex = CreateMutex(NULL, FALSE, NULL);
+    hEmpty = CreateSemaphore(NULL, BUFFER_SIZE, BUFFER_SIZE, NULL);  // изначально все места пустые
+    hFull = CreateSemaphore(NULL, 0, BUFFER_SIZE, NULL);             // изначально заполненных нет
+    
+    if (!hMutex || !hEmpty || !hFull) {
+        cout << "Ошибка создания объектов синхронизации" << endl;
+        return 1;
+    }
+    
+    cout << "=== Задача Производитель-Потребитель ===" << endl;
+    cout << "Размер буфера: " << BUFFER_SIZE << endl;
+    cout << "Всего элементов: " << TOTAL_ITEMS << endl;
+    cout << "========================================" << endl;
+    
+    // Создаём потоки
+    HANDLE hProducer = CreateThread(NULL, 0, Producer, NULL, 0, NULL);
+    HANDLE hConsumer = CreateThread(NULL, 0, Consumer, NULL, 0, NULL);
+    
+    if (!hProducer || !hConsumer) {
+        cout << "Ошибка создания потоков" << endl;
+        return 1;
+    }
+    
+    // Ждём завершения
+    WaitForSingleObject(hProducer, INFINITE);
+    WaitForSingleObject(hConsumer, INFINITE);
+    
+    // Закрываем handle'ы
+    CloseHandle(hProducer);
+    CloseHandle(hConsumer);
+    CloseHandle(hMutex);
+    CloseHandle(hEmpty);
+    CloseHandle(hFull);
+    
+    cout << "========================================" << endl;
+    cout << "Все элементы обработаны!" << endl;
+    
+    return 0;
+}

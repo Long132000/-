@@ -1,0 +1,137 @@
+Билет №2
+МДК 01.01/01.02 – Решение треугольника
+Задача: по выбору пользователя:
+
+а) по двум сторонам и углу между ними;
+
+б) по стороне и двум прилежащим углам.
+Вычислить все неизвестные элементы: стороны, углы, высоты, площадь, радиусы вписанной/описанной окружностей.
+
+Входные данные: выбор варианта, параметры (стороны, углы в градусах).
+
+Выходные данные: все вычисленные элементы.
+
+Функциональные характеристики:
+
+Перевод градусов в радианы.
+
+Для варианта (а): по теореме косинусов найти третью сторону, затем углы.
+
+Для варианта (б): третий угол = 180° - сумма двух, по теореме синусов найти остальные стороны.
+
+Вычисление площади (через стороны или через ½ab·sinγ).
+
+Высоты: h = 2*S / сторона.
+
+Радиус описанной: R = a/(2·sinA).
+
+Радиус вписанной: r = S / p, где p – полупериметр.
+
+Структура данных:
+
+cpp
+struct Triangle {
+    double a, b, c;   // стороны
+    double A, B, C;   // углы в градусах
+    double S, p;      // площадь, полупериметр
+    double ha, hb, hc;
+    double R, r;
+};
+МДК 01.03 – Мобильное приложение (фамилия, рост, Add, Clear, Red, Blue)
+activity_main.xml (фрагмент)
+
+xml
+<TextView android:text="Фамилия" />
+<EditText android:id="@+id/etSurname" />
+<TextView android:text="Рост" />
+<EditText android:id="@+id/etHeight" android:inputType="number" />
+<Button android:id="@+id/btnAdd" android:text="Add" />
+<Button android:id="@+id/btnClear" android:text="Clear" />
+<Button android:id="@+id/btnRed" android:text="Red" />
+<Button android:id="@+id/btnBlue" android:text="Blue" />
+<ListView android:id="@+id/listView" />
+MainActivity.java
+
+java
+public class MainActivity extends AppCompatActivity {
+    private EditText etSurname, etHeight;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+    private View mainLayout;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        mainLayout = findViewById(android.R.id.content);
+        etSurname = findViewById(R.id.etSurname);
+        etHeight = findViewById(R.id.etHeight);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String surname = etSurname.getText().toString();
+            String height = etHeight.getText().toString();
+            if (!surname.isEmpty() && !height.isEmpty()) {
+                items.add("Фамилия: " + surname + " Рост: " + height);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+        findViewById(R.id.btnRed).setOnClickListener(v -> mainLayout.setBackgroundColor(Color.RED));
+        findViewById(R.id.btnBlue).setOnClickListener(v -> mainLayout.setBackgroundColor(Color.BLUE));
+    }
+}
+МДК 01.04 – Системный мониторинг (C++)
+Задание: вывести в консоль:
+
+Время работы системы (дни:часы:минуты:секунды)
+
+Размер ОЗУ (общий и доступный в МБ)
+
+Информацию о диске C: (общий объём и свободное место в ГБ)
+
+Версию ОС
+
+Код:
+
+cpp
+#include <windows.h>
+#include <iostream>
+
+int main() {
+    // 1. Время работы
+    ULONGLONG ms = GetTickCount64();
+    ULONGLONG sec = ms / 1000;
+    ULONGLONG days = sec / 86400; sec %= 86400;
+    ULONGLONG hours = sec / 3600; sec %= 3600;
+    ULONGLONG minutes = sec / 60; sec %= 60;
+    std::cout << days << ":" << hours << ":" << minutes << ":" << sec << std::endl;
+
+    // 2. Память
+    MEMORYSTATUSEX mem;
+    mem.dwLength = sizeof(mem);
+    GlobalMemoryStatusEx(&mem);
+    std::cout << "ОЗУ всего: " << mem.ullTotalPhys / (1024*1024) << " МБ\n";
+    std::cout << "ОЗУ доступно: " << mem.ullAvailPhys / (1024*1024) << " МБ\n";
+
+    // 3. Диск C:
+    ULARGE_INTEGER freeBytes, totalBytes;
+    GetDiskFreeSpaceExA("C:\\", &freeBytes, &totalBytes, NULL);
+    std::cout << "Диск C: всего: " << totalBytes.QuadPart / (1024*1024*1024) << " ГБ\n";
+    std::cout << "Свободно: " << freeBytes.QuadPart / (1024*1024*1024) << " ГБ\n";
+
+    // 4. Версия ОС
+    OSVERSIONINFOA osvi;
+    osvi.dwOSVersionInfoSize = sizeof(osvi);
+    GetVersionExA(&osvi);
+    std::cout << "Версия ОС: " << osvi.dwMajorVersion << "." << osvi.dwMinorVersion
+              << " Build " << osvi.dwBuildNumber << std::endl;
+    return 0;
+}

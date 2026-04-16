@@ -1,0 +1,22 @@
+Билет №24
+МДК 01.01/01.02 – Функция определения вида треугольника
+cpp
+enum TriangleType { RECTANGULAR, ACUTE, OBTUSE, INVALID };
+TriangleType getTriangleType(double a, double b, double c) {
+    if (a+b<=c || a+c<=b || b+c<=a) return INVALID;
+    double a2=a*a, b2=b*b, c2=c*c;
+    if (fabs(a2+b2-c2)<1e-9 || fabs(a2+c2-b2)<1e-9 || fabs(b2+c2-a2)<1e-9) return RECTANGULAR;
+    if (a2+b2>c2 && a2+c2>b2 && b2+c2>a2) return ACUTE;
+    return OBTUSE;
+}
+МДК 01.03 – Звёздочки и строка
+java
+int stars = Integer.parseInt(et1.getText().toString());
+String text = et2.getText().toString();
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < stars; i++) sb.append("*");
+items.add(sb.toString());
+items.add(text);
+МДК 01.04 – Параллельная обработка файлов (чтение, шифрование, запись)
+cpp
+// Три потока, конвейер через очереди.

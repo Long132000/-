@@ -1,0 +1,84 @@
+Билет №7
+МДК 01.01/01.02 – Класс «Правильный многоугольник»
+Спецификация:
+
+Поля: int n (количество вершин), double side (сторона).
+
+Конструктор RegularPolygon(int n, double side).
+
+Методы: getVertexCount(), getSide(), getAngle() – угол в градусах = (n-2)*180/n.
+
+getPerimeter() = n * side.
+
+getArea() = (n * side^2) / (4 * tan(π/n)).
+
+getInradius() = side / (2 * tan(π/n)).
+
+getCircumradius() = side / (2 * sin(π/n)).
+
+Код:
+
+cpp
+#include <cmath>
+class RegularPolygon {
+    int n;
+    double side;
+public:
+    RegularPolygon(int n, double side) : n(n), side(side) {}
+    int getVertexCount() const { return n; }
+    double getSide() const { return side; }
+    double getAngle() const { return (n-2)*180.0/n; }
+    double getPerimeter() const { return n * side; }
+    double getArea() const { return (n * side * side) / (4 * tan(M_PI / n)); }
+    double getInradius() const { return side / (2 * tan(M_PI / n)); }
+    double getCircumradius() const { return side / (2 * sin(M_PI / n)); }
+};
+МДК 01.03 – Копирование строки несколько раз
+Задание: первый EditText – строка, второй – количество копий. Скопированная строка (одна копия) добавляется в список.
+
+Код:
+
+java
+btnAdd.setOnClickListener(v -> {
+    String text = etText.getText().toString();
+    String countStr = etCount.getText().toString();
+    if (text.isEmpty() || countStr.isEmpty()) return;
+    int count = Integer.parseInt(countStr);
+    StringBuilder builder = new StringBuilder();
+    for (int i = 0; i < count; i++) builder.append(text);
+    items.add(builder.toString());
+    adapter.notifyDataSetChanged();
+});
+МДК 01.04 – Функции для работы со строками (ANSI/UNICODE)
+Требование: реализовать addslashes, ltrim, comparestrings в двух вариантах.
+
+Код (ANSI):
+
+cpp
+#include <cstring>
+#include <string>
+
+// добавляет \ перед каждым символом "
+char* addslashes(const char* src) {
+    int len = strlen(src);
+    char* dst = new char[len*2+1];
+    int j = 0;
+    for (int i = 0; i < len; i++) {
+        if (src[i] == '"') dst[j++] = '\\';
+        dst[j++] = src[i];
+    }
+    dst[j] = 0;
+    return dst;
+}
+
+// удаляет пробелы в начале
+char* ltrim(char* str) {
+    while (*str == ' ') str++;
+    return str;
+}
+
+// сравнивает длины строк (возвращает разницу)
+int comparestrings(const char* a, const char* b) {
+    return strlen(a) - strlen(b);
+}
+Для UNICODE (wchar_t) – аналогично.

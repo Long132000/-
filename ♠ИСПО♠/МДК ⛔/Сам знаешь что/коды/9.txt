@@ -1,0 +1,188 @@
+Билет 9 (полностью)
+МДК 01.01/01.02 – Диаграмма прецедентов для склада
+Текстовое описание для построения в Visio:
+
+Актёры:
+
+Работник склада
+
+Менеджер
+
+Прецеденты для Работника склада:
+
+Оформить приёмку товаров
+
+Оформить отгрузку товаров по накладной
+
+Прецеденты для Менеджера:
+
+Корректировать список товаров (включает):
+
+Добавить товар
+
+Удалить товар
+
+Добавить категорию товаров
+
+Удалить категорию товаров
+
+Сформировать накладную на выдачу товаров
+
+Связи:
+
+Актёр «Работник склада» соединён с прецедентами «Оформить приёмку» и «Оформить отгрузку».
+
+Актёр «Менеджер» соединён с «Корректировать список товаров» и «Сформировать накладную».
+
+«Корректировать список товаров» имеет отношение include (включение) с четырьмя подпрецедентами.
+
+Как рисовать в Visio:
+
+Создать диаграмму прецедентов (Use Case Diagram).
+
+Добавить двух актёров (фигурки человечков).
+
+Добавить прецеденты (овалы) с названиями.
+
+Соединить актёров с прецедентами линиями (ассоциация).
+
+Для «Корректировать список товаров» нарисовать стрелку «include» к каждому из четырёх подпрецедентов.
+
+МДК 01.03 – Сумма трёх чисел (10=3+2+5) и покраска окна
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/et1" android:hint="Число 1" android:inputType="number" />
+    <EditText android:id="@+id/et2" android:hint="Число 2" android:inputType="number" />
+    <EditText android:id="@+id/et3" android:hint="Число 3" android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnRed" android:text="RED" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnBlue" android:text="BLUE" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.sumthree;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText et1, et2, et3;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+    private View rootView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        rootView = findViewById(android.R.id.content);
+
+        et1 = findViewById(R.id.et1);
+        et2 = findViewById(R.id.et2);
+        et3 = findViewById(R.id.et3);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String s1 = et1.getText().toString();
+            String s2 = et2.getText().toString();
+            String s3 = et3.getText().toString();
+            if (s1.isEmpty() || s2.isEmpty() || s3.isEmpty()) return;
+            int a = Integer.parseInt(s1);
+            int b = Integer.parseInt(s2);
+            int c = Integer.parseInt(s3);
+            int sum = a + b + c;
+            items.add(sum + "=" + a + "+" + b + "+" + c);
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnRed).setOnClickListener(v -> rootView.setBackgroundColor(Color.RED));
+        findViewById(R.id.btnBlue).setOnClickListener(v -> rootView.setBackgroundColor(Color.BLUE));
+    }
+}
+МДК 01.04 – Функции countwords, reversestring, isstringpalindrome
+cpp
+#include <iostream>
+#include <cstring>
+#include <cctype>
+using namespace std;
+
+// Подсчёт количества слов
+int countwords(const char* str) {
+    int count = 0;
+    bool inWord = false;
+    for (int i = 0; str[i]; i++) {
+        if (isspace(str[i])) {
+            inWord = false;
+        } else {
+            if (!inWord) {
+                inWord = true;
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+// Переворот строки
+void reversestring(char* str) {
+    int len = strlen(str);
+    for (int i = 0; i < len / 2; i++) {
+        char temp = str[i];
+        str[i] = str[len - 1 - i];
+        str[len - 1 - i] = temp;
+    }
+}
+
+// Проверка, является ли строка палиндромом
+int isstringpalindrome(const char* str) {
+    int len = strlen(str);
+    for (int i = 0; i < len / 2; i++) {
+        if (str[i] != str[len - 1 - i]) return 0;
+    }
+    return 1;
+}
+
+int main() {
+    const char* sentence = "Hello world from C++";
+    cout << "Количество слов: " << countwords(sentence) << endl;
+
+    char test[] = "reverse me";
+    reversestring(test);
+    cout << "Переворот: " << test << endl;
+
+    const char* pal1 = "radar";
+    const char* pal2 = "hello";
+    cout << "radar палиндром? " << isstringpalindrome(pal1) << " (1=да)" << endl;
+    cout << "hello палиндром? " << isstringpalindrome(pal2) << " (0=нет)" << endl;
+
+    retur

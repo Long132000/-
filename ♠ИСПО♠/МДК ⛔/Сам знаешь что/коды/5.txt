@@ -1,0 +1,178 @@
+Билет 5 (полностью)
+МДК 01.01/01.02 – Шифрование/дешифрование методом Цезаря (класс)
+cpp
+#include <iostream>
+#include <string>
+#include <cctype>
+using namespace std;
+
+class CaesarCipher {
+private:
+    int shift;
+public:
+    CaesarCipher(int k) : shift(k % 26) {}
+
+    string encrypt(const string& text) {
+        string res = text;
+        for (char& c : res) {
+            if (isupper(c)) {
+                c = 'A' + (c - 'A' + shift) % 26;
+            } else if (islower(c)) {
+                c = 'a' + (c - 'a' + shift) % 26;
+            }
+        }
+        return res;
+    }
+
+    string decrypt(const string& text) {
+        string res = text;
+        for (char& c : res) {
+            if (isupper(c)) {
+                c = 'A' + (c - 'A' - shift + 26) % 26;
+            } else if (islower(c)) {
+                c = 'a' + (c - 'a' - shift + 26) % 26;
+            }
+        }
+        return res;
+    }
+};
+
+int main() {
+    int k;
+    string msg;
+    cout << "Введите сдвиг: ";
+    cin >> k;
+    cin.ignore();
+    cout << "Введите строку: ";
+    getline(cin, msg);
+    CaesarCipher cipher(k);
+    string enc = cipher.encrypt(msg);
+    string dec = cipher.decrypt(enc);
+    cout << "Зашифровано: " << enc << endl;
+    cout << "Расшифровано: " << dec << endl;
+    return 0;
+}
+МДК 01.03 – Скобки и темы (изменение цвета EditText)
+activity_main.xml (два EditText, кнопки "<>", "()", "[]", "{}", "Clear", "Тема1", "Тема2", ListView)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/et1" android:hint="Текст 1" />
+    <EditText android:id="@+id/et2" android:hint="Текст 2" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAngle" android:text="<>" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnRound" android:text="()" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnSquare" android:text="[]" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnCurly" android:text="{}" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnTheme1" android:text="Тема 1" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnTheme2" android:text="Тема 2" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.brackets;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText et1, et2;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        et1 = findViewById(R.id.et1);
+        et2 = findViewById(R.id.et2);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAngle).setOnClickListener(v -> addWithBrackets("<>"));
+        findViewById(R.id.btnRound).setOnClickListener(v -> addWithBrackets("()"));
+        findViewById(R.id.btnSquare).setOnClickListener(v -> addWithBrackets("[]"));
+        findViewById(R.id.btnCurly).setOnClickListener(v -> addWithBrackets("{}"));
+        findViewById(R.id.btnClear).setOnClickListener(v -> { items.clear(); adapter.notifyDataSetChanged(); });
+
+        findViewById(R.id.btnTheme1).setOnClickListener(v -> applyTheme(Color.parseColor("#FF5722"), Color.LTGRAY));
+        findViewById(R.id.btnTheme2).setOnClickListener(v -> applyTheme(Color.parseColor("#4CAF50"), Color.WHITE));
+    }
+
+    private void addWithBrackets(String brackets) {
+        String left = brackets.substring(0, 1);
+        String right = brackets.substring(1);
+        String text = left + et1.getText().toString() + " " + left + et2.getText().toString() + right;
+        items.add(text);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void applyTheme(int textColor, int bgColor) {
+        et1.setTextColor(textColor);
+        et1.setBackgroundColor(bgColor);
+        et2.setTextColor(textColor);
+        et2.setBackgroundColor(bgColor);
+    }
+}
+МДК 01.04 – Кроссплатформенная программа (Windows/Linux)
+cpp
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#include <fstream>
+#include <cstdlib>
+#endif
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string compName, userName;
+    unsigned long long uptimeSec = 0;
+
+#ifdef _WIN32
+    char buf[256];
+    DWORD sz = 256;
+    GetComputerNameA(buf, &sz);
+    compName = buf;
+    sz = 256;
+    GetUserNameA(buf, &sz);
+    userName = buf;
+    uptimeSec = GetTickCount64() / 1000;
+#else
+    // Linux
+    std::ifstream("/proc/uptime") >> uptimeSec;
+    std::ifstream("/etc/hostname") >> compName;
+    const char* user = getenv("USER");
+    userName = user ? user : "";
+#endif
+
+    std::cout << "Имя компьютера: " << compName << std::endl;
+    std::cout << "Имя пользователя: " << userName << std::endl;
+    std::cout << "Время работы системы: " << uptimeSec / 86400 << " дней "
+              << (uptimeSec % 86400) / 3600 << " часов" << std::endl;
+    return 0;
+}

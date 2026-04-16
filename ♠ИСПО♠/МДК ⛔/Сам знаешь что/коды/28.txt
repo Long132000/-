@@ -1,0 +1,332 @@
+Билет 28 (полностью)
+МДК 01.01/01.02 – Выдача суммы минимальным количеством купюр
+cpp
+#include <iostream>
+#include <vector>
+#include <stdexcept>
+using namespace std;
+
+struct Money {
+    int denomination;
+    int count;
+};
+
+vector<Money> withdrawMoney(int amount, const vector<int>& denominations) {
+    vector<Money> result;
+    int remaining = amount;
+    
+    for (int denom : denominations) {
+        if (remaining == 0) break;
+        
+        int count = remaining / denom;
+        if (count > 0) {
+            result.push_back({denom, count});
+            remaining -= count * denom;
+        }
+    }
+    
+    if (remaining != 0) {
+        throw runtime_error("Указанную сумму нельзя выдать этими купюрами");
+    }
+    
+    return result;
+}
+
+int main() {
+    // Купюры в порядке убывания номинала
+    vector<int> denominations = {5000, 2000, 1000, 500, 200, 100, 50};
+    
+    int amount;
+    cout << "Введите сумму для выдачи: ";
+    cin >> amount;
+    
+    try {
+        vector<Money> result = withdrawMoney(amount, denominations);
+        
+        cout << "Для выдачи суммы " << amount << " рублей нужно:" << endl;
+        int totalCount = 0;
+        for (const auto& money : result) {
+            cout << "  " << money.count << " купюр по " << money.denomination << " руб." << endl;
+            totalCount += money.count;
+        }
+        cout << "Всего купюр: " << totalCount << endl;
+        
+    } catch (const exception& e) {
+        cout << "Ошибка: " << e.what() << endl;
+    }
+    
+    return 0;
+}
+Тестовые данные (тест-кейсы):
+
+№	Сумма	Ожидаемый результат
+1	3750	1x2000, 1x1000, 1x500, 1x200, 1x50 (5 купюр)
+2	10000	2x5000 (2 купюры)
+3	1234	1x1000, 1x200, 1x20? нет 20 → ошибка
+4	50	1x50 (1 купюра)
+5	0	0 купюр
+6	12345	2x5000, 1x2000, 1x300? нет 300 → ошибка
+7	7700	1x5000, 1x2000, 1x500, 1x200 (4 купюры)
+МДК 01.03 – Пересчёт м/с в км/ч
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Скорость в м/с"
+        android:inputType="numberDecimal" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnCalculate" android:text="Calculate" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" android:layout_marginTop="16dp" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.speedconverter;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etSpeed;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etSpeed = findViewById(R.id.etSpeed);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnCalculate).setOnClickListener(v -> {
+            String s = etSpeed.getText().toString();
+            if (s.isEmpty()) return;
+            
+            double ms = Double.parseDouble(s);
+            double kmh = ms * 3.6;
+            
+            items.add(ms + " м/с = " + kmh + " км/ч");
+            adapter.notifyDataSetChanged();
+            
+            etSpeed.setText("");
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Файловый менеджер (рекурсивный обход директорий)
+cpp
+#include <windows.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <stack>
+using namespace std;
+
+// Структура для информации о файле/директории
+struct FileInfo {
+    string name;
+    string path;
+    bool isDirectory;
+    DWORD size;
+    FILETIME creationTime;
+    FILETIME lastWriteTime;
+};
+
+// Рекурсивный обход директории (без взаимоблокировок)
+void walkDirectoryRecursive(const string& path, vector<FileInfo>& files, int depth = 0) {
+    string searchPath = path + "\\*";
+    WIN32_FIND_DATAA fd;
+    HANDLE hFind = FindFirstFileA(searchPath.c_str(), &fd);
+    
+    if (hFind == INVALID_HANDLE_VALUE) {
+        return;
+    }
+    
+    do {
+        // Пропускаем . и ..
+        if (strcmp(fd.cFileName, ".") == 0 || strcmp(fd.cFileName, "..") == 0) {
+            continue;
+        }
+        
+        FileInfo info;
+        info.name = fd.cFileName;
+        info.path = path + "\\" + fd.cFileName;
+        info.isDirectory = (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+        
+        if (!info.isDirectory) {
+            info.size = (fd.nFileSizeHigh * (MAXDWORD + 1)) + fd.nFileSizeLow;
+        } else {
+            info.size = 0;
+        }
+        
+        info.creationTime = fd.ftCreationTime;
+        info.lastWriteTime = fd.ftLastWriteTime;
+        
+        files.push_back(info);
+        
+        // Для отладки выводим с отступами
+        for (int i = 0; i < depth; i++) cout << "  ";
+        cout << (info.isDirectory ? "[DIR] " : "[FILE] ") << info.name;
+        if (!info.isDirectory) cout << " (" << info.size << " байт)";
+        cout << endl;
+        
+        // Если это директория, рекурсивно обходим её
+        if (info.isDirectory) {
+            walkDirectoryRecursive(info.path, files, depth + 1);
+        }
+        
+    } while (FindNextFileA(hFind, &fd));
+    
+    FindClose(hFind);
+}
+
+// Итеративный обход с использованием стека (избегаем глубокой рекурсии)
+void walkDirectoryIterative(const string& rootPath, vector<FileInfo>& files) {
+    stack<string> directories;
+    directories.push(rootPath);
+    
+    while (!directories.empty()) {
+        string currentPath = directories.top();
+        directories.pop();
+        
+        string searchPath = currentPath + "\\*";
+        WIN32_FIND_DATAA fd;
+        HANDLE hFind = FindFirstFileA(searchPath.c_str(), &fd);
+        
+        if (hFind == INVALID_HANDLE_VALUE) {
+            continue;
+        }
+        
+        do {
+            if (strcmp(fd.cFileName, ".") == 0 || strcmp(fd.cFileName, "..") == 0) {
+                continue;
+            }
+            
+            FileInfo info;
+            info.name = fd.cFileName;
+            info.path = currentPath + "\\" + fd.cFileName;
+            info.isDirectory = (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
+            
+            if (!info.isDirectory) {
+                info.size = (fd.nFileSizeHigh * (MAXDWORD + 1)) + fd.nFileSizeLow;
+                files.push_back(info);
+                cout << "[FILE] " << info.path << " (" << info.size << " байт)" << endl;
+            } else {
+                files.push_back(info);
+                cout << "[DIR]  " << info.path << endl;
+                directories.push(info.path);  // добавляем в стек для дальнейшего обхода
+            }
+            
+        } while (FindNextFileA(hFind, &fd));
+        
+        FindClose(hFind);
+    }
+}
+
+// Система резервного копирования с синхронизацией
+CRITICAL_SECTION backupCs;
+HANDLE hBackupMutex;
+
+void backupFile(const string& sourcePath, const string& destPath) {
+    WaitForSingleObject(hBackupMutex, INFINITE);
+    EnterCriticalSection(&backupCs);
+    
+    cout << "Копирование: " << sourcePath << " -> " << destPath << endl;
+    
+    // Реальное копирование файла
+    if (CopyFileA(sourcePath.c_str(), destPath.c_str(), FALSE)) {
+        cout << "  Успешно!" << endl;
+    } else {
+        cout << "  Ошибка копирования! Код: " << GetLastError() << endl;
+    }
+    
+    LeaveCriticalSection(&backupCs);
+    ReleaseMutex(hBackupMutex);
+}
+
+// Создание резервной копии директории
+void backupDirectory(const string& sourceDir, const string& backupDir) {
+    vector<FileInfo> files;
+    walkDirectoryIterative(sourceDir, files);
+    
+    // Создаём корневую директорию для бэкапа
+    CreateDirectoryA(backupDir.c_str(), NULL);
+    
+    for (const auto& file : files) {
+        if (!file.isDirectory) {
+            // Создаём относительный путь
+            string relativePath = file.path.substr(sourceDir.length() + 1);
+            string destPath = backupDir + "\\" + relativePath;
+            
+            // Создаём необходимые поддиректории
+            size_t pos = destPath.find_last_of('\\');
+            string destDir = destPath.substr(0, pos);
+            CreateDirectoryA(destDir.c_str(), NULL);
+            
+            backupFile(file.path, destPath);
+        }
+    }
+}
+
+int main() {
+    InitializeCriticalSection(&backupCs);
+    hBackupMutex = CreateMutex(NULL, FALSE, NULL);
+    
+    cout << "=== Файловый менеджер ===" << endl;
+    
+    string directory;
+    cout << "Введите путь для обхода: ";
+    getline(cin, directory);
+    
+    // Если путь содержит кавычки, удаляем их
+    if (directory.front() == '"' && directory.back() == '"') {
+        directory = directory.substr(1, directory.length() - 2);
+    }
+    
+    cout << "\n=== Рекурсивный обход директории ===" << endl;
+    vector<FileInfo> files1;
+    walkDirectoryRecursive(directory, files1);
+    
+    cout << "\n=== Итеративный обход директории ===" << endl;
+    vector<FileInfo> files2;
+    walkDirectoryIterative(directory, files2);
+    
+    cout << "\n=== Резервное копирование ===" << endl;
+    string backupPath = directory + "_backup";
+    cout << "Создание резервной копии в: " << backupPath << endl;
+    backupDirectory(directory, backupPath);
+    
+    cout << "\nРезервное копирование завершено!" << endl;
+    
+    CloseHandle(hBackupMutex);
+    DeleteCriticalSection(&backupCs);
+    
+    return 0;
+}

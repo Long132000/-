@@ -1,0 +1,276 @@
+Билет 30 (полностью)
+МДК 01.01/01.02 – Программа-тест на знание ударений
+cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+struct Word {
+    string text;
+    int stressPosition;  // номер ударной буквы (1-based)
+};
+
+class StressTest {
+private:
+    vector<Word> words;
+    int correctAnswers;
+    int totalAttempts;
+    
+public:
+    StressTest() : correctAnswers(0), totalAttempts(0) {}
+    
+    // Загрузка слов из файла
+    bool loadWords(const string& filename) {
+        ifstream fin(filename);
+        if (!fin.is_open()) {
+            cout << "Не удалось открыть файл: " << filename << endl;
+            return false;
+        }
+        
+        Word w;
+        while (fin >> w.text >> w.stressPosition) {
+            words.push_back(w);
+        }
+        
+        fin.close();
+        cout << "Загружено слов: " << words.size() << endl;
+        return !words.empty();
+    }
+    
+    // Отображение слова с указанием позиции ударения (для проверки)
+    string showWordWithStress(const Word& w) {
+        string result;
+        for (size_t i = 0; i < w.text.length(); i++) {
+            if ((int)i + 1 == w.stressPosition) {
+                result += toupper(w.text[i]);
+            } else {
+                result += w.text[i];
+            }
+        }
+        return result;
+    }
+    
+    // Запуск теста
+    void runTest() {
+        if (words.empty()) {
+            cout << "Нет загруженных слов!" << endl;
+            return;
+        }
+        
+        srand(time(NULL));
+        correctAnswers = 0;
+        totalAttempts = 0;
+        
+        cout << "\n=== Тест на знание ударений ===" << endl;
+        cout << "Вам будут показаны слова. Введите номер ударной буквы (1 - первая буква и т.д.)" << endl;
+        cout << "Для выхода введите 0" << endl;
+        cout << "=====================================" << endl;
+        
+        // Случайный порядок слов
+        vector<int> indices(words.size());
+        for (size_t i = 0; i < words.size(); i++) {
+            indices[i] = i;
+        }
+        
+        // Перемешиваем
+        for (size_t i = 0; i < indices.size(); i++) {
+            int j = rand() % indices.size();
+            swap(indices[i], indices[j]);
+        }
+        
+        for (int idx : indices) {
+            const Word& w = words[idx];
+            
+            cout << "\nСлово: " << w.text << endl;
+            cout << "Номер ударной буквы: ";
+            
+            int answer;
+            cin >> answer;
+            
+            if (answer == 0) {
+                cout << "Тест прерван." << endl;
+                break;
+            }
+            
+            totalAttempts++;
+            
+            if (answer == w.stressPosition) {
+                cout << "✓ Правильно!" << endl;
+                correctAnswers++;
+            } else {
+                cout << "✗ Неправильно. Правильный ответ: " << w.stressPosition 
+                     << " (" << showWordWithStress(w) << ")" << endl;
+            }
+        }
+        
+        // Вывод результатов
+        cout << "\n=== Результаты теста ===" << endl;
+        cout << "Правильных ответов: " << correctAnswers << " из " << totalAttempts << endl;
+        
+        if (totalAttempts > 0) {
+            int score = (correctAnswers * 100) / totalAttempts;
+            cout << "Результат по 100-балльной системе: " << score << " баллов" << endl;
+            
+            if (score >= 90) cout << "Отлично! Вы знаток ударений!" << endl;
+            else if (score >= 70) cout << "Хорошо! Но есть над чем поработать." << endl;
+            else if (score >= 50) cout << "Удовлетворительно. Рекомендуем повторить правила." << endl;
+            else cout << "Неудовлетворительно. Нужно больше практики!" << endl;
+        }
+    }
+    
+    // Добавление нового слова в словарь
+    void addWord() {
+        Word w;
+        cout << "Введите слово: ";
+        cin >> w.text;
+        cout << "Введите номер ударной буквы (1-" << w.text.length() << "): ";
+        cin >> w.stressPosition;
+        
+        if (w.stressPosition < 1 || w.stressPosition > (int)w.text.length()) {
+            cout << "Некорректный номер ударения!" << endl;
+            return;
+        }
+        
+        words.push_back(w);
+        
+        // Сохраняем в файл
+        ofstream fout("words.txt", ios::app);
+        fout << w.text << " " << w.stressPosition << endl;
+        fout.close();
+        
+        cout << "Слово добавлено!" << endl;
+    }
+};
+
+int main() {
+    StressTest test;
+    
+    // Загружаем слова из файла
+    if (!test.loadWords("words.txt")) {
+        cout << "Создаю пример файла words.txt..." << endl;
+        ofstream fout("words.txt");
+        fout << "звонИт 4" << endl;
+        fout << "катАлог 4" << endl;
+        fout << "тОрты 1" << endl;
+        fout << "бАнты 1" << endl;
+        fout << "шАрфы 1" << endl;
+        fout << "срЕдства 2" << endl;
+        fout << "красИвее 5" << endl;
+        fout << "облегчИть 7" << endl;
+        fout << "договОр 5" << endl;
+        fout << "жалюзИ 5" << endl;
+        fout.close();
+        test.loadWords("words.txt");
+    }
+    
+    int choice;
+    do {
+        cout << "\n=== Программа-тест 'Ударение' ===" << endl;
+        cout << "1 - Начать тест" << endl;
+        cout << "2 - Добавить слово в словарь" << endl;
+        cout << "3 - Показать все слова" << endl;
+        cout << "0 - Выход" << endl;
+        cout << "Выберите действие: ";
+        cin >> choice;
+        
+        switch (choice) {
+            case 1:
+                test.runTest();
+                break;
+            case 2:
+                test.addWord();
+                break;
+            case 3:
+                // Показать слова (для отладки)
+                break;
+            case 0:
+                cout << "До свидания!" << endl;
+                break;
+            default:
+                cout << "Неверный выбор!" << endl;
+        }
+    } while (choice != 0);
+    
+    return 0;
+}
+МДК 01.03 – Степени двойки
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите степень n"
+        android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" android:layout_marginTop="16dp" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.powersoftwo;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etN;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etN = findViewById(R.id.etN);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String s = etN.getText().toString();
+            if (s.isEmpty()) return;
+            
+            int n = Integer.parseInt(s);
+            long power = 1;
+            for (int i = 1; i <= n; i++) {
+                power *= 2;
+                items.add("2^" + i + " = " + power);
+            }
+            adapter.notifyDataSetChanged();
+            
+            etN.setText("");
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Массив мьютексов (повтор из билета 13)
+(Код массива мьютексов и WaitForMultipleObjects см. в билете 13)

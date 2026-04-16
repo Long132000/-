@@ -1,0 +1,12 @@
+Билет №32
+МДК 01.01/01.02 – Давление пациента (бинарный файл)
+cpp
+struct Pressure { char date[11]; int systolic; int diastolic; };
+// аналогично билету 31
+МДК 01.03 – Площадь треугольника по трём сторонам (формула Герона)
+java
+double a=..., b=..., c=...;
+double p = (a+b+c)/2;
+double s = Math.sqrt(p*(p-a)*(p-b)*(p-c));
+items.add(counter++ + ") a="+a+" b="+b+" c="+c+" S="+s);
+МДК 01.04 – Работа с мьютексом (DuplicateHandle) – см. билет №10

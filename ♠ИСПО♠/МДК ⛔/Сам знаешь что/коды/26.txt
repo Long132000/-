@@ -1,0 +1,343 @@
+Билет 26 (полностью)
+МДК 01.01/01.02 – Циклический сдвиг массива на k позиций
+cpp
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+// Функция циклического сдвига массива
+// k > 0 - сдвиг вправо, k < 0 - сдвиг влево
+void cyclicShift(vector<int>& arr, int k) {
+    int n = arr.size();
+    if (n == 0) return;
+    
+    k = k % n;  // нормализуем сдвиг
+    if (k == 0) return;
+    
+    if (k > 0) {
+        // Сдвиг вправо
+        reverse(arr.begin(), arr.end());
+        reverse(arr.begin(), arr.begin() + k);
+        reverse(arr.begin() + k, arr.end());
+    } else {
+        // Сдвиг влево (k отрицательный)
+        k = -k;
+        reverse(arr.begin(), arr.end());
+        reverse(arr.begin(), arr.begin() + (n - k));
+        reverse(arr.begin() + (n - k), arr.end());
+    }
+}
+
+void printArray(const vector<int>& arr) {
+    cout << "[";
+    for (size_t i = 0; i < arr.size(); i++) {
+        cout << arr[i];
+        if (i < arr.size() - 1) cout << ", ";
+    }
+    cout << "]";
+}
+
+int main() {
+    vector<int> arr = {1, 2, 3, 4, 5, 6, 7};
+    
+    cout << "Исходный массив: ";
+    printArray(arr);
+    cout << endl;
+    
+    // Тест-кейсы
+    struct TestCase {
+        int k;
+        string description;
+    };
+    
+    TestCase tests[] = {
+        {2, "Сдвиг вправо на 2"},
+        {-3, "Сдвиг влево на 3"},
+        {10, "Сдвиг вправо на 10 (больше размера)"},
+        {0, "Сдвиг на 0 (без изменений)"},
+        {-14, "Сдвиг влево на 14 (больше размера)"}
+    };
+    
+    for (const auto& test : tests) {
+        vector<int> temp = arr;  // копируем исходный массив
+        cyclicShift(temp, test.k);
+        cout << test.description << ": ";
+        printArray(temp);
+        cout << endl;
+    }
+    
+    return 0;
+}
+Тестовые данные (тест-кейсы):
+
+№	Исходный массив	k	Ожидаемый результат
+1	[1,2,3,4,5,6,7]	2	[6,7,1,2,3,4,5]
+2	[1,2,3,4,5,6,7]	-3	[4,5,6,7,1,2,3]
+3	[1,2,3,4,5,6,7]	10	[5,6,7,1,2,3,4] (10%7=3 вправо)
+4	[1,2,3,4,5,6,7]	0	[1,2,3,4,5,6,7]
+5	[1,2,3,4,5,6,7]	-14	[1,2,3,4,5,6,7] (-14%7=0)
+6	[1]	5	[1]
+7	[]	3	[]
+МДК 01.03 – Площадь круга
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etRadius"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите радиус"
+        android:inputType="numberDecimal" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnCalculate" android:text="Calculate" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" android:layout_marginTop="16dp" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.circlearea;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etRadius;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etRadius = findViewById(R.id.etRadius);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnCalculate).setOnClickListener(v -> {
+            String s = etRadius.getText().toString();
+            if (s.isEmpty()) return;
+            
+            double r = Double.parseDouble(s);
+            double area = Math.PI * r * r;
+            
+            items.add("R = " + r + " S = " + String.format("%.2f", area));
+            adapter.notifyDataSetChanged();
+            
+            etRadius.setText("");  // очищаем поле для следующего ввода
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Банковская система (взаимоблокировка и решение)
+cpp
+#include <windows.h>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Структура банковского счёта
+struct BankAccount {
+    int id;
+    double balance;
+    HANDLE hMutex;
+    
+    BankAccount(int id, double initialBalance) : id(id), balance(initialBalance) {
+        hMutex = CreateMutex(NULL, FALSE, NULL);
+    }
+    
+    ~BankAccount() {
+        CloseHandle(hMutex);
+    }
+};
+
+// Функция перевода с возможной взаимоблокировкой (берём мьютексы в порядке id)
+bool transferWithDeadlockRisk(BankAccount& from, BankAccount& to, double amount) {
+    // Берём мьютексы в порядке id (это и есть решение проблемы!)
+    if (from.id < to.id) {
+        WaitForSingleObject(from.hMutex, INFINITE);
+        WaitForSingleObject(to.hMutex, INFINITE);
+    } else {
+        WaitForSingleObject(to.hMutex, INFINITE);
+        WaitForSingleObject(from.hMutex, INFINITE);
+    }
+    
+    if (from.balance >= amount) {
+        from.balance -= amount;
+        to.balance += amount;
+        cout << "Перевод " << amount << " со счёта " << from.id 
+             << " на счёт " << to.id << " выполнен. Балансы: "
+             << from.id << "=" << from.balance << ", "
+             << to.id << "=" << to.balance << endl;
+        ReleaseMutex(from.hMutex);
+        ReleaseMutex(to.hMutex);
+        return true;
+    } else {
+        cout << "Недостаточно средств на счёте " << from.id << endl;
+        ReleaseMutex(from.hMutex);
+        ReleaseMutex(to.hMutex);
+        return false;
+    }
+}
+
+// Поток для выполнения переводов
+DWORD WINAPI TransferThread(LPVOID lpParam) {
+    struct TransferData {
+        BankAccount* from;
+        BankAccount* to;
+        double amount;
+        int count;
+    };
+    
+    TransferData* data = (TransferData*)lpParam;
+    
+    for (int i = 0; i < data->count; i++) {
+        transferWithDeadlockRisk(*(data->from), *(data->to), data->amount);
+        Sleep(10);  // небольшая задержка между переводами
+    }
+    
+    return 0;
+}
+
+// Система аудиторской проверки (запись транзакций в файл)
+CRITICAL_SECTION logCs;
+ofstream logFile;
+
+void logTransaction(int fromId, int toId, double amount, bool success) {
+    EnterCriticalSection(&logCs);
+    if (logFile.is_open()) {
+        logFile << "Транзакция: со счёта " << fromId << " на счёт " << toId
+                << ", сумма=" << amount << ", статус=" << (success ? "успех" : "отказ")
+                << ", время=" << GetTickCount() << endl;
+        logFile.flush();
+    }
+    LeaveCriticalSection(&logCs);
+}
+
+// Функция перевода с аудитом
+bool transferWithAudit(BankAccount& from, BankAccount& to, double amount) {
+    // Безопасный порядок захвата
+    if (from.id < to.id) {
+        WaitForSingleObject(from.hMutex, INFINITE);
+        WaitForSingleObject(to.hMutex, INFINITE);
+    } else {
+        WaitForSingleObject(to.hMutex, INFINITE);
+        WaitForSingleObject(from.hMutex, INFINITE);
+    }
+    
+    bool success = false;
+    if (from.balance >= amount) {
+        from.balance -= amount;
+        to.balance += amount;
+        success = true;
+        cout << "Перевод " << amount << " со счёта " << from.id 
+             << " на счёт " << to.id << " выполнен." << endl;
+    } else {
+        cout << "Недостаточно средств на счёте " << from.id << endl;
+    }
+    
+    logTransaction(from.id, to.id, amount, success);
+    
+    ReleaseMutex(from.hMutex);
+    ReleaseMutex(to.hMutex);
+    
+    return success;
+}
+
+int main() {
+    InitializeCriticalSection(&logCs);
+    logFile.open("transactions.log");
+    
+    cout << "=== Банковская система ===" << endl;
+    
+    // Создаём счета
+    BankAccount account1(1, 10000.0);
+    BankAccount account2(2, 5000.0);
+    BankAccount account3(3, 7500.0);
+    
+    cout << "Начальные балансы: счёт1=" << account1.balance 
+         << ", счёт2=" << account2.balance 
+         << ", счёт3=" << account3.balance << endl;
+    
+    // 1. Демонстрация взаимоблокировки (решение через порядок захвата)
+    cout << "\n=== Переводы между счетами (с защитой от deadlock) ===" << endl;
+    
+    transferWithDeadlockRisk(account1, account2, 1000);
+    transferWithDeadlockRisk(account2, account3, 500);
+    transferWithDeadlockRisk(account3, account1, 2000);
+    
+    // 2. Система записи транзакций
+    cout << "\n=== Транзакции с аудитом ===" << endl;
+    
+    transferWithAudit(account1, account2, 500);
+    transferWithAudit(account2, account3, 300);
+    transferWithAudit(account3, account1, 700);
+    
+    // 3. Многопоточные переводы
+    cout << "\n=== Многопоточные переводы ===" << endl;
+    
+    // Создаём несколько потоков для параллельных переводов
+    HANDLE threads[4];
+    TransferData data[4];
+    
+    // Поток 1: счёт1 -> счёт2
+    data[0] = {&account1, &account2, 100, 20};
+    threads[0] = CreateThread(NULL, 0, TransferThread, &data[0], 0, NULL);
+    
+    // Поток 2: счёт2 -> счёт1
+    data[1] = {&account2, &account1, 50, 20};
+    threads[1] = CreateThread(NULL, 0, TransferThread, &data[1], 0, NULL);
+    
+    // Поток 3: счёт2 -> счёт3
+    data[2] = {&account2, &account3, 75, 15};
+    threads[2] = CreateThread(NULL, 0, TransferThread, &data[2], 0, NULL);
+    
+    // Поток 4: счёт3 -> счёт1
+    data[3] = {&account3, &account1, 120, 15};
+    threads[3] = CreateThread(NULL, 0, TransferThread, &data[3], 0, NULL);
+    
+    // Ждём завершения всех потоков
+    WaitForMultipleObjects(4, threads, TRUE, INFINITE);
+    
+    // Закрываем handle'ы потоков
+    for (int i = 0; i < 4; i++) {
+        CloseHandle(threads[i]);
+    }
+    
+    cout << "\n=== Итоговые балансы ===" << endl;
+    cout << "Счёт 1: " << account1.balance << endl;
+    cout << "Счёт 2: " << account2.balance << endl;
+    cout << "Счёт 3: " << account3.balance << endl;
+    
+    // Проверка сохранения общей суммы
+    double total = account1.balance + account2.balance + account3.balance;
+    cout << "Общая сумма: " << total << " (было 22500)" << endl;
+    
+    logFile.close();
+    DeleteCriticalSection(&logCs);
+    
+    return 0;
+}

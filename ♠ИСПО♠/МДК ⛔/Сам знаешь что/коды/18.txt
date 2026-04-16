@@ -1,0 +1,268 @@
+Билет 18 (полностью)
+МДК 01.01/01.02 – Класс комплексных чисел (перегрузка операций)
+cpp
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+
+class Complex {
+private:
+    double re;  // действительная часть
+    double im;  // мнимая часть
+    
+public:
+    // Конструкторы
+    Complex(double r = 0, double i = 0) : re(r), im(i) {}
+    
+    // Геттеры
+    double getRe() const { return re; }
+    double getIm() const { return im; }
+    
+    // Перегрузка операторов
+    Complex operator+(const Complex& other) const {
+        return Complex(re + other.re, im + other.im);
+    }
+    
+    Complex operator-(const Complex& other) const {
+        return Complex(re - other.re, im - other.im);
+    }
+    
+    Complex operator*(const Complex& other) const {
+        return Complex(
+            re * other.re - im * other.im,
+            re * other.im + im * other.re
+        );
+    }
+    
+    Complex operator/(const Complex& other) const {
+        double denominator = other.re * other.re + other.im * other.im;
+        if (denominator == 0) {
+            throw runtime_error("Деление на ноль");
+        }
+        return Complex(
+            (re * other.re + im * other.im) / denominator,
+            (im * other.re - re * other.im) / denominator
+        );
+    }
+    
+    // Метод для вывода
+    string toString() const {
+        if (im >= 0) {
+            return to_string(re) + "+" + to_string(im) + "i";
+        } else {
+            return to_string(re) + to_string(im) + "i";
+        }
+    }
+};
+
+int main() {
+    Complex a(3, 4);
+    Complex b(1, 2);
+    
+    cout << "a = " << a.toString() << endl;
+    cout << "b = " << b.toString() << endl;
+    
+    Complex sum = a + b;
+    Complex diff = a - b;
+    Complex prod = a * b;
+    Complex quot = a / b;
+    
+    cout << "\nРезультаты операций:" << endl;
+    cout << "a + b = " << sum.toString() << endl;
+    cout << "a - b = " << diff.toString() << endl;
+    cout << "a * b = " << prod.toString() << endl;
+    cout << "a / b = " << quot.toString() << endl;
+    
+    return 0;
+}
+МДК 01.03 – Кнопка "+1", Add, Clear
+activity_main.xml (EditText, кнопки +1, Add, Clear, ListView)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите число"
+        android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnPlus1" android:text="+1" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnAdd" android:text="Add" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.plusone;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText editText;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editText = findViewById(R.id.editText);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnPlus1).setOnClickListener(v -> {
+            String s = editText.getText().toString();
+            if (s.isEmpty()) {
+                editText.setText("1");
+            } else {
+                int val = Integer.parseInt(s);
+                editText.setText(String.valueOf(val + 1));
+            }
+        });
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String s = editText.getText().toString();
+            if (!s.isEmpty()) {
+                items.add(s);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Параллельные вычисления (4 потока, барьеры)
+cpp
+#include <windows.h>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Глобальные данные
+const int ARRAY_SIZE = 1000;
+const int THREAD_COUNT = 4;
+int arrayData[ARRAY_SIZE];
+int partialSums[THREAD_COUNT] = {0};
+int totalSum = 0;
+
+// Синхронизация
+CRITICAL_SECTION cs;
+HANDLE hBarrierEvent;
+int threadsArrived = 0;
+HANDLE hMutexBarrier;
+
+// Простая реализация барьера
+void Barrier() {
+    EnterCriticalSection(&cs);
+    threadsArrived++;
+    if (threadsArrived == THREAD_COUNT) {
+        threadsArrived = 0;
+        SetEvent(hBarrierEvent);
+    }
+    LeaveCriticalSection(&cs);
+    WaitForSingleObject(hBarrierEvent, INFINITE);
+    SetEvent(hBarrierEvent);  // сбрасываем для следующего раза
+}
+
+// Поток для вычисления частичной суммы
+DWORD WINAPI SumThread(LPVOID lpParam) {
+    int threadId = *(int*)lpParam;
+    int start = threadId * (ARRAY_SIZE / THREAD_COUNT);
+    int end = (threadId + 1) * (ARRAY_SIZE / THREAD_COUNT);
+    
+    // Вычисляем частичную сумму
+    for (int i = start; i < end; i++) {
+        partialSums[threadId] += arrayData[i];
+    }
+    
+    cout << "Поток " << threadId << " вычислил частичную сумму: " 
+         << partialSums[threadId] << endl;
+    
+    // Барьерная синхронизация
+    Barrier();
+    
+    // Второй этап: если это первый поток, суммируем частичные суммы
+    if (threadId == 0) {
+        totalSum = 0;
+        for (int i = 0; i < THREAD_COUNT; i++) {
+            totalSum += partialSums[i];
+        }
+        cout << "\nОбщая сумма: " << totalSum << endl;
+    }
+    
+    // Ещё один барьер, чтобы все потоки завершились вместе
+    Barrier();
+    
+    return 0;
+}
+
+int main() {
+    // Инициализация массива
+    for (int i = 0; i < ARRAY_SIZE; i++) {
+        arrayData[i] = i + 1;  // 1, 2, 3, ...
+    }
+    
+    // Инициализация синхронизации
+    InitializeCriticalSection(&cs);
+    hBarrierEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
+    
+    // Создаём потоки
+    HANDLE hThreads[THREAD_COUNT];
+    int threadIds[THREAD_COUNT];
+    
+    cout << "=== Параллельное суммирование массива ===" << endl;
+    cout << "Размер массива: " << ARRAY_SIZE << endl;
+    cout << "Количество потоков: " << THREAD_COUNT << endl;
+    cout << "=========================================" << endl;
+    
+    for (int i = 0; i < THREAD_COUNT; i++) {
+        threadIds[i] = i;
+        hThreads[i] = CreateThread(NULL, 0, SumThread, &threadIds[i], 0, NULL);
+    }
+    
+    // Ждём завершения всех потоков
+    WaitForMultipleObjects(THREAD_COUNT, hThreads, TRUE, INFINITE);
+    
+    // Закрываем handle'ы
+    for (int i = 0; i < THREAD_COUNT; i++) {
+        CloseHandle(hThreads[i]);
+    }
+    CloseHandle(hBarrierEvent);
+    DeleteCriticalSection(&cs);
+    
+    // Проверка
+    int expectedSum = ARRAY_SIZE * (ARRAY_SIZE + 1) / 2;
+    cout << "Ожидаемая сумма: " << expectedSum << endl;
+    
+    if (totalSum == expectedSum) {
+        cout << "Результат верный!" << endl;
+    } else {
+        cout << "Ошибка в вычислениях!" << endl;
+    }
+    
+    return 0;
+}

@@ -1,0 +1,56 @@
+Билет №8
+МДК 01.01/01.02 – Класс для работы с натуральными числами
+Спецификация:
+
+Методы: countDigits(int n) – количество разрядов.
+
+sumDigits(int n) – сумма цифр.
+
+productDigits(int n) – произведение цифр.
+
+isPrime(int n) – проверка на простоту.
+
+areCoprime(int a, int b) – взаимно просты (НОД=1).
+
+Тест-кейсы:
+
+countDigits(123) → 3; sumDigits(123)=6; productDigits(123)=6.
+
+isPrime(7)=true, isPrime(10)=false.
+
+areCoprime(8,9)=true, areCoprime(6,9)=false.
+
+МДК 01.03 – Квадраты натуральных чисел от 1 до N
+Код:
+
+java
+btnAdd.setOnClickListener(v -> {
+    String s = et.getText().toString();
+    if (s.isEmpty()) return;
+    int n = Integer.parseInt(s);
+    for (int i = 1; i <= n; i++) {
+        items.add(String.valueOf(i * i));
+    }
+    adapter.notifyDataSetChanged();
+});
+МДК 01.04 – Строковые функции (mystrlwr, mystrrchr, isstringsame)
+cpp
+#include <cctype>
+
+void mystrlwr(char* str) {
+    for (; *str; str++) *str = tolower(*str);
+}
+
+char* mystrrchr(const char* str, int ch) {
+    const char* last = NULL;
+    for (; *str; str++) if (*str == ch) last = str;
+    return (char*)last;
+}
+
+int isstringsame(const char* a, const char* b) {
+    while (*a && *b) {
+        if (tolower(*a) != tolower(*b)) return 0;
+        a++; b++;
+    }
+    return *a == *b;
+}

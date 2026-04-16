@@ -1,0 +1,287 @@
+Билет 34 (полностью)
+МДК 01.01/01.02 – Игра "Угадай число" (две формы, настройки)
+cpp
+#include <iostream>
+#include <windows.h>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+// Глобальные настройки
+int bgColor = 7;      // цвет фона (по умолчанию серый)
+int textColor = 15;   // цвет текста (белый)
+int fontSize = 16;    // размер шрифта
+
+// Функция для установки цвета консоли
+void setColor(int bg, int text) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, (bg << 4) | text);
+}
+
+// Вторая форма - настройки (модальное окно)
+void showSettingsForm() {
+    system("cls");
+    cout << "========== НАСТРОЙКИ ==========" << endl;
+    cout << "1 - Цвет фона (черный, синий, зеленый, красный и т.д.)" << endl;
+    cout << "2 - Цвет текста" << endl;
+    cout << "3 - Размер шрифта (мелкий/средний/крупный)" << endl;
+    cout << "0 - Вернуться в игру" << endl;
+    cout << "================================" << endl;
+    
+    int choice;
+    cout << "Выбор: ";
+    cin >> choice;
+    
+    switch (choice) {
+        case 1:
+            cout << "Выберите цвет фона (0-15): ";
+            cout << "0-черный,1-синий,2-зеленый,3-голубой,4-красный,5-фиолетовый,6-желтый,7-белый,8-серый" << endl;
+            cin >> bgColor;
+            break;
+        case 2:
+            cout << "Выберите цвет текста (0-15): ";
+            cin >> textColor;
+            break;
+        case 3:
+            cout << "Выберите размер: 1-мелкий, 2-средний, 3-крупный: ";
+            int sizeChoice;
+            cin >> sizeChoice;
+            if (sizeChoice == 1) fontSize = 12;
+            else if (sizeChoice == 2) fontSize = 16;
+            else if (sizeChoice == 3) fontSize = 20;
+            break;
+    }
+    
+    setColor(bgColor, textColor);
+    system("cls");
+}
+
+// Первая форма - игра "Угадай число"
+void runGame() {
+    srand(time(NULL));
+    int secretNumber = rand() % 100 + 1;
+    int attempts = 0;
+    int guess;
+    time_t startTime = time(NULL);
+    time_t currentTime;
+    
+    cout << "========== УГАДАЙ ЧИСЛО ==========" << endl;
+    cout << "Я загадал число от 1 до 100." << endl;
+    cout << "У тебя есть 2 минуты! Удачи!" << endl;
+    cout << "===================================" << endl;
+    
+    while (true) {
+        currentTime = time(NULL);
+        int elapsedSeconds = (int)(currentTime - startTime);
+        
+        if (elapsedSeconds >= 120) {
+            cout << "\nВремя вышло! Загаданное число было: " << secretNumber << endl;
+            break;
+        }
+        
+        cout << "\nОсталось времени: " << (120 - elapsedSeconds) << " сек" << endl;
+        cout << "Введите число (или 0 для выхода): ";
+        cin >> guess;
+        
+        if (guess == 0) {
+            cout << "Игра прервана." << endl;
+            break;
+        }
+        
+        attempts++;
+        
+        if (guess < secretNumber) {
+            cout << "БОЛЬШЕ!" << endl;
+        } else if (guess > secretNumber) {
+            cout << "МЕНЬШЕ!" << endl;
+        } else {
+            cout << "\nПОЗДРАВЛЯЮ! Ты угадал число " << secretNumber << " за " << attempts << " попыток!" << endl;
+            break;
+        }
+    }
+    
+    cout << "\nИгра окончена." << endl;
+}
+
+int main() {
+    // Устанавливаем кодировку для русского языка
+    SetConsoleOutputCP(1251);
+    SetConsoleCP(1251);
+    
+    setColor(bgColor, textColor);
+    
+    int choice;
+    do {
+        cout << "\n========== ГЛАВНОЕ МЕНЮ ==========" << endl;
+        cout << "1 - Играть (первая форма)" << endl;
+        cout << "2 - Настройки (вторая форма)" << endl;
+        cout << "0 - Выход" << endl;
+        cout << "==================================" << endl;
+        cout << "Выбор: ";
+        cin >> choice;
+        
+        switch (choice) {
+            case 1:
+                runGame();
+                break;
+            case 2:
+                showSettingsForm();
+                break;
+            case 0:
+                cout << "До свидания!" << endl;
+                break;
+            default:
+                cout << "Неверный выбор!" << endl;
+        }
+    } while (choice != 0);
+    
+    return 0;
+}
+МДК 01.03 – Диагональ прямоугольного параллелепипеда
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/etA" android:hint="Ребро a" android:inputType="numberDecimal" />
+    <EditText android:id="@+id/etB" android:hint="Ребро b" android:inputType="numberDecimal" />
+    <EditText android:id="@+id/etC" android:hint="Ребро c" android:inputType="numberDecimal" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnCalculate" android:text="Calculate" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnTheme1" android:text="Тема 1" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnTheme2" android:text="Тема 2" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" android:layout_marginTop="16dp" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.diagonal;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etA, etB, etC;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etA = findViewById(R.id.etA);
+        etB = findViewById(R.id.etB);
+        etC = findViewById(R.id.etC);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnCalculate).setOnClickListener(v -> {
+            String sA = etA.getText().toString();
+            String sB = etB.getText().toString();
+            String sC = etC.getText().toString();
+            
+            if (sA.isEmpty() || sB.isEmpty() || sC.isEmpty()) return;
+            
+            double a = Double.parseDouble(sA);
+            double b = Double.parseDouble(sB);
+            double c = Double.parseDouble(sC);
+            double diagonal = Math.sqrt(a * a + b * b + c * c);
+            
+            items.add("a = " + a + " b = " + b + " c = " + c + " d = " + String.format("%.2f", diagonal));
+            adapter.notifyDataSetChanged();
+            
+            etA.setText("");
+            etB.setText("");
+            etC.setText("");
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnTheme1).setOnClickListener(v -> {
+            int textColor = Color.parseColor("#FF5722");
+            int bgColor = Color.parseColor("#FFF3E0");
+            applyTheme(textColor, bgColor);
+        });
+
+        findViewById(R.id.btnTheme2).setOnClickListener(v -> {
+            int textColor = Color.parseColor("#4CAF50");
+            int bgColor = Color.parseColor("#E8F5E9");
+            applyTheme(textColor, bgColor);
+        });
+    }
+    
+    private void applyTheme(int textColor, int bgColor) {
+        etA.setTextColor(textColor);
+        etA.setBackgroundColor(bgColor);
+        etB.setTextColor(textColor);
+        etB.setBackgroundColor(bgColor);
+        etC.setTextColor(textColor);
+        etC.setBackgroundColor(bgColor);
+    }
+}
+МДК 01.04 – Время работы ОС, MessageBox (повтор из билета 1)
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    // 1. Время работы системы
+    ULONGLONG ms = GetTickCount64();
+    ULONGLONG seconds = ms / 1000;
+    ULONGLONG days = seconds / 86400;
+    seconds %= 86400;
+    ULONGLONG hours = seconds / 3600;
+    seconds %= 3600;
+    ULONGLONG minutes = seconds / 60;
+    seconds %= 60;
+
+    cout << "Время работы ОС: " << days << " дней, " << hours << " часов, "
+         << minutes << " минут, " << seconds << " секунд" << endl;
+
+    // 2. MessageBox с текущим временем и датой
+    SYSTEMTIME st;
+    GetLocalTime(&st);
+    char timeMsg[200];
+    sprintf_s(timeMsg, sizeof(timeMsg),
+              "Текущее время: %02d:%02d:%02d\nДата: %02d.%02d.%04d",
+              st.wHour, st.wMinute, st.wSecond, st.wDay, st.wMonth, st.wYear);
+    MessageBoxA(NULL, timeMsg, "Время и дата", MB_OK);
+
+    // 3. Имя компьютера и пользователя
+    char compName[256];
+    DWORD size = sizeof(compName);
+    GetComputerNameA(compName, &size);
+    cout << "Имя компьютера: " << compName << endl;
+
+    char userName[256];
+    size = sizeof(userName);
+    GetUserNameA(userName, &size);
+    cout << "Имя пользователя: " << userName << endl;
+
+    return 0;
+}

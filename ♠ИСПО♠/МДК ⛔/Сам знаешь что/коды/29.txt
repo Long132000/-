@@ -1,0 +1,159 @@
+Билет 29 (полностью)
+МДК 01.01/01.02 – Проверка орфографии с подключённым словарём
+cpp
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <set>
+#include <sstream>
+#include <vector>
+#include <algorithm>
+#include <cctype>
+using namespace std;
+
+class SpellChecker {
+private:
+    set<string> dictionary;
+    
+    // Приведение слова к нижнему регистру и удаление знаков препинания
+    string normalizeWord(const string& word) {
+        string result;
+        for (char c : word) {
+            if (isalpha((unsigned char)c)) {
+                result += tolower(c);
+            }
+        }
+        return result;
+    }
+    
+public:
+    // Загрузка словаря из файла
+    bool loadDictionary(const string& filename) {
+        ifstream fin(filename);
+        if (!fin.is_open()) {
+            cout << "Не удалось открыть файл словаря: " << filename << endl;
+            return false;
+        }
+        
+        string word;
+        while (fin >> word) {
+            dictionary.insert(normalizeWord(word));
+        }
+        
+        fin.close();
+        cout << "Загружено слов в словарь: " << dictionary.size() << endl;
+        return true;
+    }
+    
+    // Проверка орфографии текста
+    vector<string> checkText(const string& text) {
+        vector<string> errors;
+        stringstream ss(text);
+        string word;
+        
+        while (ss >> word) {
+            string normalized = normalizeWord(word);
+            if (!normalized.empty() && dictionary.find(normalized) == dictionary.end()) {
+                errors.push_back(word);
+            }
+        }
+        
+        return errors;
+    }
+    
+    // Вывод текста с подчёркиванием ошибок
+    string highlightErrors(const string& text) {
+        string result;
+        stringstream ss(text);
+        string word;
+        bool first = true;
+        
+        while (ss >> word) {
+            if (!first) result += " ";
+            first = false;
+            
+            string normalized = normalizeWord(word);
+            if (!normalized.empty() && dictionary.find(normalized) == dictionary.end()) {
+                result += "[" + word + "]";  // выделяем ошибку скобками
+            } else {
+                result += word;
+            }
+        }
+        
+        return result;
+    }
+};
+
+int main() {
+    SpellChecker checker;
+    
+    // Загружаем словарь
+    if (!checker.loadDictionary("dictionary.txt")) {
+        // Если нет файла, создаём пример словаря
+        cout << "Создаю пример словаря..." << endl;
+        ofstream fout("dictionary.txt");
+        fout << "hello world this is a test dictionary example words" << endl;
+        fout << "computer programming cpp language spell checker" << endl;
+        fout << "good morning evening afternoon night" << endl;
+        fout << "the quick brown fox jumps over lazy dog" << endl;
+        fout.close();
+        checker.loadDictionary("dictionary.txt");
+    }
+    
+    int choice;
+    string text;
+    
+    cout << "=== Проверка орфографии ===" << endl;
+    cout << "1 - Ввод текста с клавиатуры" << endl;
+    cout << "2 - Загрузка текста из файла" << endl;
+    cout << "Выберите вариант: ";
+    cin >> choice;
+    cin.ignore();
+    
+    if (choice == 1) {
+        cout << "Введите текст: ";
+        getline(cin, text);
+    } else if (choice == 2) {
+        string filename;
+        cout << "Введите имя файла: ";
+        getline(cin, filename);
+        
+        ifstream fin(filename);
+        if (fin.is_open()) {
+            string line;
+            while (getline(fin, line)) {
+                text += line + " ";
+            }
+            fin.close();
+        } else {
+            cout << "Не удалось открыть файл!" << endl;
+            return 1;
+        }
+    } else {
+        cout << "Неверный выбор!" << endl;
+        return 1;
+    }
+    
+    // Проверяем текст
+    vector<string> errors = checker.checkText(text);
+    
+    cout << "\n=== Результат ===" << endl;
+    cout << "Исходный текст:" << endl;
+    cout << text << endl;
+    
+    cout << "\nТекст с выделением ошибок:" << endl;
+    cout << checker.highlightErrors(text) << endl;
+    
+    cout << "\nНайдено ошибок: " << errors.size() << endl;
+    if (!errors.empty()) {
+        cout << "Ошибочные слова: ";
+        for (const string& err : errors) {
+            cout << err << " ";
+        }
+        cout << endl;
+    }
+    
+    return 0;
+}
+МДК 01.03 – Площадь прямоугольника (уже в билете 27)
+МДК 01.04 – Производитель-Потребитель с файлом как буфером (уже в билете 27)

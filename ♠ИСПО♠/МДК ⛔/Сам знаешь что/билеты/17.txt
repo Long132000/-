@@ -1,0 +1,24 @@
+Билет №17
+МДК 01.01/01.02 – Динамическая библиотека для обработки натуральных чисел
+Создание DLL (файл NumberUtils.dll):
+
+cpp
+extern "C" __declspec(dllexport) int countDigits(long long n);
+extern "C" __declspec(dllexport) int sumDigits(long long n);
+extern "C" __declspec(dllexport) int maxDigit(long long n);
+extern "C" __declspec(dllexport) long long removeMaxDigit(long long n);
+Подключение в основной программе:
+
+cpp
+typedef int (*CountDigitsFunc)(long long);
+HMODULE hLib = LoadLibrary("NumberUtils.dll");
+CountDigitsFunc countDigits = (CountDigitsFunc)GetProcAddress(hLib, "countDigits");
+// вызов
+МДК 01.03 – Сумма трёх чисел и темы (аналогично билету №9, но темы меняют цвет EditText)
+МДК 01.04 – Производитель-Потребитель (буфер 10, семафоры)
+cpp
+HANDLE empty = CreateSemaphore(NULL, 10, 10, NULL);
+HANDLE full = CreateSemaphore(NULL, 0, 10, NULL);
+CRITICAL_SECTION cs;
+// Производитель: WaitForSingleObject(empty) -> EnterCriticalSection -> положить -> Leave -> ReleaseSemaphore(full)
+// Потребитель: WaitForSingleObject(full) -> Enter -> взять -> Leave -> ReleaseSemaphore(empty)

@@ -1,0 +1,203 @@
+Билет 11 (полностью)
+МДК 01.01/01.02 – Диаграмма активностей для соревнований
+Текстовое описание для построения в Visio (Activity Diagram):
+
+Начальный узел (●)
+
+Создать новое мероприятие
+
+Указать дату и время проведения
+
+Выбрать вид состязаний
+
+Добавить судей
+
+Добавить участников
+
+Разделитель (fork) → параллельно:
+
+Для каждого участника (цикл):
+7. Занести показатели участника (время, очки)
+8. Проверить нарушение регламента
+
+[есть нарушение] → Дисквалифицировать участника
+
+[нет нарушения] → Вывести список выступивших в порядке ухудшения результатов
+
+[Пока не все участники] → вернуться к шагу 7
+По окончании состязаний (сборка после цикла)
+
+Сформировать список победителей (три призовых места)
+
+Завершить мероприятие
+
+Конечный узел (●)
+
+Элементы для Visio:
+
+Начальный узел (Initial Node)
+
+Действия (Actions) – прямоугольники с закруглёнными углами
+
+Узлы решения (Decision) – ромбы для проверки нарушений
+
+Цикл (Loop node) – рамка с условием "для каждого участника"
+
+Потоки управления (Control Flow) – стрелки
+
+Конечный узел (Final Node)
+
+МДК 01.03 – Арифметические операции (8=5+3) – такой же как билет 1, но формат вывода: результат=операнд1+операнд2
+activity_main.xml (как в билете 1, но кнопки +, -, *, /, CLEAR)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/et1" android:hint="Операнд 1" android:inputType="numberDecimal" />
+    <EditText android:id="@+id/et2" android:hint="Операнд 2" android:inputType="numberDecimal" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="+" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnSub" android:text="-" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnMul" android:text="*" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnDiv" android:text="/" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.arithmetic;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText et1, et2;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        et1 = findViewById(R.id.et1);
+        et2 = findViewById(R.id.et2);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> calculate("+"));
+        findViewById(R.id.btnSub).setOnClickListener(v -> calculate("-"));
+        findViewById(R.id.btnMul).setOnClickListener(v -> calculate("*"));
+        findViewById(R.id.btnDiv).setOnClickListener(v -> calculate("/"));
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+
+    private void calculate(String op) {
+        String s1 = et1.getText().toString();
+        String s2 = et2.getText().toString();
+        if (s1.isEmpty() || s2.isEmpty()) {
+            Toast.makeText(this, "Введите оба числа", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        double a = Double.parseDouble(s1);
+        double b = Double.parseDouble(s2);
+        double result = 0;
+        switch (op) {
+            case "+": result = a + b; break;
+            case "-": result = a - b; break;
+            case "*": result = a * b; break;
+            case "/":
+                if (b == 0) {
+                    Toast.makeText(this, "Деление на ноль", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                result = a / b;
+                break;
+        }
+        // Формат: 8=5+3
+        String entry = result + "=" + a + op + b;
+        items.add(entry);
+        adapter.notifyDataSetChanged();
+    }
+}
+МДК 01.04 – Работа с файлом (CreateFile, дублирование описателя)
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    // 1. Создаём файл
+    HANDLE hFile1 = CreateFileA(
+        "test_duplicate.txt",
+        GENERIC_WRITE,
+        0,                      // эксклюзивный доступ
+        NULL,
+        CREATE_ALWAYS,          // создать новый или перезаписать
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+    if (hFile1 == INVALID_HANDLE_VALUE) {
+        cout << "Ошибка создания файла" << endl;
+        return 1;
+    }
+    cout << "Файл создан. Handle: " << hFile1 << endl;
+
+    // 2. Дублируем описатель
+    HANDLE hFile2;
+    DuplicateHandle(
+        GetCurrentProcess(),
+        hFile1,
+        GetCurrentProcess(),
+        &hFile2,
+        0,
+        FALSE,
+        DUPLICATE_SAME_ACCESS
+    );
+    cout << "Дубликат handle: " << hFile2 << endl;
+
+    // 3. Запись через оба описателя
+    DWORD written;
+    char data1[] = "Запись через первый описатель\n";
+    WriteFile(hFile1, data1, sizeof(data1) - 1, &written, NULL);
+    cout << "Записано через первый: " << written << " байт" << endl;
+
+    char data2[] = "Запись через второй описатель\n";
+    WriteFile(hFile2, data2, sizeof(data2) - 1, &written, NULL);
+    cout << "Записано через второй: " << written << " байт" << endl;
+
+    // 4. Закрываем первый описатель
+    CloseHandle(hFile1);
+    cout << "Первый описатель закрыт" << endl;
+
+    // 5. Проверяем запись через второй описатель
+    char data3[] = "Запись после закрытия первого\n";
+    WriteFile(hFile2, data3, sizeof(data3) - 1, &written, NULL);
+    cout << "Записано через второй после закрытия первого: " << written << " байт" << endl;
+
+    // 6. Закрываем второй описатель
+    CloseHandle(hFile2);
+    cout << "Второй описатель закрыт. Файл закрыт." << endl;
+
+    return 0;
+}

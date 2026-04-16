@@ -1,0 +1,19 @@
+Билет №25
+МДК 01.01/01.02 – Вставка в массив на указанную позицию
+cpp
+void insert(int arr[], int& size, int value, int pos) {
+    if (pos<0 || pos>size) throw out_of_range("Invalid position");
+    for (int i = size; i > pos; i--) arr[i] = arr[i-1];
+    arr[pos] = value;
+    size++;
+}
+МДК 01.03 – Скобки и дублирование строки (из первого EditText, количество из второго)
+java
+String text = et1.getText().toString();
+int count = Integer.parseInt(et2.getText().toString());
+StringBuilder sb = new StringBuilder();
+for (int i=0; i<count; i++) sb.append(text);
+items.add("(" + sb.toString() + ")");
+МДК 01.04 – Обедающие философы (3 процесса, мьютексы)
+cpp
+// Каждый философ берёт левую и правую вилку (мьютексы).

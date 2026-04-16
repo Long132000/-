@@ -1,0 +1,21 @@
+Билет №28
+МДК 01.01/01.02 – Выдача суммы минимальным количеством купюр
+cpp
+vector<int> denominations = {5000,2000,1000,500,200,100,50};
+vector<int> count(denominations.size());
+int S; cin >> S;
+for (size_t i=0; i<denominations.size(); i++) {
+    count[i] = S / denominations[i];
+    S %= denominations[i];
+}
+if (S != 0) throw runtime_error("Cannot pay exact sum");
+МДК 01.03 – Пересчёт м/с в км/ч
+java
+double ms = Double.parseDouble(et.getText().toString());
+double kmh = ms * 3.6;
+items.add(ms + " м/с = " + kmh + " км/ч");
+МДК 01.04 – Файловый менеджер (рекурсивный обход)
+cpp
+void walkDir(const string& path) {
+    // FindFirstFile/FindNextFile, рекурсивно для поддиректорий
+}

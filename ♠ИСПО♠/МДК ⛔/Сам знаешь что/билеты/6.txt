@@ -1,0 +1,71 @@
+Билет №6
+МДК 01.01/01.02 – Класс для обработки одномерного массива
+Спецификация класса ArrayProcessor:
+
+Метод double averagePositive(int arr[], int size) – среднее положительных по всему массиву.
+
+Метод double averagePositiveRange(int arr[], int start, int end) – среднее положительных на отрезке [start, end] (индексы включительно). Если start<0 или end>=size – выбрасывать исключение. Если положительных нет – возвращать -1 или выбрасывать исключение (по спецификации).
+
+Пример:
+
+cpp
+class ArrayProcessor {
+public:
+    static double averagePositive(int arr[], int size) {
+        int sum = 0, count = 0;
+        for (int i = 0; i < size; i++)
+            if (arr[i] > 0) { sum += arr[i]; count++; }
+        return count ? (double)sum / count : -1.0;
+    }
+    static double averagePositiveRange(int arr[], int start, int end, int size) {
+        if (start < 0 || end >= size || start > end) throw out_of_range("Invalid range");
+        int sum = 0, count = 0;
+        for (int i = start; i <= end; i++)
+            if (arr[i] > 0) { sum += arr[i]; count++; }
+        return count ? (double)sum / count : -1.0;
+    }
+};
+МДК 01.03 – Добавление * и добавление в список
+Код:
+
+java
+btnAddStar.setOnClickListener(v -> {
+    String text = et.getText().toString();
+    et.setText(text + "*");
+});
+btnAddToList.setOnClickListener(v -> {
+    items.add(et.getText().toString());
+    adapter.notifyDataSetChanged();
+});
+МДК 01.04 – GUI-приложение WinAPI (диалоговое окно)
+Создание диалогового окна с полями и кнопками (упрощённо, ресурсы не используются – динамическое создание элементов).
+
+cpp
+#include <windows.h>
+
+HWND hEditTime, hEditComp, hEditUser, hEditUptime;
+
+INT_PTR CALLBACK DlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+    switch (msg) {
+        case WM_INITDIALOG:
+            // Создаём поля ввода (статик + эдит)
+            // ... (код создания опущен для краткости)
+            // Заполняем значениями
+            SetDlgItemText(hDlg, IDC_EDIT_TIME, "текущее время...");
+            // ... и т.д.
+            return TRUE;
+        case WM_COMMAND:
+            if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+                EndDialog(hDlg, LOWORD(wParam));
+            else if (LOWORD(wParam) == IDC_ABOUT)
+                MessageBox(hDlg, "Программа системной информации", "О программе", MB_OK);
+            return TRUE;
+    }
+    return FALSE;
+}
+
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE, LPSTR, int) {
+    DialogBox(hInst, MAKEINTRESOURCE(IDD_MAIN), NULL, DlgProc);
+    return 0;
+}
+Примечание: для реальной работы нужно создать ресурс диалога или создавать элементы программно.

@@ -1,0 +1,191 @@
+Билет 8 (полностью)
+МДК 01.01/01.02 – Класс для работы с натуральными числами
+cpp
+#include <iostream>
+using namespace std;
+
+class NaturalUtils {
+public:
+    // Количество разрядов
+    static int countDigits(long long n) {
+        if (n == 0) return 1;
+        int c = 0;
+        while (n > 0) {
+            c++;
+            n /= 10;
+        }
+        return c;
+    }
+
+    // Сумма цифр
+    static int sumDigits(long long n) {
+        int s = 0;
+        while (n > 0) {
+            s += n % 10;
+            n /= 10;
+        }
+        return s;
+    }
+
+    // Произведение цифр
+    static int productDigits(long long n) {
+        int p = 1;
+        while (n > 0) {
+            p *= n % 10;
+            n /= 10;
+        }
+        return p;
+    }
+
+    // Проверка на простоту
+    static bool isPrime(long long n) {
+        if (n < 2) return false;
+        for (long long i = 2; i * i <= n; i++) {
+            if (n % i == 0) return false;
+        }
+        return true;
+    }
+
+    // Взаимно простые (НОД == 1)
+    static bool areCoprime(long long a, long long b) {
+        while (b != 0) {
+            long long t = b;
+            b = a % b;
+            a = t;
+        }
+        return a == 1;
+    }
+};
+
+// Тест-кейсы
+int main() {
+    cout << "countDigits(12345) = " << NaturalUtils::countDigits(12345) << " (ожидается 5)" << endl;
+    cout << "sumDigits(123) = " << NaturalUtils::sumDigits(123) << " (ожидается 6)" << endl;
+    cout << "productDigits(123) = " << NaturalUtils::productDigits(123) << " (ожидается 6)" << endl;
+    cout << "isPrime(7) = " << NaturalUtils::isPrime(7) << " (1=true, 0=false) ожидается 1" << endl;
+    cout << "isPrime(10) = " << NaturalUtils::isPrime(10) << " (ожидается 0)" << endl;
+    cout << "areCoprime(8,9) = " << NaturalUtils::areCoprime(8, 9) << " (ожидается 1)" << endl;
+    cout << "areCoprime(6,9) = " << NaturalUtils::areCoprime(6, 9) << " (ожидается 0)" << endl;
+    return 0;
+}
+МДК 01.03 – Квадраты натуральных чисел от 1 до N
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите N"
+        android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.squares;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etN;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etN = findViewById(R.id.etN);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String s = etN.getText().toString();
+            if (s.isEmpty()) return;
+            int n = Integer.parseInt(s);
+            for (int i = 1; i <= n; i++) {
+                items.add(i + "^2 = " + (i * i));
+            }
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Строковые функции (mystrlwr, mystrrchr, isstringsame)
+cpp
+#include <iostream>
+#include <cctype>
+#include <cstring>
+using namespace std;
+
+// Преобразование строки к нижнему регистру
+void mystrlwr(char* str) {
+    for (int i = 0; str[i]; i++) {
+        str[i] = tolower(str[i]);
+    }
+}
+
+// Поиск последнего вхождения символа (возвращает указатель)
+char* mystrrchr(const char* str, int ch) {
+    const char* last = nullptr;
+    for (int i = 0; str[i]; i++) {
+        if (str[i] == ch) {
+            last = &str[i];
+        }
+    }
+    return const_cast<char*>(last);
+}
+
+// Сравнение строк без учёта регистра
+int isstringsame(const char* a, const char* b) {
+    while (*a && *b) {
+        if (tolower(*a) != tolower(*b)) return 0;
+        a++;
+        b++;
+    }
+    return *a == *b;
+}
+
+int main() {
+    char test[] = "HeLLo WoRLd";
+    mystrlwr(test);
+    cout << "mystrlwr: " << test << endl;
+
+    const char* text = "Hello World, Hello!";
+    char* lastH = mystrrchr(text, 'H');
+    if (lastH) {
+        cout << "Последнее 'H' на позиции: " << (lastH - text) << endl;
+    }
+
+    cout << "isstringsame(\"Hello\", \"HELLO\"): " << isstringsame("Hello", "HELLO") << " (1=true)" << endl;
+    cout << "isstringsame(\"Hello\", \"World\"): " << isstringsame("Hello", "World") << " (0=false)" << endl;
+
+    return 0;
+}

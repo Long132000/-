@@ -1,0 +1,24 @@
+Билет №26
+МДК 01.01/01.02 – Циклический сдвиг массива
+cpp
+void shift(int arr[], int n, int k) {
+    k %= n;
+    if (k > 0) { // вправо
+        reverse(arr, arr+n);
+        reverse(arr, arr+k);
+        reverse(arr+k, arr+n);
+    } else if (k < 0) { // влево
+        k = -k;
+        reverse(arr, arr+n);
+        reverse(arr, arr+n-k);
+        reverse(arr+n-k, arr+n);
+    }
+}
+МДК 01.03 – Площадь круга
+java
+double r = Double.parseDouble(et.getText().toString());
+double s = Math.PI * r * r;
+items.add("R = " + r + " S = " + String.format("%.2f", s));
+МДК 01.04 – Банковская система (взаимоблокировка)
+cpp
+// Два счёта, два мьютекса, перевод: lock(m1); lock(m2); ... unlock.

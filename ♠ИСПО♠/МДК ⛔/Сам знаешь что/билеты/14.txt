@@ -1,0 +1,58 @@
+Билет №14
+МДК 01.01/01.02 – Частота двухбуквенных сочетаний (например, "нн", "мм")
+Код:
+
+cpp
+#include <iostream>
+#include <string>
+#include <map>
+using namespace std;
+
+int main() {
+    string text;
+    cout << "Введите текст: "; getline(cin, text);
+    map<string, int> freq;
+    int totalBigrams = 0;
+    for (size_t i = 0; i+1 < text.length(); i++) {
+        if (isalpha(text[i]) && isalpha(text[i+1]) && text[i] == text[i+1]) {
+            string bigram = text.substr(i,2);
+            freq[bigram]++;
+            totalBigrams++;
+        }
+    }
+    cout << "Сочетание\tЧастота (%)\n";
+    for (auto& p : freq) {
+        cout << p.first << "\t\t" << (p.second * 100.0 / totalBigrams) << "%\n";
+    }
+    return 0;
+}
+МДК 01.03 – Добавление # (не более 20)
+java
+btnAddHash.setOnClickListener(v -> {
+    String text = et1.getText().toString();
+    int count = Integer.parseInt(et2.getText().toString());
+    if (count > 20) count = 20;
+    StringBuilder sb = new StringBuilder(text);
+    for (int i = 0; i < count; i++) sb.append("#");
+    et1.setText(sb.toString());
+});
+МДК 01.04 – Отклонение от среднего более 10% (с указателями)
+cpp
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main() {
+    int N; cin >> N;
+    float* A = new float[N];
+    for (int i = 0; i < N; i++) cin >> A[i];
+    float sum = 0;
+    for (int i = 0; i < N; i++) sum += *(A+i);
+    float avg = sum / N;
+    int k = 0;
+    for (int i = 0; i < N; i++)
+        if (fabs(*(A+i) - avg) > 0.1 * avg) k++;
+    cout << "Sum=" << sum << " Sr=" << avg << " k=" << k << endl;
+    delete[] A;
+    return 0;
+}

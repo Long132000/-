@@ -1,0 +1,210 @@
+Билет 15 (полностью)
+МДК 01.01/01.02 – Зачётная оценка (исключить max и min)
+cpp
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <numeric>
+using namespace std;
+
+int main() {
+    ifstream fin("scores.txt");
+    if (!fin.is_open()) {
+        cout << "Не удалось открыть файл scores.txt" << endl;
+        cout << "Создайте файл с оценками (каждое число на новой строке)" << endl;
+        return 1;
+    }
+
+    vector<int> scores;
+    int score;
+    while (fin >> score) {
+        scores.push_back(score);
+    }
+    fin.close();
+
+    if (scores.size() < 3) {
+        cout << "Ошибка: нужно как минимум 3 оценки" << endl;
+        return 1;
+    }
+
+    cout << "Исходные оценки: ";
+    for (int s : scores) cout << s << " ";
+    cout << endl;
+
+    // Находим позиции максимума и минимума (первые вхождения)
+    auto maxIt = max_element(scores.begin(), scores.end());
+    auto minIt = min_element(scores.begin(), scores.end());
+
+    int maxValue = *maxIt;
+    int minValue = *minIt;
+
+    cout << "Максимальная оценка: " << maxValue << endl;
+    cout << "Минимальная оценка: " << minValue << endl;
+
+    // Удаляем одну максимальную и одну минимальную
+    // Удаляем сначала тот, который правее, чтобы не сдвигать индексы
+    if (maxIt > minIt) {
+        scores.erase(maxIt);
+        scores.erase(minIt);
+    } else {
+        scores.erase(minIt);
+        scores.erase(maxIt);
+    }
+
+    int sum = accumulate(scores.begin(), scores.end(), 0);
+    double average = static_cast<double>(sum) / scores.size();
+
+    cout << "Оценки после исключения: ";
+    for (int s : scores) cout << s << " ";
+    cout << endl;
+    cout << "Зачётная сумма: " << sum << endl;
+    cout << "Средний балл: " << average << endl;
+
+    return 0;
+}
+МДК 01.03 – Переворот строки и добавление (не более 10 раз)
+activity_main.xml (два EditText: строка и количество, кнопки ADD, CLEAR)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/etText" android:hint="Строка" />
+    <EditText android:id="@+id/etCount" android:hint="Количество (не более 10)" android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.reverseadd;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etText, etCount;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etText = findViewById(R.id.etText);
+        etCount = findViewById(R.id.etCount);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String text = etText.getText().toString();
+            String countStr = etCount.getText().toString();
+            if (text.isEmpty() || countStr.isEmpty()) {
+                Toast.makeText(this, "Заполните оба поля", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int count = Integer.parseInt(countStr);
+            if (count > 10) {
+                count = 10;
+                Toast.makeText(this, "Ограничено 10 повторений", Toast.LENGTH_SHORT).show();
+            }
+            // Переворачиваем строку
+            String reversed = new StringBuilder(text).reverse().toString();
+            for (int i = 0; i < count; i++) {
+                items.add(reversed);
+            }
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Два потока с критической секцией
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+// Глобальные переменные
+CRITICAL_SECTION cs;
+int sharedCounter = 0;
+const int ITERATIONS = 10000;
+
+// Функция первого потока (увеличивает счётчик)
+DWORD WINAPI IncrementThread(LPVOID lpParam) {
+    for (int i = 0; i < ITERATIONS; i++) {
+        EnterCriticalSection(&cs);
+        sharedCounter++;
+        LeaveCriticalSection(&cs);
+    }
+    cout << "Поток Increment завершил работу" << endl;
+    return 0;
+}
+
+// Функция второго потока (уменьшает счётчик)
+DWORD WINAPI DecrementThread(LPVOID lpParam) {
+    for (int i = 0; i < ITERATIONS; i++) {
+        EnterCriticalSection(&cs);
+        sharedCounter--;
+        LeaveCriticalSection(&cs);
+    }
+    cout << "Поток Decrement завершил работу" << endl;
+    return 0;
+}
+
+int main() {
+    // Инициализируем критическую секцию
+    InitializeCriticalSection(&cs);
+    cout << "Критическая секция инициализирована" << endl;
+
+    // Создаём потоки
+    HANDLE hThread1 = CreateThread(NULL, 0, IncrementThread, NULL, 0, NULL);
+    HANDLE hThread2 = CreateThread(NULL, 0, DecrementThread, NULL, 0, NULL);
+
+    if (hThread1 == NULL || hThread2 == NULL) {
+        cout << "Ошибка создания потоков" << endl;
+        DeleteCriticalSection(&cs);
+        return 1;
+    }
+
+    cout << "Потоки запущены. Ожидание завершения..." << endl;
+
+    // Ждём завершения обоих потоков
+    WaitForSingleObject(hThread1, INFINITE);
+    WaitForSingleObject(hThread2, INFINITE);
+
+    // Закрываем handle'ы потоков
+    CloseHandle(hThread1);
+    CloseHandle(hThread2);
+
+    // Удаляем критическую секцию
+    DeleteCriticalSection(&cs);
+
+    // Выводим результат
+    cout << "Финальное значение счётчика: " << sharedCounter << endl;
+    cout << "Ожидалось: 0 (при корректной синхронизации)" << endl;
+
+    return 0;
+}

@@ -1,0 +1,313 @@
+Билет 19 (полностью)
+МДК 01.01/01.02 – Класс комплексных чисел (сравнение, сопряжённое)
+cpp
+#include <iostream>
+#include <string>
+#include <cmath>
+using namespace std;
+
+class Complex {
+private:
+    double re;
+    double im;
+    
+public:
+    Complex(double r = 0, double i = 0) : re(r), im(i) {}
+    
+    double getRe() const { return re; }
+    double getIm() const { return im; }
+    
+    // Перегрузка операторов сравнения
+    bool operator==(const Complex& other) const {
+        return (re == other.re) && (im == other.im);
+    }
+    
+    bool operator!=(const Complex& other) const {
+        return !(*this == other);
+    }
+    
+    // Комплексно-сопряжённое число
+    Complex conjugate() const {
+        return Complex(re, -im);
+    }
+    
+    // Умножение на действительное число
+    Complex multiplyByReal(double r) const {
+        return Complex(re * r, im * r);
+    }
+    
+    // Умножение на комплексное число
+    Complex multiplyByComplex(const Complex& other) const {
+        return Complex(
+            re * other.re - im * other.im,
+            re * other.im + im * other.re
+        );
+    }
+    
+    string toString() const {
+        if (im >= 0) {
+            return to_string(re) + "+" + to_string(im) + "i";
+        } else {
+            return to_string(re) + to_string(im) + "i";
+        }
+    }
+};
+
+int main() {
+    Complex a(3, 4);
+    Complex b(3, 4);
+    Complex c(1, 2);
+    
+    cout << "a = " << a.toString() << endl;
+    cout << "b = " << b.toString() << endl;
+    cout << "c = " << c.toString() << endl;
+    
+    // Сравнение
+    cout << "\n=== Сравнение ===" << endl;
+    cout << "a == b: " << (a == b ? "true" : "false") << endl;
+    cout << "a == c: " << (a == c ? "true" : "false") << endl;
+    cout << "a != c: " << (a != c ? "true" : "false") << endl;
+    
+    // Сопряжённое
+    cout << "\n=== Сопряжённое число ===" << endl;
+    cout << "Сопряжённое к a: " << a.conjugate().toString() << endl;
+    
+    // Умножение
+    cout << "\n=== Умножение ===" << endl;
+    cout << "a * 2 = " << a.multiplyByReal(2).toString() << endl;
+    cout << "a * c = " << a.multiplyByComplex(c).toString() << endl;
+    
+    return 0;
+}
+МДК 01.03 – Удвоение числа (*2)
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите число"
+        android:inputType="numberDecimal" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnMul2" android:text="*2" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnAdd" android:text="Add" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.multiply2;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText editText;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editText = findViewById(R.id.editText);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnMul2).setOnClickListener(v -> {
+            String s = editText.getText().toString();
+            if (!s.isEmpty()) {
+                double val = Double.parseDouble(s);
+                editText.setText(String.valueOf(val * 2));
+            }
+        });
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String s = editText.getText().toString();
+            if (!s.isEmpty()) {
+                items.add(s);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Мультимедийная обработка (pipeline)
+cpp
+#include <windows.h>
+#include <iostream>
+#include <queue>
+using namespace std;
+
+// Этапы обработки
+struct Frame {
+    int id;
+    int data;
+};
+
+// Буферы между этапами
+queue<Frame> readBuffer;
+queue<Frame> filterBuffer;
+queue<Frame> writeBuffer;
+
+// Синхронизация
+CRITICAL_SECTION csRead, csFilter, csWrite;
+HANDLE hReadReady, hFilterReady, hWriteReady;
+HANDLE hReadDone, hFilterDone, hWriteDone;
+
+const int TOTAL_FRAMES = 20;
+int framesRead = 0;
+int framesFiltered = 0;
+int framesWritten = 0;
+
+// Поток чтения кадров
+DWORD WINAPI ReadThread(LPVOID lpParam) {
+    for (int i = 0; i < TOTAL_FRAMES; i++) {
+        WaitForSingleObject(hReadReady, INFINITE);
+        EnterCriticalSection(&csRead);
+        
+        Frame f;
+        f.id = i;
+        f.data = rand() % 256;
+        readBuffer.push(f);
+        framesRead++;
+        cout << "[Чтение]     Кадр " << f.id << " прочитан (данные: " << f.data << ")" << endl;
+        
+        LeaveCriticalSection(&csRead);
+        SetEvent(hFilterReady);
+        Sleep(10);
+    }
+    cout << "Чтение завершено" << endl;
+    return 0;
+}
+
+// Поток применения фильтра
+DWORD WINAPI FilterThread(LPVOID lpParam) {
+    while (framesWritten < TOTAL_FRAMES) {
+        WaitForSingleObject(hFilterReady, INFINITE);
+        EnterCriticalSection(&csRead);
+        
+        if (readBuffer.empty()) {
+            LeaveCriticalSection(&csRead);
+            continue;
+        }
+        
+        Frame f = readBuffer.front();
+        readBuffer.pop();
+        
+        LeaveCriticalSection(&csRead);
+        
+        // Применяем фильтр (простое преобразование)
+        EnterCriticalSection(&csFilter);
+        f.data = f.data * 2;  // фильтр: удвоение
+        filterBuffer.push(f);
+        framesFiltered++;
+        cout << "[Фильтр]     Кадр " << f.id << " обработан (данные: " << f.data << ")" << endl;
+        LeaveCriticalSection(&csFilter);
+        
+        SetEvent(hWriteReady);
+        Sleep(10);
+    }
+    cout << "Фильтрация завершена" << endl;
+    return 0;
+}
+
+// Поток сохранения
+DWORD WINAPI WriteThread(LPVOID lpParam) {
+    while (framesWritten < TOTAL_FRAMES) {
+        WaitForSingleObject(hWriteReady, INFINITE);
+        EnterCriticalSection(&csFilter);
+        
+        if (filterBuffer.empty()) {
+            LeaveCriticalSection(&csFilter);
+            continue;
+        }
+        
+        Frame f = filterBuffer.front();
+        filterBuffer.pop();
+        
+        LeaveCriticalSection(&csFilter);
+        
+        EnterCriticalSection(&csWrite);
+        writeBuffer.push(f);
+        framesWritten++;
+        cout << "[Запись]     Кадр " << f.id << " сохранён (данные: " << f.data << ")" << endl;
+        LeaveCriticalSection(&csWrite);
+        
+        SetEvent(hReadReady);
+        Sleep(10);
+    }
+    cout << "Сохранение завершено" << endl;
+    return 0;
+}
+
+int main() {
+    srand(GetTickCount());
+    
+    // Инициализация
+    InitializeCriticalSection(&csRead);
+    InitializeCriticalSection(&csFilter);
+    InitializeCriticalSection(&csWrite);
+    
+    hReadReady = CreateEvent(NULL, FALSE, TRUE, NULL);
+    hFilterReady = CreateEvent(NULL, FALSE, FALSE, NULL);
+    hWriteReady = CreateEvent(NULL, FALSE, FALSE, NULL);
+    
+    // Создаём потоки
+    HANDLE hRead = CreateThread(NULL, 0, ReadThread, NULL, 0, NULL);
+    HANDLE hFilter = CreateThread(NULL, 0, FilterThread, NULL, 0, NULL);
+    HANDLE hWrite = CreateThread(NULL, 0, WriteThread, NULL, 0, NULL);
+    
+    cout << "=== Мультимедийная обработка (Pipeline) ===" << endl;
+    cout << "Всего кадров: " << TOTAL_FRAMES << endl;
+    cout << "===========================================" << endl;
+    
+    // Ждём завершения
+    WaitForSingleObject(hRead, INFINITE);
+    WaitForSingleObject(hFilter, INFINITE);
+    WaitForSingleObject(hWrite, INFINITE);
+    
+    // Закрываем handle'ы
+    CloseHandle(hRead);
+    CloseHandle(hFilter);
+    CloseHandle(hWrite);
+    CloseHandle(hReadReady);
+    CloseHandle(hFilterReady);
+    CloseHandle(hWriteReady);
+    
+    DeleteCriticalSection(&csRead);
+    DeleteCriticalSection(&csFilter);
+    DeleteCriticalSection(&csWrite);
+    
+    cout << "===========================================" << endl;
+    cout << "Обработка завершена!" << endl;
+    cout << "Прочитано кадров: " << framesRead << endl;
+    cout << "Отфильтровано: " << framesFiltered << endl;
+    cout << "Сохранено: " << framesWritten << endl;
+    
+    return 0;
+}

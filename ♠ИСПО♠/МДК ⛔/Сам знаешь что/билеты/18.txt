@@ -1,0 +1,23 @@
+Билет №18
+МДК 01.01/01.02 – Класс для комплексных чисел (перегрузка операций)
+cpp
+class Complex {
+    double re, im;
+public:
+    Complex(double r=0, double i=0) : re(r), im(i) {}
+    Complex operator+(const Complex& other) const { return Complex(re+other.re, im+other.im); }
+    Complex operator-(const Complex& other) const { return Complex(re-other.re, im-other.im); }
+    Complex operator*(const Complex& other) const { return Complex(re*other.re - im*other.im, re*other.im + im*other.re); }
+    Complex operator/(const Complex& other) const { double den = other.re*other.re + other.im*other.im; return Complex((re*other.re + im*other.im)/den, (im*other.re - re*other.im)/den); }
+    string toString() const { return to_string(re) + "+" + to_string(im) + "i"; }
+};
+МДК 01.03 – Кнопка "+1", Add, Clear
+java
+btnPlus1.setOnClickListener(v -> {
+    int val = Integer.parseInt(et.getText().toString());
+    et.setText(String.valueOf(val+1));
+});
+btnAdd.setOnClickListener(v -> items.add(et.getText().toString()));
+МДК 01.04 – Параллельные вычисления (4 потока, барьеры)
+cpp
+// Используем CreateBarrier (Windows 8+), или реализуем через событие.

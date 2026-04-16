@@ -1,0 +1,67 @@
+Билет №4
+МДК 01.01/01.02 – Периметр выпуклого многоугольника
+Входные данные: массив координат вершин (x[i], y[i]), i=0..n-1.
+Выходные данные: периметр P.
+
+Функциональные характеристики:
+
+Для i от 0 до n-2: расстояние между (x[i],y[i]) и (x[i+1],y[i+1]).
+
+Добавить расстояние между последней и первой вершиной.
+
+Суммировать.
+
+Структура данных:
+
+cpp
+struct Point { double x, y; };
+double perimeter(Point points[], int n) {
+    double p = 0.0;
+    for (int i = 0; i < n-1; i++)
+        p += sqrt(pow(points[i+1].x - points[i].x, 2) + pow(points[i+1].y - points[i].y, 2));
+    p += sqrt(pow(points[0].x - points[n-1].x, 2) + pow(points[0].y - points[n-1].y, 2));
+    return p;
+}
+МДК 01.03 – Добавление строки в список несколько раз
+Задание: из первого EditText текст, из второго – количество повторений.
+
+Код (фрагмент):
+
+java
+btnAdd.setOnClickListener(v -> {
+    String text = etText.getText().toString();
+    String countStr = etCount.getText().toString();
+    if (text.isEmpty() || countStr.isEmpty()) return;
+    int count = Integer.parseInt(countStr);
+    for (int i = 0; i < count; i++) {
+        items.add(text);
+    }
+    adapter.notifyDataSetChanged();
+});
+МДК 01.04 – Системный смотритель (периодическая проверка)
+Код:
+
+cpp
+#include <windows.h>
+#include <iostream>
+
+int main() {
+    int N;
+    std::cout << "Введите интервал проверки (сек): ";
+    std::cin >> N;
+
+    ULONGLONG startTick = GetTickCount64();
+    while (true) {
+        Sleep(N * 1000);
+        ULONGLONG uptime = GetTickCount64() / 1000;
+        if (uptime > 7 * 86400) {
+            MessageBoxA(NULL, "Система работает более 7 дней!", "Предупреждение", MB_ICONWARNING);
+        }
+        ULARGE_INTEGER freeBytes;
+        GetDiskFreeSpaceExA("C:\\", &freeBytes, NULL, NULL);
+        if (freeBytes.QuadPart < 5ULL * 1024 * 1024 * 1024) {
+            MessageBoxA(NULL, "Мало свободного места на диске C: (<5 ГБ)", "Ошибка", MB_ICONERROR);
+        }
+    }
+    return 0;
+}

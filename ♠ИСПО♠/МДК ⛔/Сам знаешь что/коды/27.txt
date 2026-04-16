@@ -1,0 +1,362 @@
+Билет 27 (полностью)
+МДК 01.01/01.02 – Составление тестовых данных (алгоритм и тест-кейсы)
+Задание: Составить алгоритм и тестовые данные для функции, вычисляющей номер подъезда и этажа по номеру квартиры.
+
+cpp
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+struct ApartmentLocation {
+    int entrance;   // номер подъезда (1-based)
+    int floor;      // номер этажа (1-based)
+    bool found;     // найден ли такой номер квартиры
+};
+
+// Функция определения подъезда и этажа
+// totalEntrances - количество подъездов
+// totalFloors - количество этажей в доме
+// flatsPerFloor - количество квартир на этаже
+// apartmentNumber - номер искомой квартиры
+ApartmentLocation findApartment(int totalEntrances, int totalFloors, 
+                                 int flatsPerFloor, int apartmentNumber) {
+    ApartmentLocation result = {0, 0, false};
+    
+    int totalFlats = totalEntrances * totalFloors * flatsPerFloor;
+    
+    if (apartmentNumber < 1 || apartmentNumber > totalFlats) {
+        return result;  // квартиры с таким номером нет
+    }
+    
+    // Всего квартир в одном подъезде
+    int flatsPerEntrance = totalFloors * flatsPerFloor;
+    
+    // Номер подъезда (с 1)
+    result.entrance = (apartmentNumber - 1) / flatsPerEntrance + 1;
+    
+    // Номер квартиры внутри подъезда (с 1)
+    int flatInEntrance = (apartmentNumber - 1) % flatsPerEntrance + 1;
+    
+    // Номер этажа
+    result.floor = (flatInEntrance - 1) / flatsPerFloor + 1;
+    
+    result.found = true;
+    return result;
+}
+
+int main() {
+    int entrances, floors, flatsPerFloor, apartment;
+    
+    cout << "Введите количество подъездов: ";
+    cin >> entrances;
+    cout << "Введите количество этажей: ";
+    cin >> floors;
+    cout << "Введите количество квартир на этаже: ";
+    cin >> flatsPerFloor;
+    cout << "Введите номер квартиры: ";
+    cin >> apartment;
+    
+    ApartmentLocation loc = findApartment(entrances, floors, flatsPerFloor, apartment);
+    
+    if (loc.found) {
+        cout << "Квартира №" << apartment << " находится в " 
+             << loc.entrance << "-м подъезде, на " 
+             << loc.floor << "-м этаже." << endl;
+    } else {
+        cout << "Квартиры с номером " << apartment << " нет в этом доме." << endl;
+    }
+    
+    return 0;
+}
+Тестовые данные (тест-кейсы):
+
+№	Подъездов	Этажей	Кв/этаж	Номер кв	Ожидаемый результат
+1	3	9	4	1	1-й подъезд, 1-й этаж
+2	3	9	4	4	1-й подъезд, 1-й этаж
+3	3	9	4	5	1-й подъезд, 2-й этаж
+4	3	9	4	36	1-й подъезд, 9-й этаж
+5	3	9	4	37	2-й подъезд, 1-й этаж
+6	3	9	4	72	2-й подъезд, 9-й этаж
+7	3	9	4	73	3-й подъезд, 1-й этаж
+8	3	9	4	108	3-й подъезд, 9-й этаж
+9	3	9	4	109	не найдена
+10	3	9	4	0	не найдена
+МДК 01.03 – Площадь прямоугольника
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Сторона a"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/etB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Сторона b"
+        android:inputType="numberDecimal" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnCalculate" android:text="Calculate" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" android:layout_marginTop="16dp" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.rectanglearea;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etA, etB;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etA = findViewById(R.id.etA);
+        etB = findViewById(R.id.etB);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnCalculate).setOnClickListener(v -> {
+            String sA = etA.getText().toString();
+            String sB = etB.getText().toString();
+            
+            if (sA.isEmpty() || sB.isEmpty()) return;
+            
+            double a = Double.parseDouble(sA);
+            double b = Double.parseDouble(sB);
+            double area = a * b;
+            
+            items.add("a = " + a + " b = " + b + " S = " + area);
+            adapter.notifyDataSetChanged();
+            
+            etA.setText("");
+            etB.setText("");
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Производитель-Потребитель с файлом как буфером
+cpp
+#include <windows.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+// Константы
+const int BUFFER_SIZE = 10;
+const int TOTAL_ITEMS = 50;
+
+// Синхронизация
+HANDLE hMutex;
+HANDLE hEmpty;   // счётчик пустых мест
+HANDLE hFull;    // счётчик заполненных мест
+HANDLE hFileMutex;  // мьютекс для доступа к файлу
+
+// Имя файла-буфера
+const char* BUFFER_FILE = "buffer.txt";
+
+// Инициализация файла-буфера
+void initBufferFile() {
+    ofstream fout(BUFFER_FILE);
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        fout << -1 << endl;  // -1 означает пустое место
+    }
+    fout.close();
+}
+
+// Запись в буфер (производитель)
+void writeToBuffer(int index, int value) {
+    WaitForSingleObject(hFileMutex, INFINITE);
+    
+    // Читаем весь файл
+    ifstream fin(BUFFER_FILE);
+    string lines[BUFFER_SIZE];
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        getline(fin, lines[i]);
+    }
+    fin.close();
+    
+    // Обновляем нужную позицию
+    lines[index] = to_string(value);
+    
+    // Записываем обратно
+    ofstream fout(BUFFER_FILE);
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        fout << lines[i] << endl;
+    }
+    fout.close();
+    
+    ReleaseMutex(hFileMutex);
+}
+
+// Чтение из буфера (потребитель)
+int readFromBuffer(int index) {
+    WaitForSingleObject(hFileMutex, INFINITE);
+    
+    ifstream fin(BUFFER_FILE);
+    string lines[BUFFER_SIZE];
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        getline(fin, lines[i]);
+    }
+    fin.close();
+    
+    int value = stoi(lines[index]);
+    
+    // Очищаем позицию
+    lines[index] = "-1";
+    ofstream fout(BUFFER_FILE);
+    for (int i = 0; i < BUFFER_SIZE; i++) {
+        fout << lines[i] << endl;
+    }
+    fout.close();
+    
+    ReleaseMutex(hFileMutex);
+    return value;
+}
+
+// Поток-производитель
+DWORD WINAPI Producer(LPVOID lpParam) {
+    for (int i = 0; i < TOTAL_ITEMS; i++) {
+        WaitForSingleObject(hEmpty, INFINITE);
+        WaitForSingleObject(hMutex, INFINITE);
+        
+        // Ищем свободное место в буфере
+        int freeIndex = -1;
+        WaitForSingleObject(hFileMutex, INFINITE);
+        ifstream fin(BUFFER_FILE);
+        string line;
+        for (int j = 0; j < BUFFER_SIZE; j++) {
+            getline(fin, line);
+            if (stoi(line) == -1) {
+                freeIndex = j;
+                break;
+            }
+        }
+        fin.close();
+        ReleaseMutex(hFileMutex);
+        
+        if (freeIndex != -1) {
+            int item = i + 1;
+            writeToBuffer(freeIndex, item);
+            cout << "[Производитель] Создал элемент " << item 
+                 << " на позиции " << freeIndex << endl;
+        }
+        
+        ReleaseMutex(hMutex);
+        ReleaseSemaphore(hFull, 1, NULL);
+        Sleep(rand() % 50);
+    }
+    cout << "Производитель завершил работу" << endl;
+    return 0;
+}
+
+// Поток-потребитель
+DWORD WINAPI Consumer(LPVOID lpParam) {
+    int consumed = 0;
+    
+    while (consumed < TOTAL_ITEMS) {
+        WaitForSingleObject(hFull, INFINITE);
+        WaitForSingleObject(hMutex, INFINITE);
+        
+        // Ищем занятое место
+        int occupiedIndex = -1;
+        WaitForSingleObject(hFileMutex, INFINITE);
+        ifstream fin(BUFFER_FILE);
+        string line;
+        for (int j = 0; j < BUFFER_SIZE; j++) {
+            getline(fin, line);
+            int val = stoi(line);
+            if (val != -1) {
+                occupiedIndex = j;
+                break;
+            }
+        }
+        fin.close();
+        ReleaseMutex(hFileMutex);
+        
+        if (occupiedIndex != -1) {
+            int item = readFromBuffer(occupiedIndex);
+            consumed++;
+            cout << "[Потребитель]   Забрал элемент " << item 
+                 << " с позиции " << occupiedIndex << endl;
+        }
+        
+        ReleaseMutex(hMutex);
+        ReleaseSemaphore(hEmpty, 1, NULL);
+        Sleep(rand() % 70);
+    }
+    cout << "Потребитель завершил работу" << endl;
+    return 0;
+}
+
+int main() {
+    srand(GetTickCount());
+    
+    // Инициализация файла-буфера
+    initBufferFile();
+    
+    // Создаём объекты синхронизации
+    hMutex = CreateMutex(NULL, FALSE, NULL);
+    hEmpty = CreateSemaphore(NULL, BUFFER_SIZE, BUFFER_SIZE, NULL);
+    hFull = CreateSemaphore(NULL, 0, BUFFER_SIZE, NULL);
+    hFileMutex = CreateMutex(NULL, FALSE, NULL);
+    
+    cout << "=== Производитель-Потребитель с файлом как буфером ===" << endl;
+    cout << "Размер буфера: " << BUFFER_SIZE << endl;
+    cout << "Всего элементов: " << TOTAL_ITEMS << endl;
+    cout << "Файл-буфер: " << BUFFER_FILE << endl;
+    cout << "======================================================" << endl;
+    
+    // Создаём потоки
+    HANDLE hProducer = CreateThread(NULL, 0, Producer, NULL, 0, NULL);
+    HANDLE hConsumer = CreateThread(NULL, 0, Consumer, NULL, 0, NULL);
+    
+    // Ждём завершения
+    WaitForSingleObject(hProducer, INFINITE);
+    WaitForSingleObject(hConsumer, INFINITE);
+    
+    // Закрываем handle'ы
+    CloseHandle(hProducer);
+    CloseHandle(hConsumer);
+    CloseHandle(hMutex);
+    CloseHandle(hEmpty);
+    CloseHandle(hFull);
+    CloseHandle(hFileMutex);
+    
+    cout << "======================================================" << endl;
+    cout << "Обработка завершена!" << endl;
+    
+    return 0;
+}

@@ -1,0 +1,374 @@
+Билет 22 (полностью)
+МДК 01.01/01.02 – Функция F(a,b,k) по трём формулам
+cpp
+#include <iostream>
+#include <cmath>
+#include <stdexcept>
+using namespace std;
+
+double computeF(int a, int b, int k) {
+    // Первая формула: a>0, b>0, k>1
+    if (a > 0 && b > 0 && k > 1) {
+        return (a + b) / (double)k;
+    }
+    
+    // Вторая формула: a>0, k != 0
+    if (a > 0 && k != 0) {
+        return a / (double)k;
+    }
+    
+    // Третья формула: b>0, k==1 или k==0
+    if (b > 0 && (k == 1 || k == 0)) {
+        return b;
+    }
+    
+    // Во всех остальных случаях функция не определена
+    throw runtime_error("F не определена для заданных параметров");
+}
+
+int main() {
+    int a, b, k;
+    
+    cout << "Введите a, b, k: ";
+    cin >> a >> b >> k;
+    
+    try {
+        double result = computeF(a, b, k);
+        cout << "F(" << a << ", " << b << ", " << k << ") = " << result << endl;
+    } catch (const exception& e) {
+        cout << "Ошибка: " << e.what() << endl;
+    }
+    
+    return 0;
+}
+Тестовые данные (тест-кейсы):
+
+№	a	b	k	Ожидаемый результат	Формула
+1	2	3	2	(2+3)/2 = 2.5	первая
+2	5	10	3	(5+10)/3 = 5.0	первая
+3	5	-1	2	5/2 = 2.5	вторая
+4	10	0	5	10/5 = 2.0	вторая
+5	-5	10	1	10	третья
+6	-2	7	0	7	третья
+7	0	0	0	не определена	исключение
+8	-1	-2	3	не определена	исключение
+9	5	5	0	5	третья
+10	3	4	1	4	третья
+МДК 01.03 – Пометки "new" и "edited"
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите текст" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="Add (new)" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnEdit" android:text="Edit (edited)" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnDelete" android:text="Delete" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.newedited;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText editText;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+    private int selectedPosition = -1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editText = findViewById(R.id.editText);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            selectedPosition = position;
+            // Убираем пометку при показе в EditText
+            String item = items.get(position);
+            item = item.replace(" (new)", "").replace(" (edited)", "");
+            editText.setText(item);
+        });
+
+        // Add: добавляем с пометкой "new"
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String text = editText.getText().toString().trim();
+            if (!text.isEmpty()) {
+                items.add(text + " (new)");
+                adapter.notifyDataSetChanged();
+                editText.setText("");
+            }
+        });
+
+        // Edit: добавляем с пометкой "edited"
+        findViewById(R.id.btnEdit).setOnClickListener(v -> {
+            String text = editText.getText().toString().trim();
+            if (!text.isEmpty()) {
+                items.add(text + " (edited)");
+                adapter.notifyDataSetChanged();
+                editText.setText("");
+            }
+        });
+
+        // Delete: удаляем выбранный элемент
+        findViewById(R.id.btnDelete).setOnClickListener(v -> {
+            if (selectedPosition != -1 && selectedPosition < items.size()) {
+                items.remove(selectedPosition);
+                adapter.notifyDataSetChanged();
+                selectedPosition = -1;
+                editText.setText("");
+            }
+        });
+
+        // Clear: очищаем список
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+            selectedPosition = -1;
+            editText.setText("");
+        });
+    }
+}
+МДК 01.04 – Распределённые вычисления (интеграл через каналы, чат, аутентификация)
+cpp
+#include <windows.h>
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+// Функция для интегрирования
+double f(double x) {
+    return x * x;  // можно заменить на любую функцию
+}
+
+// Вычисление интеграла методом прямоугольников на отрезке
+double integrateSegment(double a, double b, int steps) {
+    double h = (b - a) / steps;
+    double sum = 0.0;
+    for (int i = 0; i < steps; i++) {
+        sum += f(a + i * h) * h;
+    }
+    return sum;
+}
+
+// Структура для сообщений чата
+struct ChatMessage {
+    char sender[50];
+    char message[200];
+    DWORD timestamp;
+};
+
+// Почтовый ящик для чата
+HANDLE hMailslot;
+const char* MAILSLOT_NAME = "\\\\.\\mailslot\\ChatChannel";
+
+// Создание почтового ящика (серверная часть)
+void CreateChatServer() {
+    hMailslot = CreateMailslotA(
+        MAILSLOT_NAME,
+        0,                    // нет ограничения на размер сообщения
+        MAILSLOT_WAIT_FOREVER,
+        NULL
+    );
+    if (hMailslot == INVALID_HANDLE_VALUE) {
+        cout << "Ошибка создания почтового ящика" << endl;
+    } else {
+        cout << "Чат-сервер запущен" << endl;
+    }
+}
+
+// Отправка сообщения в чат (клиентская часть)
+void SendChatMessage(const char* sender, const char* message) {
+    HANDLE hMailSlotClient = CreateFileA(
+        MAILSLOT_NAME,
+        GENERIC_WRITE,
+        FILE_SHARE_READ,
+        NULL,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+    
+    if (hMailSlotClient != INVALID_HANDLE_VALUE) {
+        ChatMessage msg;
+        strcpy_s(msg.sender, sender);
+        strcpy_s(msg.message, message);
+        msg.timestamp = GetTickCount();
+        
+        DWORD written;
+        WriteFile(hMailSlotClient, &msg, sizeof(msg), &written, NULL);
+        CloseHandle(hMailSlotClient);
+    }
+}
+
+// Чтение сообщений из чата
+void ReadChatMessages() {
+    DWORD bytesRead;
+    ChatMessage msg;
+    
+    while (ReadFile(hMailslot, &msg, sizeof(msg), &bytesRead, NULL)) {
+        if (bytesRead == sizeof(msg)) {
+            cout << "[" << msg.sender << "]: " << msg.message << endl;
+        }
+    }
+}
+
+// ========== Аутентификация через именованные каналы ==========
+const char* NAMED_PIPE_NAME = "\\\\.\\pipe\\AuthPipe";
+
+// Сервер аутентификации
+DWORD WINAPI AuthServerThread(LPVOID lpParam) {
+    HANDLE hPipe = CreateNamedPipeA(
+        NAMED_PIPE_NAME,
+        PIPE_ACCESS_DUPLEX,
+        PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_WAIT,
+        1,                    // 1 экземпляр
+        512,                  // размер выходного буфера
+        512,                  // размер входного буфера
+        0,
+        NULL
+    );
+    
+    if (hPipe == INVALID_HANDLE_VALUE) {
+        cout << "Ошибка создания именованного канала" << endl;
+        return 1;
+    }
+    
+    cout << "Сервер аутентификации запущен" << endl;
+    
+    ConnectNamedPipe(hPipe, NULL);
+    
+    char login[50], password[50];
+    DWORD bytesRead;
+    
+    ReadFile(hPipe, login, sizeof(login), &bytesRead, NULL);
+    ReadFile(hPipe, password, sizeof(password), &bytesRead, NULL);
+    
+    // Простая проверка (в реальности должна быть БД)
+    int authResult = 0;
+    if (strcmp(login, "admin") == 0 && strcmp(password, "12345") == 0) {
+        authResult = 1;
+    }
+    
+    WriteFile(hPipe, &authResult, sizeof(authResult), &bytesRead, NULL);
+    
+    FlushFileBuffers(hPipe);
+    DisconnectNamedPipe(hPipe);
+    CloseHandle(hPipe);
+    
+    return 0;
+}
+
+// Клиент аутентификации
+bool Authenticate(const char* login, const char* password) {
+    HANDLE hPipe = CreateFileA(
+        NAMED_PIPE_NAME,
+        GENERIC_READ | GENERIC_WRITE,
+        0,
+        NULL,
+        OPEN_EXISTING,
+        0,
+        NULL
+    );
+    
+    if (hPipe == INVALID_HANDLE_VALUE) {
+        cout << "Не удалось подключиться к серверу аутентификации" << endl;
+        return false;
+    }
+    
+    DWORD bytesWritten;
+    WriteFile(hPipe, login, strlen(login) + 1, &bytesWritten, NULL);
+    WriteFile(hPipe, password, strlen(password) + 1, &bytesWritten, NULL);
+    
+    int result;
+    DWORD bytesRead;
+    ReadFile(hPipe, &result, sizeof(result), &bytesRead, NULL);
+    
+    CloseHandle(hPipe);
+    
+    return result == 1;
+}
+
+int main() {
+    cout << "=== Распределённые вычисления ===" << endl;
+    
+    // 1. Вычисление интеграла (разбиваем на 4 процесса/потока)
+    double a = 0.0, b = 10.0;
+    int totalSteps = 1000000;
+    int numSegments = 4;
+    double segmentLength = (b - a) / numSegments;
+    vector<double> partialResults(numSegments, 0.0);
+    
+    // Здесь можно создать 4 потока, но для демонстрации используем синхронный вызов
+    for (int i = 0; i < numSegments; i++) {
+        double segStart = a + i * segmentLength;
+        double segEnd = segStart + segmentLength;
+        partialResults[i] = integrateSegment(segStart, segEnd, totalSteps / numSegments);
+        cout << "Сегмент " << i + 1 << ": [" << segStart << ", " << segEnd 
+             << "] = " << partialResults[i] << endl;
+    }
+    
+    double totalIntegral = 0;
+    for (double res : partialResults) totalIntegral += res;
+    cout << "Общий интеграл: " << totalIntegral << endl;
+    
+    // 2. Чат-система через почтовые ящики
+    CreateChatServer();
+    
+    // 3. Аутентификация через именованные каналы
+    HANDLE hAuthThread = CreateThread(NULL, 0, AuthServerThread, NULL, 0, NULL);
+    
+    // Даём время серверу запуститься
+    Sleep(500);
+    
+    char login[50], password[50];
+    cout << "\n=== Аутентификация ===" << endl;
+    cout << "Логин: ";
+    cin >> login;
+    cout << "Пароль: ";
+    cin >> password;
+    
+    if (Authenticate(login, password)) {
+        cout << "Аутентификация успешна!" << endl;
+    } else {
+        cout << "Неверный логин или пароль!" << endl;
+    }
+    
+    WaitForSingleObject(hAuthThread, INFINITE);
+    CloseHandle(hAuthThread);
+    
+    return 0;
+}

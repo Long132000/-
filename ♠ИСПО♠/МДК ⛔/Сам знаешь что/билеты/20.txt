@@ -1,0 +1,33 @@
+Билет №20
+МДК 01.01/01.02 – Класс для обработки строк (последнее вхождение символа)
+cpp
+class StringUtils {
+public:
+    static int lastIndexOf(const string& str, char ch) {
+        for (int i = str.length()-1; i >= 0; i--) if (str[i]==ch) return i;
+        return -1;
+    }
+    static string afterLast(const string& str, char ch) {
+        int pos = lastIndexOf(str, ch);
+        if (pos == -1) return "";
+        return str.substr(pos+1);
+    }
+    static string afterLastN(const string& str, char ch, int n) {
+        string tail = afterLast(str, ch);
+        return tail.substr(0, n);
+    }
+};
+МДК 01.03 – Next Number (накопление чисел в TextView)
+java
+private int counter = 0;
+btnNext.setOnClickListener(v -> {
+    String current = tvNumbers.getText().toString();
+    if (current.equals("0")) tvNumbers.setText("0 1");
+    else tvNumbers.setText(current + " " + (++counter));
+});
+btnAddToList.setOnClickListener(v -> items.add(tvNumbers.getText().toString()));
+МДК 01.04 – Анонимные каналы (два дочерних процесса)
+cpp
+CreatePipe(&hRead, &hWrite, &sa, 0);
+CreateProcess(..., hWrite, ...); // передаём описатель
+// Аналогично для второго процесса

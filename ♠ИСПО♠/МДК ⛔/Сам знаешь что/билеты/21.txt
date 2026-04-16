@@ -1,0 +1,21 @@
+Билет №21
+МДК 01.01/01.02 – Сумма элементов между max и min
+Алгоритм:
+
+Найти индексы первого максимального и первого минимального.
+
+Если maxIndex < minIndex – поменять местами.
+
+Просуммировать элементы от minIndex+1 до maxIndex-1.
+
+Тестовые данные: массив [5,2,8,1,9,3], max=9 (индекс4), min=1 (индекс3) → сумма между = пусто? между 3 и 4 нет элементов → сумма 0. Другой пример: [10, -2, 3, 10, 5] – первый max индекс0, min индекс1 → сумма от 2 до -1? нужно корректно.
+
+МДК 01.03 – Add, Edit, Delete, Clear с разными скобками
+java
+btnAdd.setOnClickListener(v -> items.add("(" + et.getText() + ")"));
+lv.setOnItemClickListener((parent, view, pos, id) -> et.setText("[" + items.get(pos) + "]"));
+btnEdit.setOnClickListener(v -> items.add("{" + et.getText() + "}"));
+btnDelete.setOnClickListener(v -> items.remove(selectedPos));
+МДК 01.04 – Управление процессами (родитель + два дочерних)
+cpp
+// Первый процесс генерирует массив и пишет в канал, второй читает и сортирует.

@@ -1,0 +1,229 @@
+Билет 13 (полностью)
+МДК 01.01/01.02 – Класс Параллелепипед (ввод из файла)
+cpp
+#include <iostream>
+#include <fstream>
+#include <cmath>
+#include <vector>
+using namespace std;
+
+class Parallelepiped {
+private:
+    double a, b, c;  // рёбра
+public:
+    Parallelepiped(double a = 0, double b = 0, double c = 0) : a(a), b(b), c(c) {}
+
+    double getA() const { return a; }
+    double getB() const { return b; }
+    double getC() const { return c; }
+
+    double diagonal() const {
+        return sqrt(a * a + b * b + c * c);
+    }
+
+    double surfaceArea() const {
+        return 2 * (a * b + a * c + b * c);
+    }
+
+    double volume() const {
+        return a * b * c;
+    }
+
+    void print() const {
+        cout << "Параллелепипед: a=" << a << ", b=" << b << ", c=" << c << endl;
+        cout << "  Диагональ: " << diagonal() << endl;
+        cout << "  Площадь поверхности: " << surfaceArea() << endl;
+        cout << "  Объём: " << volume() << endl;
+        cout << "------------------------" << endl;
+    }
+};
+
+int main() {
+    ifstream fin("parallelepipeds.txt");
+    if (!fin.is_open()) {
+        cout << "Не удалось открыть файл parallelepipeds.txt" << endl;
+        return 1;
+    }
+
+    vector<Parallelepiped> parallelepipeds;
+    double a, b, c;
+
+    while (fin >> a >> b >> c) {
+        parallelepipeds.push_back(Parallelepiped(a, b, c));
+    }
+    fin.close();
+
+    if (parallelepipeds.empty()) {
+        cout << "Файл пуст или данные некорректны" << endl;
+        return 1;
+    }
+
+    for (const auto& p : parallelepipeds) {
+        p.print();
+    }
+
+    return 0;
+}
+Пример файла parallelepipeds.txt:
+
+text
+2 3 4
+1 1 1
+5 6 7
+МДК 01.03 – Вычисление 2*x^3+4*x+1
+activity_main.xml (как в билете 3, но формула 2*x^3+4*x+1)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etX"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите x"
+        android:inputType="numberDecimal" />
+
+    <Button
+        android:id="@+id/btnCalc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2*x^3+4*x+1" />
+
+    <Button
+        android:id="@+id/btnClear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clear" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.cubic;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etX;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etX = findViewById(R.id.etX);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnCalc).setOnClickListener(v -> {
+            String s = etX.getText().toString();
+            if (s.isEmpty()) return;
+            double x = Double.parseDouble(s);
+            double res = 2 * Math.pow(x, 3) + 4 * x + 1;
+            items.add("2*" + x + "^3+4*" + x + "+1 = " + res);
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Массив мьютексов и WaitForMultipleObjects
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    const int MUTEX_COUNT = 5;
+    HANDLE mutexes[MUTEX_COUNT];
+
+    // 1. Создаём массив мьютексов
+    for (int i = 0; i < MUTEX_COUNT; i++) {
+        mutexes[i] = CreateMutex(NULL, FALSE, NULL);
+        if (mutexes[i] == NULL) {
+            cout << "Ошибка создания мьютекса " << i << endl;
+            return 1;
+        }
+        cout << "Мьютекс " << i << " создан. Handle: " << mutexes[i] << endl;
+    }
+
+    // 2. Дублируем все описатели (создаём копии)
+    HANDLE duplicates[MUTEX_COUNT];
+    for (int i = 0; i < MUTEX_COUNT; i++) {
+        DuplicateHandle(
+            GetCurrentProcess(),
+            mutexes[i],
+            GetCurrentProcess(),
+            &duplicates[i],
+            0,
+            FALSE,
+            DUPLICATE_SAME_ACCESS
+        );
+        cout << "Дубликат " << i << ": " << duplicates[i] << endl;
+    }
+
+    // 3. Используем WaitForMultipleObjects для ожидания всех мьютексов
+    cout << "\nОжидаем все 5 мьютексов..." << endl;
+    DWORD waitResult = WaitForMultipleObjects(
+        MUTEX_COUNT,    // количество объектов
+        mutexes,        // массив handle'ов
+        TRUE,           // ожидать ВСЕ объекты
+        2000            // таймаут 2 секунды
+    );
+
+    if (waitResult == WAIT_OBJECT_0) {
+        cout << "Все мьютексы захвачены!" << endl;
+        // Освобождаем
+        for (int i = 0; i < MUTEX_COUNT; i++) {
+            ReleaseMutex(mutexes[i]);
+        }
+    } else if (waitResult == WAIT_TIMEOUT) {
+        cout << "Таймаут. Не удалось захватить все мьютексы." << endl;
+    } else {
+        cout << "Ошибка: " << waitResult << endl;
+    }
+
+    // 4. Поочередно закрываем описатели
+    for (int i = 0; i < MUTEX_COUNT; i++) {
+        CloseHandle(mutexes[i]);
+        cout << "Закрыт оригинал " << i << endl;
+        // Проверяем, что дубликат ещё жив
+        DWORD check = WaitForSingleObject(duplicates[i], 0);
+        if (check == WAIT_OBJECT_0) {
+            cout << "  Дубликат " << i << " ещё активен" << endl;
+            ReleaseMutex(duplicates[i]);
+        } else {
+            cout << "  Дубликат " << i << " уже неактивен" << endl;
+        }
+    }
+
+    // 5. Закрываем дубликаты
+    for (int i = 0; i < MUTEX_COUNT; i++) {
+        CloseHandle(duplicates[i]);
+    }
+    cout << "Все handle'ы закрыты." << endl;
+
+    return 0;
+}

@@ -1,0 +1,311 @@
+МДК 01.01/01.02 – Сумма элементов между максимальным и минимальным значением
+cpp
+#include <iostream>
+#include <vector>
+#include <climits>
+using namespace std;
+
+int sumBetweenMaxMin(vector<int>& arr) {
+    if (arr.size() < 2) return 0;
+    
+    // Находим первый максимум и первый минимум
+    int maxIdx = 0, minIdx = 0;
+    for (size_t i = 1; i < arr.size(); i++) {
+        if (arr[i] > arr[maxIdx]) maxIdx = i;
+        if (arr[i] < arr[minIdx]) minIdx = i;
+    }
+    
+    // Определяем левую и правую границу
+    int left = min(maxIdx, minIdx);
+    int right = max(maxIdx, minIdx);
+    
+    // Суммируем элементы между ними
+    int sum = 0;
+    for (int i = left + 1; i < right; i++) {
+        sum += arr[i];
+    }
+    
+    return sum;
+}
+
+int main() {
+    vector<int> arr;
+    int n, x;
+    
+    cout << "Введите количество элементов: ";
+    cin >> n;
+    
+    cout << "Введите " << n << " целых чисел: ";
+    for (int i = 0; i < n; i++) {
+        cin >> x;
+        arr.push_back(x);
+    }
+    
+    cout << "Массив: ";
+    for (int val : arr) cout << val << " ";
+    cout << endl;
+    
+    int result = sumBetweenMaxMin(arr);
+    cout << "Сумма элементов между первыми max и min: " << result << endl;
+    
+    return 0;
+}
+Тестовые данные для проверки:
+
+Тест	Массив	Ожидаемый результат
+1	[5, 2, 8, 1, 9, 3]	0 (между индексами 3 и 4 нет элементов)
+2	[10, -2, 3, 10, 5]	-2+3 = 1 (max в 0, min в 1)
+3	[1, 2, 3, 4, 5]	2+3+4 = 9 (min в 0, max в 4)
+4	[5, 5, 5, 5]	0 (все равны, max и min в 0 и 0)
+МДК 01.03 – Add, Edit, Delete, Clear с разными скобками
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите текст" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="Add" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnEdit" android:text="Edit" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnDelete" android:text="Delete" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.bracketlist;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText editText;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+    private int selectedPosition = -1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editText = findViewById(R.id.editText);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        // При клике на элемент списка - показываем его в EditText в квадратных скобках
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            selectedPosition = position;
+            editText.setText("[" + items.get(position) + "]");
+        });
+
+        // Add: содержимое EditText в круглых скобках добавляется в список
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String text = editText.getText().toString();
+            if (!text.isEmpty()) {
+                items.add("(" + text + ")");
+                adapter.notifyDataSetChanged();
+                editText.setText("");
+            }
+        });
+
+        // Edit: содержимое EditText в фигурных скобках добавляется в список
+        findViewById(R.id.btnEdit).setOnClickListener(v -> {
+            String text = editText.getText().toString();
+            if (!text.isEmpty()) {
+                items.add("{" + text + "}");
+                adapter.notifyDataSetChanged();
+                editText.setText("");
+            }
+        });
+
+        // Delete: удаляем выбранный элемент
+        findViewById(R.id.btnDelete).setOnClickListener(v -> {
+            if (selectedPosition != -1 && selectedPosition < items.size()) {
+                items.remove(selectedPosition);
+                adapter.notifyDataSetChanged();
+                selectedPosition = -1;
+                editText.setText("");
+            }
+        });
+
+        // Clear: очищаем список
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+            selectedPosition = -1;
+            editText.setText("");
+        });
+    }
+}
+МДК 01.04 – Управление процессами (родитель + два дочерних)
+Родительский процесс (parent.cpp):
+
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    // Создаём канал для передачи данных между дочерними процессами
+    HANDLE hReadPipe, hWritePipe;
+    SECURITY_ATTRIBUTES sa = { sizeof(sa), NULL, TRUE };
+    
+    if (!CreatePipe(&hReadPipe, &hWritePipe, &sa, 0)) {
+        cout << "Ошибка создания канала" << endl;
+        return 1;
+    }
+    
+    // Первый дочерний процесс (генератор массива)
+    STARTUPINFOA si1 = { sizeof(si1) };
+    PROCESS_INFORMATION pi1;
+    
+    // Передаём write handle как аргумент
+    char cmdLine1[256];
+    sprintf_s(cmdLine1, "generator.exe %p", hWritePipe);
+    
+    if (!CreateProcessA(NULL, cmdLine1, NULL, NULL, TRUE, 0, NULL, NULL, &si1, &pi1)) {
+        cout << "Ошибка запуска generator.exe" << endl;
+        return 1;
+    }
+    
+    // Второй дочерний процесс (сортировщик)
+    STARTUPINFOA si2 = { sizeof(si2) };
+    PROCESS_INFORMATION pi2;
+    
+    char cmdLine2[256];
+    sprintf_s(cmdLine2, "sorter.exe %p", hReadPipe);
+    
+    if (!CreateProcessA(NULL, cmdLine2, NULL, NULL, TRUE, 0, NULL, NULL, &si2, &pi2)) {
+        cout << "Ошибка запуска sorter.exe" << endl;
+        return 1;
+    }
+    
+    cout << "Родитель: оба дочерних процесса запущены" << endl;
+    
+    // Закрываем handle'ы в родителе (они не нужны)
+    CloseHandle(hWritePipe);
+    CloseHandle(hReadPipe);
+    
+    // Ждём завершения дочерних процессов
+    WaitForSingleObject(pi1.hProcess, INFINITE);
+    WaitForSingleObject(pi2.hProcess, INFINITE);
+    
+    // Закрываем handle'ы процессов
+    CloseHandle(pi1.hProcess);
+    CloseHandle(pi1.hThread);
+    CloseHandle(pi2.hProcess);
+    CloseHandle(pi2.hThread);
+    
+    cout << "Родитель: все процессы завершены" << endl;
+    
+    return 0;
+}
+Генератор массива (generator.cpp):
+
+cpp
+#include <windows.h>
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cout << "Generator: не передан handle канала" << endl;
+        return 1;
+    }
+    
+    HANDLE hWritePipe = (HANDLE)strtoull(argv[1], NULL, 16);
+    
+    // Генерируем массив из 10 случайных чисел
+    int arr[10];
+    srand(GetTickCount());
+    
+    cout << "Generator: сгенерирован массив: ";
+    for (int i = 0; i < 10; i++) {
+        arr[i] = rand() % 100;
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+    
+    // Отправляем массив через канал
+    DWORD written;
+    WriteFile(hWritePipe, arr, sizeof(arr), &written, NULL);
+    cout << "Generator: массив отправлен (" << written << " байт)" << endl;
+    
+    CloseHandle(hWritePipe);
+    
+    return 0;
+}
+Сортировщик (sorter.cpp):
+
+cpp
+#include <windows.h>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cout << "Sorter: не передан handle канала" << endl;
+        return 1;
+    }
+    
+    HANDLE hReadPipe = (HANDLE)strtoull(argv[1], NULL, 16);
+    
+    int arr[10];
+    DWORD read;
+    
+    // Читаем массив из канала
+    ReadFile(hReadPipe, arr, sizeof(arr), &read, NULL);
+    
+    cout << "Sorter: получен массив: ";
+    for (int i = 0; i < 10; i++) cout << arr[i] << " ";
+    cout << endl;
+    
+    // Сортируем массив
+    sort(arr, arr + 10);
+    
+    cout << "Sorter: отсортированный массив: ";
+    for (int i = 0; i < 10; i++) cout << arr[i] << " ";
+    cout << endl;
+    
+    // Записываем в файл
+    ofstream fout("sorted_array.txt");
+    for (int i = 0; i < 10; i++) {
+        fout << arr[i] << " ";
+    }
+    fout.close();
+    
+    cout << "Sorter: массив записан в файл sorted_array.txt" << endl;
+    
+    CloseHandle(hReadPipe);
+    
+    return 0;
+}

@@ -1,0 +1,317 @@
+Билет 25 (полностью)
+МДК 01.01/01.02 – Вставка в массив на указанную позицию
+cpp
+#include <iostream>
+#include <stdexcept>
+using namespace std;
+
+// Функция вставки значения в массив на указанную позицию
+// arr - массив (достаточно большой)
+// size - текущий размер массива (передаётся по ссылке, увеличится)
+// capacity - максимальная вместимость массива
+// value - вставляемое значение
+// pos - позиция для вставки (0 - в начало, size - в конец)
+void insertIntoArray(int arr[], int& size, int capacity, int value, int pos) {
+    // Проверка на корректность позиции
+    if (pos < 0 || pos > size) {
+        throw out_of_range("Некорректная позиция для вставки");
+    }
+    
+    // Проверка на переполнение
+    if (size >= capacity) {
+        throw overflow_error("Массив переполнен");
+    }
+    
+    // Сдвигаем элементы вправо
+    for (int i = size; i > pos; i--) {
+        arr[i] = arr[i - 1];
+    }
+    
+    // Вставляем значение
+    arr[pos] = value;
+    size++;
+}
+
+void printArray(int arr[], int size) {
+    cout << "[";
+    for (int i = 0; i < size; i++) {
+        cout << arr[i];
+        if (i < size - 1) cout << ", ";
+    }
+    cout << "]";
+}
+
+int main() {
+    const int CAPACITY = 100;
+    int arr[CAPACITY];
+    int size = 0;
+    
+    // Исходный массив
+    int init[] = {10, 20, 30, 40, 50};
+    for (int i = 0; i < 5; i++) {
+        arr[i] = init[i];
+    }
+    size = 5;
+    
+    cout << "Исходный массив: ";
+    printArray(arr, size);
+    cout << endl;
+    
+    // Тест-кейсы
+    struct TestCase {
+        int value;
+        int pos;
+        string description;
+    };
+    
+    TestCase tests[] = {
+        {99, 0, "Вставка в начало"},
+        {77, 3, "Вставка в середину"},
+        {88, size, "Вставка в конец"},
+        {55, 1, "Вставка на позицию 1"}
+    };
+    
+    for (const auto& test : tests) {
+        try {
+            cout << "\n" << test.description << ": ";
+            cout << "вставка " << test.value << " на позицию " << test.pos << " -> ";
+            insertIntoArray(arr, size, CAPACITY, test.value, test.pos);
+            printArray(arr, size);
+            cout << endl;
+        } catch (const exception& e) {
+            cout << "Ошибка: " << e.what() << endl;
+        }
+    }
+    
+    return 0;
+}
+Тестовые данные (тест-кейсы):
+
+№	Исходный массив	Вставка (значение, позиция)	Ожидаемый результат
+1	[10,20,30,40,50]	99, 0	[99,10,20,30,40,50]
+2	[10,20,30,40,50]	77, 3	[10,20,30,77,40,50]
+3	[10,20,30,40,50]	88, 5	[10,20,30,40,50,88]
+4	[10,20,30,40,50]	55, -1	Ошибка (некорректная позиция)
+5	[10,20,30,40,50]	66, 10	Ошибка (позиция > размера)
+6	Массив размером CAPACITY	любой, любая	Ошибка (переполнение)
+МДК 01.03 – Скобки и дублирование строки
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Текст" />
+
+    <EditText
+        android:id="@+id/etCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Количество повторений"
+        android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAngle" android:text="<>" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnRound" android:text="()" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnSquare" android:text="[]" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnCurly" android:text="{}" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnTheme1" android:text="Тема 1" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnTheme2" android:text="Тема 2" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.bracketduplicate;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etText, etCount;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etText = findViewById(R.id.etText);
+        etCount = findViewById(R.id.etCount);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAngle).setOnClickListener(v -> addWithBracketsAndDuplicate("<>"));
+        findViewById(R.id.btnRound).setOnClickListener(v -> addWithBracketsAndDuplicate("()"));
+        findViewById(R.id.btnSquare).setOnClickListener(v -> addWithBracketsAndDuplicate("[]"));
+        findViewById(R.id.btnCurly).setOnClickListener(v -> addWithBracketsAndDuplicate("{}"));
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnTheme1).setOnClickListener(v -> {
+            etText.setTextColor(Color.parseColor("#FF5722"));
+            etText.setBackgroundColor(Color.LTGRAY);
+            etCount.setTextColor(Color.parseColor("#FF5722"));
+            etCount.setBackgroundColor(Color.LTGRAY);
+        });
+
+        findViewById(R.id.btnTheme2).setOnClickListener(v -> {
+            etText.setTextColor(Color.parseColor("#4CAF50"));
+            etText.setBackgroundColor(Color.WHITE);
+            etCount.setTextColor(Color.parseColor("#4CAF50"));
+            etCount.setBackgroundColor(Color.WHITE);
+        });
+    }
+
+    private void addWithBracketsAndDuplicate(String brackets) {
+        String text = etText.getText().toString();
+        String countStr = etCount.getText().toString();
+        
+        if (text.isEmpty() || countStr.isEmpty()) return;
+        
+        int count = Integer.parseInt(countStr);
+        StringBuilder repeated = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            repeated.append(text);
+        }
+        
+        String left = brackets.substring(0, 1);
+        String right = brackets.substring(1);
+        String result = left + repeated.toString() + right;
+        
+        items.add(result);
+        adapter.notifyDataSetChanged();
+    }
+}
+МДК 01.04 – Обедающие философы (3 процесса, мьютексы)
+cpp
+#include <windows.h>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+const int NUM_PHILOSOPHERS = 3;
+HANDLE forks[NUM_PHILOSOPHERS];
+CRITICAL_SECTION logCs;
+
+void logMessage(const char* philosopher, const char* action) {
+    EnterCriticalSection(&logCs);
+    cout << philosopher << " " << action << endl;
+    LeaveCriticalSection(&logCs);
+}
+
+DWORD WINAPI PhilosopherThread(LPVOID lpParam) {
+    int id = *(int*)lpParam;
+    char name[20];
+    sprintf_s(name, "Философ %d", id + 1);
+    
+    int leftFork = id;
+    int rightFork = (id + 1) % NUM_PHILOSOPHERS;
+    
+    // Для избежания deadlock'а: последний философ берёт вилки в обратном порядке
+    bool reverse = (id == NUM_PHILOSOPHERS - 1);
+    
+    for (int i = 0; i < 5; i++) {  // каждый философ ест 5 раз
+        // Думает
+        logMessage(name, "думает");
+        Sleep(rand() % 1000);
+        
+        // Берёт вилки
+        if (!reverse) {
+            WaitForSingleObject(forks[leftFork], INFINITE);
+            logMessage(name, "взял левую вилку");
+            WaitForSingleObject(forks[rightFork], INFINITE);
+            logMessage(name, "взял правую вилку");
+        } else {
+            WaitForSingleObject(forks[rightFork], INFINITE);
+            logMessage(name, "взял правую вилку");
+            WaitForSingleObject(forks[leftFork], INFINITE);
+            logMessage(name, "взял левую вилку");
+        }
+        
+        // Ест
+        logMessage(name, "ЕСТ");
+        Sleep(rand() % 500);
+        
+        // Кладёт вилки
+        ReleaseMutex(forks[leftFork]);
+        ReleaseMutex(forks[rightFork]);
+        logMessage(name, "положил вилки");
+    }
+    
+    logMessage(name, "завершил трапезу");
+    return 0;
+}
+
+int main() {
+    srand(GetTickCount());
+    InitializeCriticalSection(&logCs);
+    
+    cout << "=== Задача обедающих философов ===" << endl;
+    cout << "Количество философов: " << NUM_PHILOSOPHERS << endl;
+    cout << "=================================" << endl;
+    
+    // Создаём мьютексы для вилок
+    for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+        forks[i] = CreateMutex(NULL, FALSE, NULL);
+        if (forks[i] == NULL) {
+            cout << "Ошибка создания мьютекса для вилки " << i << endl;
+            return 1;
+        }
+    }
+    
+    // Создаём потоки философов
+    HANDLE philosophers[NUM_PHILOSOPHERS];
+    int ids[NUM_PHILOSOPHERS];
+    
+    for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+        ids[i] = i;
+        philosophers[i] = CreateThread(NULL, 0, PhilosopherThread, &ids[i], 0, NULL);
+        if (philosophers[i] == NULL) {
+            cout << "Ошибка создания потока для философа " << i << endl;
+            return 1;
+        }
+    }
+    
+    // Ждём завершения всех философов
+    WaitForMultipleObjects(NUM_PHILOSOPHERS, philosophers, TRUE, INFINITE);
+    
+    // Закрываем handle'ы
+    for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
+        CloseHandle(philosophers[i]);
+        CloseHandle(forks[i]);
+    }
+    
+    DeleteCriticalSection(&logCs);
+    
+    cout << "=================================" << endl;
+    cout << "Все философы поели!" << endl;
+    
+    return 0;
+}

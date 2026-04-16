@@ -1,0 +1,16 @@
+Билет №19
+МДК 01.01/01.02 – Класс для комплексных чисел (сравнение, сопряжённое)
+cpp
+bool operator==(const Complex& other) const { return re==other.re && im==other.im; }
+bool operator!=(const Complex& other) const { return !(*this==other); }
+Complex conjugate() const { return Complex(re, -im); }
+Complex mulByReal(double r) const { return Complex(re*r, im*r); }
+МДК 01.03 – Удвоение числа (*2)
+java
+btnMul2.setOnClickListener(v -> {
+    double val = Double.parseDouble(et.getText().toString());
+    et.setText(String.valueOf(val*2));
+});
+МДК 01.04 – Мультимедийная обработка (pipeline)
+cpp
+// Три потока, семафоры для синхронизации этапов.

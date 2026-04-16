@@ -1,0 +1,211 @@
+Билет 12 (полностью)
+МДК 01.01/01.02 – Диаграмма активностей для графика курсов валют
+Текстовое описание для Visio:
+
+Начальный узел
+
+Пользователь выбирает вид валюты (USD, EUR, GBP и т.д.)
+
+Проверка наличия данных за текущую дату в БД
+
+[данные есть] → Взять курс из БД → переход к шагу 5
+
+[данных нет] → переход к шагу 3
+
+Запрос к официальному сайту ЦБ РФ (HTTP-запрос)
+
+Сохранить полученный курс в БД
+
+Загрузить результаты предыдущих запросов из БД (история)
+
+Построить график колебания курса (текущая дата + история)
+
+Отобразить график пользователю
+
+Конечный узел
+
+Дополнительные элементы:
+
+Узел решения (ромб) для проверки наличия данных в БД
+
+Действие "Построить график" можно развернуть в поддиаграмму
+
+МДК 01.03 – Фамилия и год рождения (аналогично билету 2, поля "Фамилия" и "Год рождения")
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView android:text="Фамилия" />
+    <EditText android:id="@+id/etSurname" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <TextView android:text="Год рождения" />
+    <EditText android:id="@+id/etYear" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="Add" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnGreen" android:text="Green" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnBlue" android:text="Blue" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.familyyear;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etSurname, etYear;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+    private View rootView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        rootView = findViewById(android.R.id.content);
+
+        etSurname = findViewById(R.id.etSurname);
+        etYear = findViewById(R.id.etYear);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String surname = etSurname.getText().toString().trim();
+            String year = etYear.getText().toString().trim();
+            if (!surname.isEmpty() && !year.isEmpty()) {
+                items.add("Фамилия: " + surname + " Год рождения: " + year);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnGreen).setOnClickListener(v -> rootView.setBackgroundColor(Color.GREEN));
+        findViewById(R.id.btnBlue).setOnClickListener(v -> rootView.setBackgroundColor(Color.BLUE));
+    }
+}
+МДК 01.04 – Наследование описателя мьютекса дочерним процессом
+Родительский процесс (parent.cpp):
+
+cpp
+#include <windows.h>
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    // Создаём мьютекс с атрибутом наследования
+    SECURITY_ATTRIBUTES sa;
+    sa.nLength = sizeof(sa);
+    sa.lpSecurityDescriptor = NULL;
+    sa.bInheritHandle = TRUE;   // РАЗРЕШАЕМ наследование
+
+    HANDLE hMutex = CreateMutex(&sa, FALSE, NULL);
+    if (hMutex == NULL) {
+        cout << "Ошибка создания мьютекса" << endl;
+        return 1;
+    }
+    cout << "Мьютекс создан. Handle: " << hMutex << endl;
+
+    // Готовим командную строку для дочернего процесса (передаём handle как число)
+    char cmdLine[256];
+    sprintf_s(cmdLine, sizeof(cmdLine), "child.exe %p", hMutex);
+
+    // Запускаем дочерний процесс
+    STARTUPINFOA si;
+    PROCESS_INFORMATION pi;
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    ZeroMemory(&pi, sizeof(pi));
+
+    BOOL created = CreateProcessA(
+        NULL,           // имя исполняемого файла (берётся из cmdLine)
+        cmdLine,        // командная строка
+        NULL,           // атрибуты процесса
+        NULL,           // атрибуты потока
+        TRUE,           // НАСЛЕДОВАТЬ описатели!
+        0,              // флаги создания
+        NULL,           // переменные окружения
+        NULL,           // текущая директория
+        &si,
+        &pi
+    );
+
+    if (!created) {
+        cout << "Ошибка запуска дочернего процесса" << endl;
+        CloseHandle(hMutex);
+        return 1;
+    }
+
+    cout << "Дочерний процесс запущен. PID: " << pi.dwProcessId << endl;
+
+    // Ждём завершения дочернего процесса
+    WaitForSingleObject(pi.hProcess, INFINITE);
+
+    // Закрываем handle'ы
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+    CloseHandle(hMutex);
+
+    cout << "Родитель завершён." << endl;
+    return 0;
+}
+Дочерний процесс (child.cpp):
+
+cpp
+#include <windows.h>
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        cout << "Дочерний процесс: не передан handle мьютекса" << endl;
+        return 1;
+    }
+
+    // Преобразуем строку в handle
+    HANDLE hMutex = (HANDLE)strtoull(argv[1], NULL, 16);  // для 64-битных систем
+    // Или просто: HANDLE hMutex = (HANDLE)atoi(argv[1]); для 32-битных
+
+    cout << "Дочерний процесс получил handle: " << hMutex << endl;
+
+    // Используем мьютекс
+    DWORD waitResult = WaitForSingleObject(hMutex, 5000);
+    if (waitResult == WAIT_OBJECT_0) {
+        cout << "Дочерний процесс захватил мьютекс!" << endl;
+        // Имитируем работу
+        Sleep(1000);
+        ReleaseMutex(hMutex);
+        cout << "Дочерний процесс освободил мьютекс" << endl;
+    } else {
+        cout << "Дочерний процесс НЕ смог захватить мьютекс" << endl;
+    }
+
+    cout << "Дочерний процесс завершён." << endl;
+    return 0;
+}

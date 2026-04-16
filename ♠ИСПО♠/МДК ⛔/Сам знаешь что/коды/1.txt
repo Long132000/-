@@ -1,0 +1,228 @@
+Билет 1 (полностью)
+МДК 01.01/01.02 – Решение системы двух линейных уравнений методом Крамера (C++)
+cpp
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+struct LinearSystem {
+    double a1, b1, c1;
+    double a2, b2, c2;
+};
+
+struct Solution {
+    bool hasSolution;
+    double x, y;
+};
+
+Solution cramer(const LinearSystem& s) {
+    double det = s.a1 * s.b2 - s.a2 * s.b1;
+    if (fabs(det) < 1e-9) {
+        return {false, 0, 0};
+    }
+    double detX = s.c1 * s.b2 - s.c2 * s.b1;
+    double detY = s.a1 * s.c2 - s.a2 * s.c1;
+    return {true, detX / det, detY / det};
+}
+
+int main() {
+    LinearSystem sys;
+    cout << "Введите a1 b1 c1: ";
+    cin >> sys.a1 >> sys.b1 >> sys.c1;
+    cout << "Введите a2 b2 c2: ";
+    cin >> sys.a2 >> sys.b2 >> sys.c2;
+    Solution sol = cramer(sys);
+    if (sol.hasSolution) {
+        cout << "x = " << sol.x << ", y = " << sol.y << endl;
+    } else {
+        cout << "Система не имеет единственного решения." << endl;
+    }
+    return 0;
+}
+МДК 01.03 – Мобильное приложение (ListView, два EditText, кнопки *, /, %, ^, Clear)
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Первый операнд"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Второй операнд"
+        android:inputType="numberDecimal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnMul"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="*" />
+        <Button
+            android:id="@+id/btnDiv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="/" />
+        <Button
+            android:id="@+id/btnMod"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="%" />
+        <Button
+            android:id="@+id/btnPow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="^" />
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Clear" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.calculator;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText et1, et2;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        et1 = findViewById(R.id.editText1);
+        et2 = findViewById(R.id.editText2);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnMul).setOnClickListener(v -> calculate("*"));
+        findViewById(R.id.btnDiv).setOnClickListener(v -> calculate("/"));
+        findViewById(R.id.btnMod).setOnClickListener(v -> calculate("%"));
+        findViewById(R.id.btnPow).setOnClickListener(v -> calculate("^"));
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+
+    private void calculate(String op) {
+        String s1 = et1.getText().toString();
+        String s2 = et2.getText().toString();
+        if (s1.isEmpty() || s2.isEmpty()) {
+            Toast.makeText(this, "Введите оба числа", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        double a = Double.parseDouble(s1);
+        double b = Double.parseDouble(s2);
+        double result = 0;
+        switch (op) {
+            case "*": result = a * b; break;
+            case "/":
+                if (b == 0) {
+                    Toast.makeText(this, "Деление на ноль", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                result = a / b;
+                break;
+            case "%": result = a % b; break;
+            case "^": result = Math.pow(a, b); break;
+        }
+        String entry = a + op + b + "=" + result;
+        items.add(entry);
+        adapter.notifyDataSetChanged();
+    }
+}
+МДК 01.04 – Системное программирование (C++ WinAPI)
+Полный код, выводящий время работы ОС, MessageBox с датой/временем, имя ПК и пользователя.
+
+cpp
+#include <windows.h>
+#include <iostream>
+#include <string>
+
+int main() {
+    // 1. Время работы системы
+    ULONGLONG ms = GetTickCount64();
+    ULONGLONG seconds = ms / 1000;
+    ULONGLONG days = seconds / 86400;
+    seconds %= 86400;
+    ULONGLONG hours = seconds / 3600;
+    seconds %= 3600;
+    ULONGLONG minutes = seconds / 60;
+    seconds %= 60;
+
+    std::cout << "Время работы ОС: " << days << " дней, " << hours << " часов, "
+              << minutes << " минут, " << seconds << " секунд" << std::endl;
+
+    // 2. MessageBox с текущим временем и датой
+    SYSTEMTIME st;
+    GetLocalTime(&st);
+    char timeMsg[200];
+    sprintf_s(timeMsg, sizeof(timeMsg),
+              "Текущее время: %02d:%02d:%02d\nДата: %02d.%02d.%04d",
+              st.wHour, st.wMinute, st.wSecond, st.wDay, st.wMonth, st.wYear);
+    MessageBoxA(NULL, timeMsg, "Время и дата", MB_OK);
+
+    // 3. Имя компьютера и текущего пользователя
+    char compName[256];
+    DWORD size = sizeof(compName);
+    if (GetComputerNameA(compName, &size)) {
+        std::cout << "Имя компьютера: " << compName << std::endl;
+    } else {
+        std::cout << "Не удалось получить имя компьютера" << std::endl;
+    }
+
+    char userName[256];
+    size = sizeof(userName);
+    if (GetUserNameA(userName, &size)) {
+        std::cout << "Имя пользователя: " << userName << std::endl;
+    } else {
+        std::cout << "Не удалось получить имя пользователя" << std::endl;
+    }
+
+    return 0;
+}

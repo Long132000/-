@@ -1,0 +1,237 @@
+Билет 6 (полностью)
+МДК 01.01/01.02 – Класс для обработки одномерного массива (среднее положительных)
+cpp
+#include <iostream>
+#include <stdexcept>
+using namespace std;
+
+class ArrayProcessor {
+public:
+    // Среднее арифметическое положительных элементов по всему массиву
+    // Возвращает -1, если положительных нет
+    static double averagePositive(const int arr[], int size) {
+        int sum = 0, count = 0;
+        for (int i = 0; i < size; i++) {
+            if (arr[i] > 0) {
+                sum += arr[i];
+                count++;
+            }
+        }
+        if (count == 0) return -1.0;
+        return static_cast<double>(sum) / count;
+    }
+
+    // Среднее положительных на отрезке [start, end] (включительно)
+    // Выбрасывает исключение при выходе за границы
+    static double averagePositiveRange(const int arr[], int start, int end, int size) {
+        if (start < 0 || end >= size || start > end) {
+            throw out_of_range("Некорректные границы диапазона");
+        }
+        int sum = 0, count = 0;
+        for (int i = start; i <= end; i++) {
+            if (arr[i] > 0) {
+                sum += arr[i];
+                count++;
+            }
+        }
+        if (count == 0) return -1.0;
+        return static_cast<double>(sum) / count;
+    }
+};
+
+int main() {
+    int arr[] = { -5, 3, -2, 7, 0, 4, -1 };
+    int size = sizeof(arr) / sizeof(arr[0]);
+
+    cout << "Среднее положительных (весь массив): " 
+         << ArrayProcessor::averagePositive(arr, size) << endl;
+
+    try {
+        cout << "Среднее положительных (индексы 1-5): " 
+             << ArrayProcessor::averagePositiveRange(arr, 1, 5, size) << endl;
+    } catch (const exception& e) {
+        cout << "Ошибка: " << e.what() << endl;
+    }
+
+    return 0;
+}
+МДК 01.03 – Кнопки «Add*» и «Add To List»
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите текст" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnAddStar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add*" />
+
+        <Button
+            android:id="@+id/btnAddToList"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add To List" />
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Clear" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.addstar;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText editText;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editText = findViewById(R.id.editText);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAddStar).setOnClickListener(v -> {
+            String text = editText.getText().toString();
+            editText.setText(text + "*");
+        });
+
+        findViewById(R.id.btnAddToList).setOnClickListener(v -> {
+            String text = editText.getText().toString();
+            if (!text.isEmpty()) {
+                items.add(text);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – GUI-приложение WinAPI (диалоговое окно)
+Сначала создайте файл ресурсов Resource.h и .rc (или используйте динамическое создание). Ниже полный код с созданием окна без ресурсов:
+
+cpp
+#include <windows.h>
+#include <string>
+
+// ID для элементов управления
+#define ID_EDIT_TIME      1001
+#define ID_EDIT_COMP      1002
+#define ID_EDIT_USER      1003
+#define ID_EDIT_UPTIME    1004
+#define ID_BTN_OK         1005
+#define ID_BTN_CANCEL     1006
+#define ID_BTN_ABOUT      1007
+
+// Процедура диалога
+INT_PTR CALLBACK DlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam) {
+    switch (msg) {
+        case WM_INITDIALOG: {
+            // Текущее время
+            SYSTEMTIME st;
+            GetLocalTime(&st);
+            char timeBuf[100];
+            sprintf_s(timeBuf, sizeof(timeBuf), "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+            SetDlgItemTextA(hDlg, ID_EDIT_TIME, timeBuf);
+
+            // Имя компьютера
+            char compName[256];
+            DWORD size = sizeof(compName);
+            GetComputerNameA(compName, &size);
+            SetDlgItemTextA(hDlg, ID_EDIT_COMP, compName);
+
+            // Имя пользователя
+            char userName[256];
+            size = sizeof(userName);
+            GetUserNameA(userName, &size);
+            SetDlgItemTextA(hDlg, ID_EDIT_USER, userName);
+
+            // Время работы системы
+            ULONGLONG uptimeSec = GetTickCount64() / 1000;
+            sprintf_s(timeBuf, sizeof(timeBuf), "%llu дней %llu часов %llu минут %llu секунд",
+                      uptimeSec / 86400, (uptimeSec % 86400) / 3600, 
+                      (uptimeSec % 3600) / 60, uptimeSec % 60);
+            SetDlgItemTextA(hDlg, ID_EDIT_UPTIME, timeBuf);
+            return TRUE;
+        }
+        case WM_COMMAND:
+            switch (LOWORD(wParam)) {
+                case ID_BTN_OK:
+                case ID_BTN_CANCEL:
+                    EndDialog(hDlg, LOWORD(wParam));
+                    return TRUE;
+                case ID_BTN_ABOUT:
+                    MessageBoxA(hDlg, "Программа системной информации\nВерсия 1.0", 
+                                "О программе", MB_OK | MB_ICONINFORMATION);
+                    return TRUE;
+            }
+            break;
+    }
+    return FALSE;
+}
+
+int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow) {
+    // Создаём диалог программно (без ресурсов)
+    HWND hDlg = CreateDialogParamA(hInst, MAKEINTRESOURCE(NULL), NULL, DlgProc, 0);
+    if (!hDlg) {
+        // Если нет ресурсов, показываем сообщение
+        MessageBoxA(NULL, "Для работы нужен файл ресурсов с диалогом", "Ошибка", MB_OK);
+        return 1;
+    }
+    ShowWindow(hDlg, nCmdShow);
+    MSG msg;
+    while (GetMessage(&msg, NULL, 0, 0)) {
+        if (!IsDialogMessage(hDlg, &msg)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+    }
+    return 0;
+}
+Примечание: в реальном проекте нужно добавить файл ресурсов (.rc) с определением диалога. Выше приведена структура.
+

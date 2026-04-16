@@ -1,0 +1,182 @@
+Билет №1
+МДК 01.01/01.02 – Решение системы двух линейных уравнений по методу Крамера
+Входные данные:
+
+Коэффициенты: a1, b1, c1 (первое уравнение a1*x + b1*y = c1)
+
+Коэффициенты: a2, b2, c2 (второе уравнение a2*x + b2*y = c2)
+
+Выходные данные:
+
+x, y – корни системы, если система имеет единственное решение.
+
+Сообщение о невозможности решения (если определитель = 0).
+
+Функциональные характеристики:
+
+Вычисление главного определителя Δ = a1*b2 - a2*b1.
+
+Вычисление Δx = c1*b2 - c2*b1.
+
+Вычисление Δy = a1*c2 - a2*c1.
+
+Если Δ ≠ 0 → x = Δx/Δ, y = Δy/Δ.
+
+Иначе – выдать ошибку «Система не имеет единственного решения».
+
+Структура данных (пример на C++):
+
+cpp
+struct LinearSystem {
+    double a1, b1, c1;
+    double a2, b2, c2;
+};
+struct Solution {
+    bool hasSolution;
+    double x, y;
+};
+МДК 01.03 – Мобильное приложение (ListView, два EditText, кнопки *, /, %, ^, Clear)
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Первый операнд"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Второй операнд"
+        android:inputType="numberDecimal" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button android:id="@+id/btnMul" android:text="*" style="@style/OpButton" />
+        <Button android:id="@+id/btnDiv" android:text="/" style="@style/OpButton" />
+        <Button android:id="@+id/btnMod" android:text="%" style="@style/OpButton" />
+        <Button android:id="@+id/btnPow" android:text="^" style="@style/OpButton" />
+        <Button android:id="@+id/btnClear" android:text="Clear" style="@style/OpButton" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+
+<style name="OpButton">
+    <item name="android:layout_width">0dp</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:layout_height">wrap_content</item>
+</style>
+MainActivity.java
+
+java
+public class MainActivity extends AppCompatActivity {
+    private EditText et1, et2;
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<String> items;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        et1 = findViewById(R.id.editText1);
+        et2 = findViewById(R.id.editText2);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnMul).setOnClickListener(v -> calculate("*"));
+        findViewById(R.id.btnDiv).setOnClickListener(v -> calculate("/"));
+        findViewById(R.id.btnMod).setOnClickListener(v -> calculate("%"));
+        findViewById(R.id.btnPow).setOnClickListener(v -> calculate("^"));
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+
+    private void calculate(String op) {
+        String s1 = et1.getText().toString();
+        String s2 = et2.getText().toString();
+        if (s1.isEmpty() || s2.isEmpty()) return;
+        double a = Double.parseDouble(s1);
+        double b = Double.parseDouble(s2);
+        double result = 0;
+        String opSymbol = op;
+        switch (op) {
+            case "*": result = a * b; break;
+            case "/": if (b != 0) result = a / b; else { showError(); return; } break;
+            case "%": result = a % b; break;
+            case "^": result = Math.pow(a, b); break;
+        }
+        String entry = a + opSymbol + b + "=" + result;
+        items.add(entry);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void showError() { Toast.makeText(this, "Деление на ноль", Toast.LENGTH_SHORT).show(); }
+}
+МДК 01.04 – Системное программирование (C++ WinAPI)
+Задание: вывести время работы ОС в формате "дни, часы, минуты, секунды", MessageBox с текущим временем и датой, имя компьютера и пользователя.
+
+Код:
+
+cpp
+#include <windows.h>
+#include <iostream>
+#include <string>
+
+int main() {
+    // 1. Время работы системы (GetTickCount64)
+    ULONGLONG ms = GetTickCount64();
+    ULONGLONG seconds = ms / 1000;
+    ULONGLONG days = seconds / 86400;
+    seconds %= 86400;
+    ULONGLONG hours = seconds / 3600;
+    seconds %= 3600;
+    ULONGLONG minutes = seconds / 60;
+    seconds %= 60;
+
+    std::cout << "Время работы ОС: " << days << " дней, " << hours << " часов, "
+              << minutes << " минут, " << seconds << " секунд\n";
+
+    // 2. Текущее время и дата через MessageBox
+    SYSTEMTIME st;
+    GetLocalTime(&st);
+    char timeMsg[200];
+    sprintf_s(timeMsg, sizeof(timeMsg),
+              "Текущее время: %02d:%02d:%02d\nДата: %02d.%02d.%04d",
+              st.wHour, st.wMinute, st.wSecond, st.wDay, st.wMonth, st.wYear);
+    MessageBoxA(NULL, timeMsg, "Время и дата", MB_OK);
+
+    // 3. Имя компьютера и пользователя
+    char compName[256];
+    DWORD size = sizeof(compName);
+    GetComputerNameA(compName, &size);
+
+    char userName[256];
+    size = sizeof(userName);
+    GetUserNameA(userName, &size);
+
+    std::cout << "Имя компьютера: " << compName << "\nИмя пользователя: " << userName << std::endl;
+    return 0;
+}

@@ -1,0 +1,190 @@
+Билет 2 (полностью)
+МДК 01.01/01.02 – Решение треугольника (две стороны и угол / сторона и два угла)
+cpp
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+struct Triangle {
+    double a, b, c;       // стороны
+    double A, B, C;       // углы в градусах
+    double S;             // площадь
+    double ha, hb, hc;    // высоты
+    double R, r;          // радиусы описанной и вписанной
+};
+
+// По двум сторонам и углу между ними (стороны a, b, угол C)
+Triangle solveByTwoSidesAngle(double a, double b, double C_deg) {
+    Triangle t;
+    t.a = a; t.b = b; t.C = C_deg;
+    double radC = C_deg * M_PI / 180.0;
+    t.c = sqrt(a*a + b*b - 2*a*b*cos(radC));
+    // углы по теореме косинусов
+    t.A = acos((b*b + t.c*t.c - a*a) / (2*b*t.c)) * 180.0 / M_PI;
+    t.B = acos((a*a + t.c*t.c - b*b) / (2*a*t.c)) * 180.0 / M_PI;
+    double p = (t.a + t.b + t.c) / 2.0;
+    t.S = sqrt(p * (p-t.a) * (p-t.b) * (p-t.c));
+    t.ha = 2*t.S / t.a;
+    t.hb = 2*t.S / t.b;
+    t.hc = 2*t.S / t.c;
+    t.R = t.a / (2*sin(t.A * M_PI/180.0));
+    t.r = t.S / p;
+    return t;
+}
+
+// По стороне и двум прилежащим углам (сторона a, углы B и C)
+Triangle solveBySideTwoAngles(double a, double B_deg, double C_deg) {
+    Triangle t;
+    t.a = a; t.B = B_deg; t.C = C_deg;
+    t.A = 180.0 - B_deg - C_deg;
+    double radA = t.A * M_PI / 180.0;
+    double radB = B_deg * M_PI / 180.0;
+    double radC = C_deg * M_PI / 180.0;
+    t.b = a * sin(radB) / sin(radA);
+    t.c = a * sin(radC) / sin(radA);
+    double p = (t.a + t.b + t.c) / 2.0;
+    t.S = sqrt(p * (p-t.a) * (p-t.b) * (p-t.c));
+    t.ha = 2*t.S / t.a;
+    t.hb = 2*t.S / t.b;
+    t.hc = 2*t.S / t.c;
+    t.R = t.a / (2*sin(radA));
+    t.r = t.S / p;
+    return t;
+}
+
+int main() {
+    int choice;
+    cout << "1 - по двум сторонам и углу между ними\n2 - по стороне и двум углам\nВыбор: ";
+    cin >> choice;
+    if (choice == 1) {
+        double a,b,C;
+        cout << "Введите сторону a, сторону b и угол C (градусы): ";
+        cin >> a >> b >> C;
+        Triangle t = solveByTwoSidesAngle(a,b,C);
+        cout << "c=" << t.c << " A=" << t.A << " B=" << t.B << " S=" << t.S
+             << " ha=" << t.ha << " hb=" << t.hb << " hc=" << t.hc
+             << " R=" << t.R << " r=" << t.r << endl;
+    } else {
+        double a,B,C;
+        cout << "Введите сторону a, угол B и угол C (градусы): ";
+        cin >> a >> B >> C;
+        Triangle t = solveBySideTwoAngles(a,B,C);
+        cout << "b=" << t.b << " c=" << t.c << " A=" << t.A << " S=" << t.S
+             << " ha=" << t.ha << " hb=" << t.hb << " hc=" << t.hc
+             << " R=" << t.R << " r=" << t.r << endl;
+    }
+    return 0;
+}
+МДК 01.03 – Мобильное приложение (Фамилия, Рост, Add, Clear, Red, Blue)
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView android:text="Фамилия" />
+    <EditText android:id="@+id/etSurname" android:layout_width="match_parent" android:layout_height="wrap_content" />
+
+    <TextView android:text="Рост" />
+    <EditText android:id="@+id/etHeight" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" />
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+        <Button android:id="@+id/btnAdd" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Add" />
+        <Button android:id="@+id/btnClear" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Clear" />
+        <Button android:id="@+id/btnRed" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Red" />
+        <Button android:id="@+id/btnBlue" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Blue" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" android:layout_width="match_parent" android:layout_height="wrap_content" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.family;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etSurname, etHeight;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+    private View rootView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        rootView = findViewById(android.R.id.content);
+
+        etSurname = findViewById(R.id.etSurname);
+        etHeight = findViewById(R.id.etHeight);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String surname = etSurname.getText().toString().trim();
+            String height = etHeight.getText().toString().trim();
+            if (!surname.isEmpty() && !height.isEmpty()) {
+                items.add("Фамилия: " + surname + " Рост: " + height);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+        findViewById(R.id.btnRed).setOnClickListener(v -> rootView.setBackgroundColor(Color.RED));
+        findViewById(R.id.btnBlue).setOnClickListener(v -> rootView.setBackgroundColor(Color.BLUE));
+    }
+}
+МДК 01.04 – Системный мониторинг (ОЗУ, диск C:, версия ОС)
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    // 1. Время работы системы
+    ULONGLONG ms = GetTickCount64();
+    ULONGLONG sec = ms / 1000;
+    ULONGLONG days = sec / 86400; sec %= 86400;
+    ULONGLONG hours = sec / 3600; sec %= 3600;
+    ULONGLONG minutes = sec / 60; sec %= 60;
+    cout << "Время работы: " << days << ":" << hours << ":" << minutes << ":" << sec << endl;
+
+    // 2. Оперативная память
+    MEMORYSTATUSEX mem;
+    mem.dwLength = sizeof(mem);
+    GlobalMemoryStatusEx(&mem);
+    cout << "ОЗУ всего: " << mem.ullTotalPhys / (1024*1024) << " МБ" << endl;
+    cout << "ОЗУ доступно: " << mem.ullAvailPhys / (1024*1024) << " МБ" << endl;
+
+    // 3. Диск C:
+    ULARGE_INTEGER freeBytesAvailable, totalBytes, freeBytes;
+    GetDiskFreeSpaceExA("C:\\", &freeBytesAvailable, &totalBytes, &freeBytes);
+    cout << "Диск C: всего: " << totalBytes.QuadPart / (1024*1024*1024) << " ГБ" << endl;
+    cout << "Свободно: " << freeBytesAvailable.QuadPart / (1024*1024*1024) << " ГБ" << endl;
+
+    // 4. Версия ОС
+    OSVERSIONINFOA osvi;
+    osvi.dwOSVersionInfoSize = sizeof(osvi);
+    GetVersionExA(&osvi);
+    cout << "Версия ОС: " << osvi.dwMajorVersion << "." << osvi.dwMinorVersion
+         << " Build " << osvi.dwBuildNumber << endl;
+
+    return 0;
+}

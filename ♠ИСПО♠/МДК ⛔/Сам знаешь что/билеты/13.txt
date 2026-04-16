@@ -1,0 +1,47 @@
+Билет №13
+МДК 01.01/01.02 – Код программы для параллелепипеда (класс, ввод из файла)
+Код:
+
+cpp
+#include <fstream>
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+class Parallelepiped {
+    double a, b, c;
+public:
+    Parallelepiped(double a, double b, double c) : a(a), b(b), c(c) {}
+    double diagonal() { return sqrt(a*a + b*b + c*c); }
+    double surfaceArea() { return 2*(a*b + a*c + b*c); }
+    double volume() { return a*b*c; }
+    void print() {
+        cout << "a=" << a << " b=" << b << " c=" << c
+             << " diagonal=" << diagonal()
+             << " area=" << surfaceArea()
+             << " volume=" << volume() << endl;
+    }
+};
+
+int main() {
+    ifstream fin("input.txt");
+    double a,b,c;
+    while (fin >> a >> b >> c) {
+        Parallelepiped p(a,b,c);
+        p.print();
+    }
+    return 0;
+}
+МДК 01.03 – Вычисление 2*x^3+4*x+1
+Код:
+
+java
+double x = Double.parseDouble(et.getText().toString());
+double res = 2 * Math.pow(x, 3) + 4 * x + 1;
+items.add("2*" + x + "^3+4*" + x + "+1=" + res);
+МДК 01.04 – Массив мьютексов и WaitForMultipleObjects
+cpp
+HANDLE mutexes[5];
+for (int i = 0; i < 5; i++) mutexes[i] = CreateMutex(NULL, FALSE, NULL);
+DWORD res = WaitForMultipleObjects(5, mutexes, TRUE, 1000);
+for (int i = 0; i < 5; i++) CloseHandle(mutexes[i]);

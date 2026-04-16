@@ -1,0 +1,186 @@
+Билет 14 (полностью)
+МДК 01.01/01.02 – Частота двухбуквенных сочетаний (нн, мм, лл и т.д.)
+cpp
+#include <iostream>
+#include <string>
+#include <map>
+#include <cctype>
+using namespace std;
+
+int main() {
+    string text;
+    cout << "Введите текст (можно на русском): ";
+    getline(cin, text);
+
+    map<string, int> frequency;
+    int totalBigrams = 0;
+
+    // Проходим по тексту, ищем две одинаковые буквы подряд
+    for (size_t i = 0; i < text.length() - 1; i++) {
+        char c1 = text[i];
+        char c2 = text[i + 1];
+        
+        // Проверяем, что оба символа - буквы (поддерживает кириллицу через isalpha)
+        if (isalpha((unsigned char)c1) && isalpha((unsigned char)c2) && c1 == c2) {
+            string bigram = string(1, c1) + string(1, c2);
+            frequency[bigram]++;
+            totalBigrams++;
+        }
+    }
+
+    if (totalBigrams == 0) {
+        cout << "В тексте нет повторяющихся двухбуквенных сочетаний." << endl;
+        return 0;
+    }
+
+    // Выводим таблицу
+    cout << "\n=== Частота повторения двухбуквенных сочетаний ===\n";
+    cout << "Сочетание | Количество | Частота (%)\n";
+    cout << "----------------------------------------\n";
+    
+    for (const auto& pair : frequency) {
+        double percent = (pair.second * 100.0) / totalBigrams;
+        cout << "   " << pair.first << "     |     " << pair.second << "     |    " << percent << "%" << endl;
+    }
+    
+    cout << "\nВсего сочетаний: " << totalBigrams << endl;
+    
+    return 0;
+}
+МДК 01.03 – Добавление # (не более 20)
+activity_main.xml (два EditText: текст и количество #, кнопки Add#, Add To List, Clear)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/etText" android:hint="Текст" />
+    <EditText android:id="@+id/etCount" android:hint="Количество # (не более 20)" android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAddHash" android:text="Add#" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnAddToList" android:text="Add To List" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="Clear" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.addhash;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etText, etCount;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etText = findViewById(R.id.etText);
+        etCount = findViewById(R.id.etCount);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAddHash).setOnClickListener(v -> {
+            String countStr = etCount.getText().toString();
+            if (countStr.isEmpty()) {
+                Toast.makeText(this, "Введите количество", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            int count = Integer.parseInt(countStr);
+            if (count > 20) {
+                count = 20;
+                Toast.makeText(this, "Ограничено 20 знаками #", Toast.LENGTH_SHORT).show();
+            }
+            String text = etText.getText().toString();
+            StringBuilder sb = new StringBuilder(text);
+            for (int i = 0; i < count; i++) {
+                sb.append('#');
+            }
+            etText.setText(sb.toString());
+        });
+
+        findViewById(R.id.btnAddToList).setOnClickListener(v -> {
+            String text = etText.getText().toString();
+            if (!text.isEmpty()) {
+                items.add(text);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Отклонение от среднего более 10% (указатели)
+cpp
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+int main() {
+    int N;
+    cout << "Введите количество элементов: ";
+    cin >> N;
+
+    // Выделяем память через new
+    float* A = new float[N];
+    if (A == nullptr) {
+        cout << "Ошибка выделения памяти" << endl;
+        return 1;
+    }
+
+    // Ввод массива
+    cout << "Введите " << N << " чисел:" << endl;
+    for (int i = 0; i < N; i++) {
+        // Используем указательную арифметику: *(A + i) то же, что A[i]
+        cin >> *(A + i);
+    }
+
+    // Сумма элементов (через указатели)
+    float sum = 0;
+    for (int i = 0; i < N; i++) {
+        sum += *(A + i);
+    }
+
+    // Среднее арифметическое
+    float sr = sum / N;
+    cout << "Sum = " << sum << ", Sr = " << sr << endl;
+
+    // Подсчёт количества значений с отклонением > 10%
+    int k = 0;
+    for (int i = 0; i < N; i++) {
+        float deviation = fabs(*(A + i) - sr);
+        if (deviation > 0.1 * sr) {
+            k++;
+        }
+    }
+
+    cout << "k = " << k << " (количество значений с отклонением > 10%)" << endl;
+
+    // Освобождаем память
+    delete[] A;
+
+    return 0;
+}

@@ -1,0 +1,36 @@
+Билет №12
+МДК 01.01/01.02 – Диаграмма активностей для графика курсов валют
+Описание:
+
+Пользователь выбирает валюту.
+
+Система проверяет наличие данных за текущую дату в БД.
+
+Если есть – берёт из БД, иначе – запрос к сайту ЦБ.
+
+Сохраняет результат в БД.
+
+Строит график на основе текущих и предыдущих данных.
+
+МДК 01.03 – Фамилия и год рождения (аналогично билету №2, но другие поля)
+Код аналогичен, только TextView: «Фамилия» и «Год рождения».
+
+МДК 01.04 – Наследование описателя мьютекса дочерним процессом
+cpp
+#include <windows.h>
+#include <iostream>
+
+int main() {
+    SECURITY_ATTRIBUTES sa = { sizeof(sa), NULL, TRUE }; // наследуемый
+    HANDLE hMutex = CreateMutex(&sa, FALSE, NULL);
+    // Запускаем дочерний процесс, передавая handle через командную строку
+    char cmdLine[256];
+    sprintf_s(cmdLine, "child.exe %p", hMutex);
+    PROCESS_INFORMATION pi;
+    STARTUPINFO si = { sizeof(si) };
+    CreateProcess(NULL, cmdLine, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi);
+    WaitForSingleObject(pi.hProcess, INFINITE);
+    CloseHandle(hMutex);
+    return 0;
+}
+// В дочернем процессе: HANDLE h = (HANDLE)atoi(argv[1]); WaitForSingleObject(h, ...);

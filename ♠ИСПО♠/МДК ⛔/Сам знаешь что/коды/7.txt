@@ -1,0 +1,216 @@
+Билет 7 (полностью)
+МДК 01.01/01.02 – Класс «Правильный многоугольник»
+cpp
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+class RegularPolygon {
+private:
+    int n;          // количество вершин
+    double side;    // длина стороны
+public:
+    RegularPolygon(int n, double side) : n(n), side(side) {}
+
+    int getVertexCount() const { return n; }
+    double getSide() const { return side; }
+    
+    // Угол между сторонами (в градусах)
+    double getAngle() const {
+        return (n - 2) * 180.0 / n;
+    }
+    
+    // Периметр
+    double getPerimeter() const {
+        return n * side;
+    }
+    
+    // Площадь
+    double getArea() const {
+        return (n * side * side) / (4 * tan(M_PI / n));
+    }
+    
+    // Радиус вписанной окружности
+    double getInradius() const {
+        return side / (2 * tan(M_PI / n));
+    }
+    
+    // Радиус описанной окружности
+    double getCircumradius() const {
+        return side / (2 * sin(M_PI / n));
+    }
+    
+    void printInfo() const {
+        cout << "Правильный " << n << "-угольник" << endl;
+        cout << "Сторона: " << side << endl;
+        cout << "Угол: " << getAngle() << "°" << endl;
+        cout << "Периметр: " << getPerimeter() << endl;
+        cout << "Площадь: " << getArea() << endl;
+        cout << "Радиус вписанной: " << getInradius() << endl;
+        cout << "Радиус описанной: " << getCircumradius() << endl;
+    }
+};
+
+int main() {
+    int n;
+    double side;
+    cout << "Введите количество вершин и сторону: ";
+    cin >> n >> side;
+    RegularPolygon poly(n, side);
+    poly.printInfo();
+    return 0;
+}
+МДК 01.03 – Копирование строки N раз и добавление в список
+activity_main.xml (два EditText, кнопки ADD, CLEAR, ListView)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Строка для копирования" />
+
+    <EditText
+        android:id="@+id/etCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Количество копий"
+        android:inputType="number" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.copyrepeat;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etText, etCount;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etText = findViewById(R.id.etText);
+        etCount = findViewById(R.id.etCount);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String text = etText.getText().toString();
+            String countStr = etCount.getText().toString();
+            if (text.isEmpty() || countStr.isEmpty()) return;
+            int count = Integer.parseInt(countStr);
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < count; i++) {
+                builder.append(text);
+            }
+            items.add(builder.toString());
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Строковые функции (addslashes, ltrim, comparestrings) – ANSI и UNICODE
+cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+// ========== ANSI версии ==========
+char* addslashes_ansi(const char* src) {
+    int len = strlen(src);
+    char* dst = new char[len * 2 + 1];
+    int j = 0;
+    for (int i = 0; i < len; i++) {
+        if (src[i] == '"') dst[j++] = '\\';
+        dst[j++] = src[i];
+    }
+    dst[j] = '\0';
+    return dst;
+}
+
+char* ltrim_ansi(char* str) {
+    while (*str == ' ') str++;
+    return str;
+}
+
+int comparestrings_ansi(const char* a, const char* b) {
+    return strlen(a) - strlen(b);
+}
+
+// ========== UNICODE версии (wide char) ==========
+wchar_t* addslashes_unicode(const wchar_t* src) {
+    int len = wcslen(src);
+    wchar_t* dst = new wchar_t[len * 2 + 1];
+    int j = 0;
+    for (int i = 0; i < len; i++) {
+        if (src[i] == L'"') dst[j++] = L'\\';
+        dst[j++] = src[i];
+    }
+    dst[j] = L'\0';
+    return dst;
+}
+
+wchar_t* ltrim_unicode(wchar_t* str) {
+    while (*str == L' ') str++;
+    return str;
+}
+
+int comparestrings_unicode(const wchar_t* a, const wchar_t* b) {
+    return wcslen(a) - wcslen(b);
+}
+
+// ========== Демонстрация ==========
+int main() {
+    // ANSI
+    char text_ansi[] = "Hello \"World\"";
+    char* escaped = addslashes_ansi(text_ansi);
+    cout << "addslashes: " << escaped << endl;
+    delete[] escaped;
+
+    char spaces[] = "   Trim me";
+    cout << "ltrim: '" << ltrim_ansi(spaces) << "'" << endl;
+
+    cout << "comparestrings(\"abc\", \"abcd\"): " << comparestrings_ansi("abc", "abcd") << endl;
+
+    // UNICODE
+    wchar_t text_uni[] = L"Test \"Quote\"";
+    wchar_t* escaped_uni = addslashes_unicode(text_uni);
+    wcout << L"addslashes UNICODE: " << escaped_uni << endl;
+    delete[] escaped_uni;
+
+    return 0;
+}

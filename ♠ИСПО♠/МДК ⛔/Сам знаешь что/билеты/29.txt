@@ -1,0 +1,21 @@
+Билет №29
+МДК 01.01/01.02 – Проверка орфографии (словарь)
+cpp
+set<string> dictionary; // загрузить из файла
+string text; getline(cin, text);
+istringstream iss(text);
+string word;
+while (iss >> word) {
+    if (dictionary.find(word) == dictionary.end())
+        cout << "[" << word << "] "; // подчеркнуть
+    else cout << word << " ";
+}
+МДК 01.03 – Площадь прямоугольника
+java
+double a = Double.parseDouble(et1.getText().toString());
+double b = Double.parseDouble(et2.getText().toString());
+double s = a*b;
+items.add("a = " + a + " b = " + b + " S = " + s);
+МДК 01.04 – Производитель-Потребитель с файлом как буфером
+cpp
+// Файл фиксированного размера, два потока читают/пишут с синхронизацией.

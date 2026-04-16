@@ -1,0 +1,14 @@
+Билет №31
+МДК 01.01/01.02 – Запись в бинарный файл результатов соревнований по плаванию
+cpp
+struct Record { char date[11]; char surname[50]; int distance; double time; };
+ofstream out("results.bin", ios::binary);
+Record r;
+// заполнение
+out.write((char*)&r, sizeof(r));
+// Чтение и вывод на второй форме (C++/CLI или MFC)
+МДК 01.03 – Произведение трёх чисел
+java
+int prod = a*b*c;
+items.add(prod + "=" + a + "*" + b + "*" + c);
+МДК 01.04 – Работа с файлом (дублирование описателя) – см. билет №11

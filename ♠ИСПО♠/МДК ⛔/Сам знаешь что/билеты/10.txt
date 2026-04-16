@@ -1,0 +1,59 @@
+Билет №10
+МДК 01.01/01.02 – Диаграмма последовательностей для путевого листа
+Описание:
+
+Диспетчер вводит заказ.
+
+Система запрашивает свободные машины и водителей.
+
+Система возвращает список.
+
+Диспетчер выбирает машину, водителя, грузчиков.
+
+Диспетчер вводит дату, адрес, заказчика, параметры груза.
+
+Система сохраняет путевой лист в БД.
+
+Диспетчер может добавить ещё заказы на ту же дату.
+
+Диаграмма строится в Visio, показывая объекты (Диспетчер, Форма заказа, БД, Путевой лист) и стрелки сообщений.
+
+МДК 01.03 – Нумерованный список (1) first record, 2) next record ...)
+Код:
+
+java
+private int counter = 1;
+btnAdd.setOnClickListener(v -> {
+    String text = et.getText().toString();
+    items.add(counter + ") " + text);
+    counter++;
+    adapter.notifyDataSetChanged();
+});
+btnClear.setOnClickListener(v -> {
+    items.clear();
+    counter = 1;
+    adapter.notifyDataSetChanged();
+});
+МДК 01.04 – Работа с мьютексом (DuplicateHandle)
+cpp
+#include <windows.h>
+#include <iostream>
+
+int main() {
+    HANDLE hMutex1 = CreateMutex(NULL, FALSE, NULL);
+    if (!hMutex1) { std::cerr << "CreateMutex failed" << std::endl; return 1; }
+    std::cout << "Mutex created, handle: " << hMutex1 << std::endl;
+
+    HANDLE hMutex2;
+    DuplicateHandle(GetCurrentProcess(), hMutex1, GetCurrentProcess(), &hMutex2, 0, FALSE, DUPLICATE_SAME_ACCESS);
+    std::cout << "Duplicated handle: " << hMutex2 << std::endl;
+
+    CloseHandle(hMutex1);
+    std::cout << "First handle closed. Mutex still alive (second handle)." << std::endl;
+
+    // Проверим, что мьютекс существует (например, попробуем подождать)
+    WaitForSingleObject(hMutex2, 100);
+    CloseHandle(hMutex2);
+    std::cout << "Second handle closed. Mutex destroyed." << std::endl;
+    return 0;
+}

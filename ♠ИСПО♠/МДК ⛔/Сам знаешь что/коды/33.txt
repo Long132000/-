@@ -1,0 +1,283 @@
+Билет 33 (полностью)
+МДК 01.01/01.02 – Тест на знание таблицы умножения (две формы, таймер)
+cpp
+#include <iostream>
+#include <windows.h>
+#include <ctime>
+#include <cstdlib>
+using namespace std;
+
+// Глобальные переменные для статистики
+int totalAttempts = 0;
+int correctAnswers = 0;
+bool testActive = true;
+HANDLE hTimerThread;
+
+// Функция для генерации случайного примера
+void generateQuestion(int& a, int& b) {
+    a = rand() % 9 + 2;  // от 2 до 10
+    b = rand() % 9 + 2;
+}
+
+// Поток для таймера (2 минуты)
+DWORD WINAPI TimerThread(LPVOID lpParam) {
+    int secondsLeft = 120;  // 2 минуты
+    
+    while (secondsLeft > 0 && testActive) {
+        cout << "\rВремени осталось: " << secondsLeft / 60 << ":" 
+             << (secondsLeft % 60 < 10 ? "0" : "") << secondsLeft % 60 << "  ";
+        Sleep(1000);
+        secondsLeft--;
+    }
+    
+    if (testActive) {
+        testActive = false;
+        cout << "\n\n=== ВРЕМЯ ВЫШЛО! ===" << endl;
+    }
+    return 0;
+}
+
+// Первая форма - проведение теста
+void runTest() {
+    testActive = true;
+    totalAttempts = 0;
+    correctAnswers = 0;
+    
+    cout << "\n=== ТЕСТ НА ЗНАНИЕ ТАБЛИЦЫ УМНОЖЕНИЯ ===" << endl;
+    cout << "У вас есть 2 минуты. Введите ответ или 0 для выхода." << endl;
+    cout << "============================================" << endl;
+    
+    // Запускаем таймер
+    hTimerThread = CreateThread(NULL, 0, TimerThread, NULL, 0, NULL);
+    
+    int a, b;
+    while (testActive) {
+        generateQuestion(a, b);
+        cout << "\n" << a << " x " << b << " = ";
+        
+        int answer;
+        cin >> answer;
+        
+        if (answer == 0) {
+            testActive = false;
+            cout << "Тест прерван пользователем." << endl;
+            break;
+        }
+        
+        totalAttempts++;
+        
+        if (answer == a * b) {
+            correctAnswers++;
+            cout << "✓ Правильно!" << endl;
+        } else {
+            cout << "✗ Неправильно. Правильный ответ: " << a * b << endl;
+        }
+    }
+    
+    // Останавливаем таймер
+    testActive = false;
+    WaitForSingleObject(hTimerThread, 1000);
+    CloseHandle(hTimerThread);
+}
+
+// Вторая форма - отображение статистики
+void showStatistics() {
+    cout << "\n========== СТАТИСТИКА ТЕСТА ==========" << endl;
+    cout << "| Всего попыток:         " << totalAttempts << " |" << endl;
+    cout << "| Правильных ответов:    " << correctAnswers << " |" << endl;
+    
+    if (totalAttempts > 0) {
+        double percent = (correctAnswers * 100.0) / totalAttempts;
+        cout << "| Процент правильных:    " << percent << "% |" << endl;
+        
+        int score = (correctAnswers * 100) / totalAttempts;
+        cout << "| Оценка (100-балльная): " << score << " |" << endl;
+        
+        if (score >= 90) cout << "| Оценка: 5 (отлично)       |" << endl;
+        else if (score >= 75) cout << "| Оценка: 4 (хорошо)       |" << endl;
+        else if (score >= 60) cout << "| Оценка: 3 (удовлетворительно) |" << endl;
+        else cout << "| Оценка: 2 (неудовлетворительно) |" << endl;
+    }
+    cout << "=====================================" << endl;
+}
+
+int main() {
+    srand(time(NULL));
+    
+    int choice;
+    do {
+        cout << "\n=== ТАБЛИЦА УМНОЖЕНИЯ ===" << endl;
+        cout << "1 - Начать тест (первая форма)" << endl;
+        cout << "2 - Показать статистику (вторая форма)" << endl;
+        cout << "0 - Выход" << endl;
+        cout << "Выбор: ";
+        cin >> choice;
+        
+        switch (choice) {
+            case 1:
+                runTest();
+                break;
+            case 2:
+                showStatistics();
+                break;
+            case 0:
+                cout << "До свидания!" << endl;
+                break;
+            default:
+                cout << "Неверный выбор!" << endl;
+        }
+    } while (choice != 0);
+    
+    return 0;
+}
+МДК 01.03 – Радиус вписанной окружности треугольника
+activity_main.xml (аналогично билету 32, но с другим текстом кнопки)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/etA" android:hint="Сторона a" android:inputType="numberDecimal" />
+    <EditText android:id="@+id/etB" android:hint="Сторона b" android:inputType="numberDecimal" />
+    <EditText android:id="@+id/etC" android:hint="Сторона c" android:inputType="numberDecimal" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnCalculate" android:text="Calculate r" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnTheme1" android:text="Тема 1" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnTheme2" android:text="Тема 2" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" android:layout_marginTop="16dp" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.inradius;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etA, etB, etC;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etA = findViewById(R.id.etA);
+        etB = findViewById(R.id.etB);
+        etC = findViewById(R.id.etC);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnCalculate).setOnClickListener(v -> {
+            String sA = etA.getText().toString();
+            String sB = etB.getText().toString();
+            String sC = etC.getText().toString();
+            
+            if (sA.isEmpty() || sB.isEmpty() || sC.isEmpty()) {
+                Toast.makeText(this, "Введите все стороны", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            double a = Double.parseDouble(sA);
+            double b = Double.parseDouble(sB);
+            double c = Double.parseDouble(sC);
+            
+            if (a + b <= c || a + c <= b || b + c <= a) {
+                Toast.makeText(this, "Треугольник не существует", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            double p = (a + b + c) / 2;
+            double area = Math.sqrt(p * (p - a) * (p - b) * (p - c));
+            double r = area / p;
+            
+            items.add("a = " + a + " b = " + b + " c = " + c + " r = " + String.format("%.2f", r));
+            adapter.notifyDataSetChanged();
+            
+            etA.setText("");
+            etB.setText("");
+            etC.setText("");
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnTheme1).setOnClickListener(v -> {
+            int textColor = Color.parseColor("#FF5722");
+            int bgColor = Color.parseColor("#FFF3E0");
+            applyTheme(textColor, bgColor);
+        });
+
+        findViewById(R.id.btnTheme2).setOnClickListener(v -> {
+            int textColor = Color.parseColor("#4CAF50");
+            int bgColor = Color.parseColor("#E8F5E9");
+            applyTheme(textColor, bgColor);
+        });
+    }
+    
+    private void applyTheme(int textColor, int bgColor) {
+        etA.setTextColor(textColor);
+        etA.setBackgroundColor(bgColor);
+        etB.setTextColor(textColor);
+        etB.setBackgroundColor(bgColor);
+        etC.setTextColor(textColor);
+        etC.setBackgroundColor(bgColor);
+    }
+}
+МДК 01.04 – Интерактивный таймер (повтор из билета 3)
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    DWORD startTick = GetTickCount();
+
+    int result = MessageBoxA(NULL,
+        "Программа запущена. Остановить?",
+        "Таймер",
+        MB_OKCANCEL);
+
+    if (result == IDOK) {
+        DWORD elapsed = (GetTickCount() - startTick) / 1000;
+        cout << "Время работы: " << elapsed << " секунд" << endl;
+        return 0;
+    }
+    else if (result == IDCANCEL) {
+        int confirm = MessageBoxA(NULL,
+            "Вы уверены?",
+            "Подтверждение",
+            MB_YESNO);
+        if (confirm == IDYES) {
+            return 0;
+        } else {
+            MessageBoxA(NULL, "Программа продолжает работу", "Инфо", MB_OK);
+            return 0;
+        }
+    }
+    return 0;
+}

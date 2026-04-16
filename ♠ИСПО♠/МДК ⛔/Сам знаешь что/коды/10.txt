@@ -1,0 +1,170 @@
+Билет 10 (полностью)
+МДК 01.01/01.02 – Диаграмма последовательностей для путевого листа
+Текстовое описание для построения в Visio:
+
+Участники (объекты):
+
+Диспетчер
+
+Форма заказа (интерфейс)
+
+База данных
+
+Путевой лист
+
+Сообщения в порядке времени (сверху вниз):
+
+Диспетчер → Форма заказа: Создать новый заказ
+
+Форма заказа → База данных: Запрос свободных машин и водителей
+
+База данных → Форма заказа: Список свободных машин и водителей
+
+Диспетчер → Форма заказа: Выбрать машину, водителя, грузчиков
+
+Диспетчер → Форма заказа: Ввести дату доставки, адрес, заказчика, параметры груза
+
+Форма заказа → Путевой лист: Создать путевой лист
+
+Путевой лист → База данных: Сохранить путевой лист
+
+База данных → Путевой лист: Подтверждение сохранения
+
+Путевой лист → Форма заказа: Отобразить готовый путевой лист
+
+Диспетчер → Форма заказа: (опционально) Добавить ещё заказы на ту же дату → возврат к шагу 2
+
+Как рисовать в Visio:
+
+Диаграмма последовательностей (Sequence Diagram)
+
+Вверху – прямоугольники с названиями объектов
+
+Вертикальные линии жизни (dashed lines)
+
+Стрелки сообщений между линиями с подписями
+
+Фрейм "loop" для шага 10
+
+МДК 01.03 – Нумерованный список (1) first record, 2) next record...)
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите текст" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.numberedlist;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText editText;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+    private int counter = 1;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        editText = findViewById(R.id.editText);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String text = editText.getText().toString();
+            if (!text.isEmpty()) {
+                items.add(counter + ") " + text);
+                counter++;
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            counter = 1;
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Работа с мьютексом (DuplicateHandle)
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    // 1. Создаём мьютекс
+    HANDLE hMutex1 = CreateMutex(NULL, FALSE, NULL);
+    if (hMutex1 == NULL) {
+        cout << "Ошибка создания мьютекса" << endl;
+        return 1;
+    }
+    cout << "Мьютекс создан. Handle: " << hMutex1 << endl;
+
+    // 2. Дублируем описатель
+    HANDLE hMutex2;
+    BOOL duplicated = DuplicateHandle(
+        GetCurrentProcess(),   // текущий процесс
+        hMutex1,               // исходный описатель
+        GetCurrentProcess(),   // целевой процесс (тот же)
+        &hMutex2,              // куда сохранить дубликат
+        0,                     // права доступа (0 = те же)
+        FALSE,                 // не наследуемый
+        DUPLICATE_SAME_ACCESS  // те же права
+    );
+    if (!duplicated) {
+        cout << "Ошибка дублирования" << endl;
+        CloseHandle(hMutex1);
+        return 1;
+    }
+    cout << "Дубликат создан. Handle: " << hMutex2 << endl;
+
+    // 3. Закрываем первый handle
+    CloseHandle(hMutex1);
+    cout << "Первый handle закрыт. Мьютекс всё ещё существует (через второй handle)." << endl;
+
+    // Проверяем, что мьютекс доступен через второй handle
+    DWORD waitResult = WaitForSingleObject(hMutex2, 1000);
+    if (waitResult == WAIT_OBJECT_0) {
+        cout << "Мьютекс успешно захвачен через второй handle" << endl;
+        ReleaseMutex(hMutex2);
+    } else {
+        cout << "Не удалось захватить мьютекс" << endl;
+    }
+
+    // 4. Закрываем второй handle
+    CloseHandle(hMutex2);
+    cout << "Второй handle закрыт. Мьютекс уничтожен." << endl;
+
+    return 0;
+}

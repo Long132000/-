@@ -1,0 +1,49 @@
+Билет №9
+МДК 01.01/01.02 – Диаграмма прецедентов для склада
+Актёры: Работник склада, Менеджер.
+
+Прецеденты:
+
+Работник: «Оформить приёмку товаров», «Оформить отгрузку по накладной».
+
+Менеджер: «Корректировать список товаров» (включает «Добавить товар», «Удалить товар», «Добавить категорию», «Удалить категорию»), «Сформировать накладную на выдачу».
+
+Описание: Диаграмма рисуется в Visio, где актёры соединены с прецедентами, а прецеденты могут иметь отношение расширения или включения.
+
+МДК 01.03 – Сумма трёх чисел в виде "10=3+2+5"
+Код:
+
+java
+btnAdd.setOnClickListener(v -> {
+    int a = Integer.parseInt(et1.getText().toString());
+    int b = Integer.parseInt(et2.getText().toString());
+    int c = Integer.parseInt(et3.getText().toString());
+    int sum = a + b + c;
+    items.add(sum + "=" + a + "+" + b + "+" + c);
+    adapter.notifyDataSetChanged();
+});
+btnRed.setOnClickListener(v -> getWindow().getDecorView().setBackgroundColor(Color.RED));
+btnBlue.setOnClickListener(v -> getWindow().getDecorView().setBackgroundColor(Color.BLUE));
+МДК 01.04 – Функции countwords, reversestring, isstringpalindrome
+cpp
+int countwords(const char* str) {
+    int cnt = 0;
+    bool inWord = false;
+    for (; *str; str++) {
+        if (isspace(*str)) inWord = false;
+        else if (!inWord) { inWord = true; cnt++; }
+    }
+    return cnt;
+}
+
+void reversestring(char* str) {
+    int len = strlen(str);
+    for (int i = 0; i < len/2; i++) swap(str[i], str[len-1-i]);
+}
+
+int isstringpalindrome(const char* str) {
+    int len = strlen(str);
+    for (int i = 0; i < len/2; i++)
+        if (str[i] != str[len-1-i]) return 0;
+    return 1;
+}

@@ -1,0 +1,99 @@
+Билет №5
+МДК 01.01/01.02 – Шифрование/дешифрование методом Цезаря
+Спецификация класса CaesarCipher:
+
+Поля: int shift (сдвиг).
+
+Конструктор CaesarCipher(int k) – устанавливает сдвиг.
+
+Метод encrypt(string text) – возвращает зашифрованную строку.
+
+Метод decrypt(string text) – возвращает расшифрованную строку.
+
+Поддержка только латиницы (A-Z, a-z), остальные символы не изменять.
+
+Сдвиг циклический по алфавиту.
+
+Пример реализации:
+
+cpp
+class CaesarCipher {
+    int shift;
+public:
+    CaesarCipher(int k) : shift(k % 26) {}
+    string encrypt(const string& text) {
+        string res = text;
+        for (char& c : res) {
+            if (isupper(c)) c = 'A' + (c - 'A' + shift) % 26;
+            else if (islower(c)) c = 'a' + (c - 'a' + shift) % 26;
+        }
+        return res;
+    }
+    string decrypt(const string& text) {
+        string res = text;
+        for (char& c : res) {
+            if (isupper(c)) c = 'A' + (c - 'A' - shift + 26) % 26;
+            else if (islower(c)) c = 'a' + (c - 'a' - shift + 26) % 26;
+        }
+        return res;
+    }
+};
+МДК 01.03 – Скобки и темы
+Задание: кнопки с символами скобок («<>», «()», «[]», «{}»), «Clear», «Тема1», «Тема2». По скобкам – добавить в список содержимое двух EditText в скобках. По темам – изменить цвет/фон EditText.
+
+Код (фрагмент):
+
+java
+btnBrackets1.setOnClickListener(v -> {
+    String s1 = et1.getText().toString();
+    String s2 = et2.getText().toString();
+    items.add("<" + s1 + "> <" + s2 + ">"); // пример для <>
+    adapter.notifyDataSetChanged();
+});
+btnTheme1.setOnClickListener(v -> {
+    int color = Color.parseColor("#FF5722"); // цвет кнопки
+    et1.setTextColor(color);
+    et1.setBackgroundColor(Color.LTGRAY);
+    et2.setTextColor(color);
+    et2.setBackgroundColor(Color.LTGRAY);
+});
+МДК 01.04 – Кроссплатформенная программа (Windows/Linux)
+Код с условной компиляцией:
+
+cpp
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#include <fstream>
+#endif
+#include <iostream>
+#include <string>
+
+int main() {
+    std::string compName, userName;
+    unsigned long long uptimeSec = 0;
+
+#ifdef _WIN32
+    char buf[256];
+    DWORD size = 256;
+    GetComputerNameA(buf, &size);
+    compName = buf;
+    size = 256;
+    GetUserNameA(buf, &size);
+    userName = buf;
+    uptimeSec = GetTickCount64() / 1000;
+#else
+    // Linux
+    std::ifstream f("/proc/uptime");
+    f >> uptimeSec;
+    f.close();
+    f.open("/etc/hostname");
+    std::getline(f, compName);
+    f.close();
+    userName = getenv("USER") ? getenv("USER") : "";
+#endif
+    std::cout << "Компьютер: " << compName << "\nПользователь: " << userName
+              << "\nВремя работы: " << uptimeSec / 86400 << " дней" << std::endl;
+    return 0;
+}

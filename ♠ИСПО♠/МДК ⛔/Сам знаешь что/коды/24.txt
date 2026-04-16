@@ -1,0 +1,309 @@
+Билет 24 (полностью)
+МДК 01.01/01.02 – Определение вида треугольника по трём сторонам
+cpp
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// Перечисляемый тип для вида треугольника
+enum TriangleType {
+    RECTANGULAR,   // прямоугольный
+    ACUTE,         // остроугольный
+    OBTUSE,        // тупоугольный
+    INVALID        // не существует или вырожденный
+};
+
+string triangleTypeToString(TriangleType type) {
+    switch (type) {
+        case RECTANGULAR: return "Прямоугольный";
+        case ACUTE: return "Остроугольный";
+        case OBTUSE: return "Тупоугольный";
+        case INVALID: return "Не является треугольником";
+        default: return "Неизвестно";
+    }
+}
+
+TriangleType getTriangleType(double a, double b, double c) {
+    // Проверка на существование треугольника
+    if (a <= 0 || b <= 0 || c <= 0) return INVALID;
+    if (a + b <= c || a + c <= b || b + c <= a) return INVALID;
+    
+    // Квадраты сторон
+    double a2 = a * a;
+    double b2 = b * b;
+    double c2 = c * c;
+    
+    // Проверка на прямоугольность (теорема Пифагора с погрешностью)
+    const double EPS = 1e-9;
+    if (fabs(a2 + b2 - c2) < EPS ||
+        fabs(a2 + c2 - b2) < EPS ||
+        fabs(b2 + c2 - a2) < EPS) {
+        return RECTANGULAR;
+    }
+    
+    // Проверка на остроугольность (все квадраты сторон меньше суммы квадратов двух других)
+    if (a2 + b2 > c2 && a2 + c2 > b2 && b2 + c2 > a2) {
+        return ACUTE;
+    }
+    
+    // Иначе тупоугольный
+    return OBTUSE;
+}
+
+int main() {
+    double a, b, c;
+    
+    cout << "Введите три стороны треугольника: ";
+    cin >> a >> b >> c;
+    
+    TriangleType type = getTriangleType(a, b, c);
+    cout << "Треугольник со сторонами " << a << ", " << b << ", " << c << " - ";
+    cout << triangleTypeToString(type) << endl;
+    
+    return 0;
+}
+Тестовые данные (тест-кейсы):
+
+№	a	b	c	Ожидаемый результат
+1	3	4	5	Прямоугольный
+2	5	12	13	Прямоугольный
+3	3	3	3	Остроугольный (равносторонний)
+4	5	5	8	Тупоугольный
+5	7	8	9	Остроугольный
+6	2	3	4	Тупоугольный (2²+3²=13 < 16)
+7	1	1	3	Не треугольник
+8	-1	2	2	Не треугольник
+9	0	5	5	Не треугольник
+МДК 01.03 – Звёздочки и строка
+activity_main.xml
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/etCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Количество звёздочек"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/etText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Текст" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.starstring;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etCount, etText;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etCount = findViewById(R.id.etCount);
+        etText = findViewById(R.id.etText);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String countStr = etCount.getText().toString();
+            String text = etText.getText().toString();
+            
+            if (countStr.isEmpty() || text.isEmpty()) return;
+            
+            int count = Integer.parseInt(countStr);
+            
+            // Добавляем звёздочки
+            StringBuilder stars = new StringBuilder();
+            for (int i = 0; i < count; i++) {
+                stars.append("*");
+            }
+            items.add(stars.toString());
+            
+            // Добавляем текст отдельной строкой
+            items.add(text);
+            
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Параллельная обработка файлов (чтение, шифрование, запись)
+cpp
+#include <windows.h>
+#include <iostream>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+// Синхронизация
+HANDLE hMutex;
+HANDLE hDataReady;
+HANDLE hDataProcessed;
+CRITICAL_SECTION cs;
+
+// Буфер для данных
+vector<char> buffer;
+bool readingDone = false;
+
+// Простое шифрование XOR
+void encryptData(vector<char>& data, int key) {
+    for (char& c : data) {
+        c = c ^ key;
+    }
+}
+
+// Поток чтения из файла
+DWORD WINAPI ReadThread(LPVOID lpParam) {
+    const char* filename = (const char*)lpParam;
+    ifstream fin(filename, ios::binary);
+    
+    if (!fin.is_open()) {
+        cout << "Ошибка открытия файла для чтения" << endl;
+        return 1;
+    }
+    
+    char ch;
+    while (fin.get(ch)) {
+        WaitForSingleObject(hMutex, INFINITE);
+        buffer.push_back(ch);
+        ReleaseMutex(hMutex);
+        SetEvent(hDataReady);
+        Sleep(5);  // имитация задержки чтения
+    }
+    
+    fin.close();
+    readingDone = true;
+    SetEvent(hDataReady);
+    cout << "Чтение завершено" << endl;
+    return 0;
+}
+
+// Поток шифрования
+DWORD WINAPI EncryptThread(LPVOID lpParam) {
+    int key = *(int*)lpParam;
+    
+    while (!readingDone || !buffer.empty()) {
+        WaitForSingleObject(hDataReady, INFINITE);
+        
+        if (readingDone && buffer.empty()) break;
+        
+        WaitForSingleObject(hMutex, INFINITE);
+        if (!buffer.empty()) {
+            vector<char> dataToEncrypt;
+            // Берём один символ
+            dataToEncrypt.push_back(buffer.back());
+            buffer.pop_back();
+            ReleaseMutex(hMutex);
+            
+            encryptData(dataToEncrypt, key);
+            
+            WaitForSingleObject(hMutex, INFINITE);
+            // Можно записать зашифрованные данные в другой буфер или сразу в файл
+            // Для простоты просто выводим
+            cout << "Зашифрован символ: " << (int)dataToEncrypt[0] << endl;
+            ReleaseMutex(hMutex);
+        } else {
+            ReleaseMutex(hMutex);
+        }
+        
+        SetEvent(hDataProcessed);
+    }
+    
+    cout << "Шифрование завершено" << endl;
+    return 0;
+}
+
+// Поток записи в файл
+DWORD WINAPI WriteThread(LPVOID lpParam) {
+    const char* filename = (const char*)lpParam;
+    ofstream fout(filename, ios::binary);
+    
+    if (!fout.is_open()) {
+        cout << "Ошибка открытия файла для записи" << endl;
+        return 1;
+    }
+    
+    // Ожидаем завершения шифрования
+    while (!readingDone || !buffer.empty()) {
+        Sleep(10);
+    }
+    
+    fout.close();
+    cout << "Запись завершена" << endl;
+    return 0;
+}
+
+int main() {
+    // Инициализация синхронизации
+    hMutex = CreateMutex(NULL, FALSE, NULL);
+    hDataReady = CreateEvent(NULL, FALSE, FALSE, NULL);
+    hDataProcessed = CreateEvent(NULL, FALSE, FALSE, NULL);
+    InitializeCriticalSection(&cs);
+    
+    const char* inputFile = "input.txt";
+    const char* outputFile = "encrypted.txt";
+    int key = 42;  // ключ шифрования
+    
+    cout << "=== Параллельная обработка файла ===" << endl;
+    cout << "Исходный файл: " << inputFile << endl;
+    cout << "Выходной файл: " << outputFile << endl;
+    cout << "Ключ шифрования: " << key << endl;
+    
+    // Создаём потоки
+    HANDLE hRead = CreateThread(NULL, 0, ReadThread, (void*)inputFile, 0, NULL);
+    HANDLE hEncrypt = CreateThread(NULL, 0, EncryptThread, &key, 0, NULL);
+    HANDLE hWrite = CreateThread(NULL, 0, WriteThread, (void*)outputFile, 0, NULL);
+    
+    // Ждём завершения
+    WaitForSingleObject(hRead, INFINITE);
+    WaitForSingleObject(hEncrypt, INFINITE);
+    WaitForSingleObject(hWrite, INFINITE);
+    
+    // Закрываем handle'ы
+    CloseHandle(hRead);
+    CloseHandle(hEncrypt);
+    CloseHandle(hWrite);
+    CloseHandle(hMutex);
+    CloseHandle(hDataReady);
+    CloseHandle(hDataProcessed);
+    DeleteCriticalSection(&cs);
+    
+    cout << "Обработка завершена!" << endl;
+    
+    return 0;
+}

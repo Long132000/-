@@ -1,0 +1,278 @@
+Билет 16 (полностью)
+МДК 01.01/01.02 – Стоимость оборудования с амортизацией
+cpp
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+int main() {
+    ifstream fin("equipment.txt");
+    if (!fin.is_open()) {
+        cout << "Не удалось открыть файл equipment.txt" << endl;
+        cout << "Формат файла: первая строка - процент амортизации, затем стоимости оборудования по годам" << endl;
+        return 1;
+    }
+
+    double p;  // процент амортизации
+    fin >> p;
+    cout << "Процент амортизации: " << p << "%" << endl;
+
+    vector<double> costs;
+    double cost;
+    while (fin >> cost) {
+        costs.push_back(cost);
+    }
+    fin.close();
+
+    if (costs.empty()) {
+        cout << "Нет данных о стоимости оборудования" << endl;
+        return 1;
+    }
+
+    cout << "\nСтоимость оборудования по годам закупки:" << endl;
+    for (size_t i = 0; i < costs.size(); i++) {
+        cout << "Год " << i + 1 << ": " << costs[i] << " руб." << endl;
+    }
+
+    // Расчёт общей стоимости с учётом амортизации
+    double totalCost = 0.0;
+    int currentYear = 1;
+
+    for (size_t i = 0; i < costs.size(); i++) {
+        double currentValue = costs[i];
+        int yearsOld = costs.size() - i;  // сколько лет оборудование будет на складе
+        
+        // Амортизация: каждый год стоимость уменьшается на p%
+        for (int y = 0; y < yearsOld; y++) {
+            currentValue *= (1 - p / 100.0);
+        }
+        totalCost += currentValue;
+        cout << "Оборудование года " << i + 1 << " после амортизации: " << currentValue << " руб." << endl;
+    }
+
+    cout << "\n========================================" << endl;
+    cout << "Общая стоимость с учётом амортизации: " << totalCost << " руб." << endl;
+
+    return 0;
+}
+Пример файла equipment.txt:
+
+text
+10
+100000
+120000
+80000
+110000
+МДК 01.03 – Диапазон чисел с шагом
+activity_main.xml (три EditText: начало, конец, шаг; кнопки ADD, CLEAR; ListView)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/etStart" android:hint="Начало" android:inputType="number" />
+    <EditText android:id="@+id/etEnd" android:hint="Конец" android:inputType="number" />
+    <EditText android:id="@+id/etStep" android:hint="Шаг" android:inputType="number" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.range;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etStart, etEnd, etStep;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etStart = findViewById(R.id.etStart);
+        etEnd = findViewById(R.id.etEnd);
+        etStep = findViewById(R.id.etStep);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String startStr = etStart.getText().toString();
+            String endStr = etEnd.getText().toString();
+            String stepStr = etStep.getText().toString();
+
+            if (startStr.isEmpty() || endStr.isEmpty() || stepStr.isEmpty()) {
+                Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int start = Integer.parseInt(startStr);
+            int end = Integer.parseInt(endStr);
+            int step = Integer.parseInt(stepStr);
+
+            if (step == 0) {
+                Toast.makeText(this, "Шаг не может быть 0", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if ((start < end && step < 0) || (start > end && step > 0)) {
+                Toast.makeText(this, "Шаг не соответствует направлению", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (step > 0) {
+                for (int i = start; i <= end; i += step) {
+                    items.add(String.valueOf(i));
+                }
+            } else {
+                for (int i = start; i >= end; i += step) {
+                    items.add(String.valueOf(i));
+                }
+            }
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Банковские операции (3 потока, семафоры)
+cpp
+#include <windows.h>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Глобальные переменные
+CRITICAL_SECTION cs;
+HANDLE hSemaphore;
+double balance = 1000.0;  // начальный баланс
+int totalOperations = 0;
+const int OPERATIONS_PER_THREAD = 50;
+
+// Пополнение счёта
+DWORD WINAPI DepositThread(LPVOID lpParam) {
+    for (int i = 0; i < OPERATIONS_PER_THREAD; i++) {
+        WaitForSingleObject(hSemaphore, INFINITE);
+        EnterCriticalSection(&cs);
+        
+        double amount = 10.0 + (rand() % 100);  // 10-110
+        balance += amount;
+        totalOperations++;
+        cout << "[Пополнение] +" << amount << " руб. Баланс: " << balance << " руб." << endl;
+        
+        LeaveCriticalSection(&cs);
+        ReleaseSemaphore(hSemaphore, 1, NULL);
+        Sleep(10);  // небольшая задержка
+    }
+    cout << "Поток пополнения завершён" << endl;
+    return 0;
+}
+
+// Снятие денег
+DWORD WINAPI WithdrawThread(LPVOID lpParam) {
+    for (int i = 0; i < OPERATIONS_PER_THREAD; i++) {
+        WaitForSingleObject(hSemaphore, INFINITE);
+        EnterCriticalSection(&cs);
+        
+        double amount = 10.0 + (rand() % 80);  // 10-90
+        if (amount <= balance) {
+            balance -= amount;
+            totalOperations++;
+            cout << "[Снятие]     -" << amount << " руб. Баланс: " << balance << " руб." << endl;
+        } else {
+            cout << "[Снятие]     Недостаточно средств! Попытка снять " << amount << " руб." << endl;
+        }
+        
+        LeaveCriticalSection(&cs);
+        ReleaseSemaphore(hSemaphore, 1, NULL);
+        Sleep(10);
+    }
+    cout << "Поток снятия завершён" << endl;
+    return 0;
+}
+
+// Начисление процентов
+DWORD WINAPI InterestThread(LPVOID lpParam) {
+    for (int i = 0; i < 10; i++) {  // начисляем проценты 10 раз
+        WaitForSingleObject(hSemaphore, INFINITE);
+        EnterCriticalSection(&cs);
+        
+        double interest = balance * 0.01;  // 1% от текущего баланса
+        balance += interest;
+        totalOperations++;
+        cout << "[Проценты]   +" << interest << " руб. (1%). Баланс: " << balance << " руб." << endl;
+        
+        LeaveCriticalSection(&cs);
+        ReleaseSemaphore(hSemaphore, 1, NULL);
+        Sleep(500);  // проценты начисляем реже
+    }
+    cout << "Поток начисления процентов завершён" << endl;
+    return 0;
+}
+
+int main() {
+    srand(GetTickCount());
+    
+    // Инициализация
+    InitializeCriticalSection(&cs);
+    hSemaphore = CreateSemaphore(NULL, 1, 1, NULL);  // семафор с максимальным счётчиком 1 (как мьютекс)
+    
+    // Создаём потоки
+    HANDLE hDeposit = CreateThread(NULL, 0, DepositThread, NULL, 0, NULL);
+    HANDLE hWithdraw = CreateThread(NULL, 0, WithdrawThread, NULL, 0, NULL);
+    HANDLE hInterest = CreateThread(NULL, 0, InterestThread, NULL, 0, NULL);
+    
+    if (!hDeposit || !hWithdraw || !hInterest) {
+        cout << "Ошибка создания потоков" << endl;
+        return 1;
+    }
+    
+    cout << "=== Банковские операции ===" << endl;
+    cout << "Начальный баланс: " << balance << " руб." << endl;
+    cout << "===========================" << endl;
+    
+    // Ждём завершения всех потоков
+    WaitForSingleObject(hDeposit, INFINITE);
+    WaitForSingleObject(hWithdraw, INFINITE);
+    WaitForSingleObject(hInterest, INFINITE);
+    
+    // Закрываем handle'ы
+    CloseHandle(hDeposit);
+    CloseHandle(hWithdraw);
+    CloseHandle(hInterest);
+    CloseHandle(hSemaphore);
+    DeleteCriticalSection(&cs);
+    
+    cout << "===========================" << endl;
+    cout << "Все операции завершены" << endl;
+    cout << "Итоговый баланс: " << balance << " руб." << endl;
+    cout << "Всего операций: " << totalOperations << endl;
+    
+    return 0;
+}

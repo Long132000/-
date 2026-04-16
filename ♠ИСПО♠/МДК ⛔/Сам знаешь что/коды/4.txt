@@ -1,0 +1,136 @@
+Билет 4 (полностью)
+МДК 01.01/01.02 – Периметр выпуклого многоугольника
+cpp
+#include <iostream>
+#include <cmath>
+#include <vector>
+using namespace std;
+
+struct Point {
+    double x, y;
+};
+
+double distance(const Point& p1, const Point& p2) {
+    double dx = p1.x - p2.x;
+    double dy = p1.y - p2.y;
+    return sqrt(dx*dx + dy*dy);
+}
+
+double perimeter(const vector<Point>& points) {
+    if (points.size() < 2) return 0.0;
+    double p = 0.0;
+    for (size_t i = 0; i < points.size() - 1; i++) {
+        p += distance(points[i], points[i+1]);
+    }
+    p += distance(points.back(), points.front());
+    return p;
+}
+
+int main() {
+    int n;
+    cout << "Введите количество вершин: ";
+    cin >> n;
+    vector<Point> pts(n);
+    for (int i = 0; i < n; i++) {
+        cout << "x" << i+1 << " y" << i+1 << ": ";
+        cin >> pts[i].x >> pts[i].y;
+    }
+    cout << "Периметр = " << perimeter(pts) << endl;
+    return 0;
+}
+МДК 01.03 – Добавление строки в список N раз
+activity_main.xml (два EditText: etText, etCount; кнопки ADD, CLEAR; ListView)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText android:id="@+id/etText" android:hint="Текст" />
+    <EditText android:id="@+id/etCount" android:hint="Количество раз" android:inputType="number" />
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content">
+        <Button android:id="@+id/btnAdd" android:text="ADD" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClear" android:text="CLEAR" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+    <ListView android:id="@+id/listView" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.repeat;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText etText, etCount;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        etText = findViewById(R.id.etText);
+        etCount = findViewById(R.id.etCount);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String text = etText.getText().toString();
+            String countStr = etCount.getText().toString();
+            if (text.isEmpty() || countStr.isEmpty()) return;
+            int count = Integer.parseInt(countStr);
+            for (int i = 0; i < count; i++) {
+                items.add(text);
+            }
+            adapter.notifyDataSetChanged();
+        });
+
+        findViewById(R.id.btnClear).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Системный смотритель (периодическая проверка)
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    int N;
+    cout << "Введите интервал проверки (секунды): ";
+    cin >> N;
+
+    while (true) {
+        Sleep(N * 1000);
+
+        // 1. Время работы системы > 7 дней?
+        ULONGLONG uptimeSec = GetTickCount64() / 1000;
+        if (uptimeSec > 7 * 86400) {
+            MessageBoxA(NULL, "Система работает более 7 дней!", "Предупреждение", MB_ICONWARNING);
+        }
+
+        // 2. Мало свободного места на диске C: (<5 ГБ)
+        ULARGE_INTEGER freeBytes;
+        if (GetDiskFreeSpaceExA("C:\\", &freeBytes, NULL, NULL)) {
+            if (freeBytes.QuadPart < 5ULL * 1024 * 1024 * 1024) {
+                MessageBoxA(NULL, "Мало свободного места на диске C: (<5 ГБ)", "Ошибка", MB_ICONERROR);
+            }
+        }
+    }
+    return 0;
+}

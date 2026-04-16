@@ -1,0 +1,262 @@
+Билет 20 (полностью)
+МДК 01.01/01.02 – Класс для обработки строк (последнее вхождение символа)
+cpp
+#include <iostream>
+#include <string>
+using namespace std;
+
+class StringUtils {
+public:
+    // 1. Номер последнего вхождения заданного символа
+    static int lastIndexOf(const string& str, char ch) {
+        for (int i = str.length() - 1; i >= 0; i--) {
+            if (str[i] == ch) {
+                return i;
+            }
+        }
+        return -1;  // символ не найден
+    }
+    
+    // 2. Часть строки после последнего вхождения заданного символа
+    static string afterLast(const string& str, char ch) {
+        int pos = lastIndexOf(str, ch);
+        if (pos == -1) {
+            return "";  // символ не найден
+        }
+        return str.substr(pos + 1);
+    }
+    
+    // 3. Часть строки, состоящая из n символов, после последнего вхождения
+    static string afterLastN(const string& str, char ch, int n) {
+        string tail = afterLast(str, ch);
+        if (tail.empty()) {
+            return "";
+        }
+        if (n >= (int)tail.length()) {
+            return tail;
+        }
+        return tail.substr(0, n);
+    }
+};
+
+int main() {
+    string text;
+    char symbol;
+    int n;
+    
+    cout << "Введите строку: ";
+    getline(cin, text);
+    cout << "Введите символ: ";
+    cin >> symbol;
+    cout << "Введите n: ";
+    cin >> n;
+    
+    cout << "\n=== Результаты ===" << endl;
+    
+    int lastPos = StringUtils::lastIndexOf(text, symbol);
+    if (lastPos != -1) {
+        cout << "Последнее вхождение '" << symbol << "' на позиции: " << lastPos << endl;
+    } else {
+        cout << "Символ '" << symbol << "' не найден в строке" << endl;
+    }
+    
+    string after = StringUtils::afterLast(text, symbol);
+    if (!after.empty()) {
+        cout << "Часть после последнего '" << symbol << "': \"" << after << "\"" << endl;
+    } else {
+        cout << "Нет части после последнего '" << symbol << "'" << endl;
+    }
+    
+    string afterN = StringUtils::afterLastN(text, symbol, n);
+    if (!afterN.empty()) {
+        cout << "Первые " << n << " символов после последнего '" << symbol << "': \"" << afterN << "\"" << endl;
+    } else {
+        cout << "Нет части после последнего '" << symbol << "'" << endl;
+    }
+    
+    return 0;
+}
+МДК 01.03 – Next Number (накопление чисел в TextView)
+activity_main.xml (TextView, кнопки Next Number, Add, Clear Text, Clear List, ListView)
+
+xml
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvNumbers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:background="#F0F0F0"
+        android:padding="16dp" />
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp">
+        <Button android:id="@+id/btnNext" android:text="Next Number" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnAdd" android:text="Add" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout android:orientation="horizontal" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp">
+        <Button android:id="@+id/btnClearText" android:text="Clear Text" android:layout_width="0dp" android:layout_weight="1" />
+        <Button android:id="@+id/btnClearList" android:text="Clear List" android:layout_width="0dp" android:layout_weight="1" />
+    </LinearLayout>
+
+    <ListView android:id="@+id/listView" android:layout_marginTop="16dp" />
+</LinearLayout>
+MainActivity.java
+
+java
+package com.example.nextnumber;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import java.util.ArrayList;
+
+public class MainActivity extends AppCompatActivity {
+    private TextView tvNumbers;
+    private ListView listView;
+    private ArrayList<String> items;
+    private ArrayAdapter<String> adapter;
+    private int currentNumber = 0;
+    private StringBuilder numberSequence;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        tvNumbers = findViewById(R.id.tvNumbers);
+        listView = findViewById(R.id.listView);
+        items = new ArrayList<>();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        listView.setAdapter(adapter);
+        
+        numberSequence = new StringBuilder("0");
+
+        findViewById(R.id.btnNext).setOnClickListener(v -> {
+            currentNumber++;
+            if (numberSequence.length() > 0) {
+                numberSequence.append(" ").append(currentNumber);
+            } else {
+                numberSequence.append(currentNumber);
+            }
+            tvNumbers.setText(numberSequence.toString());
+        });
+
+        findViewById(R.id.btnAdd).setOnClickListener(v -> {
+            String text = tvNumbers.getText().toString();
+            if (!text.isEmpty()) {
+                items.add(text);
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        findViewById(R.id.btnClearText).setOnClickListener(v -> {
+            currentNumber = 0;
+            numberSequence = new StringBuilder("0");
+            tvNumbers.setText("0");
+        });
+
+        findViewById(R.id.btnClearList).setOnClickListener(v -> {
+            items.clear();
+            adapter.notifyDataSetChanged();
+        });
+    }
+}
+МДК 01.04 – Анонимные каналы (два дочерних процесса)
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    HANDLE hReadPipe, hWritePipe;
+    SECURITY_ATTRIBUTES sa = { sizeof(sa), NULL, TRUE };  // наследуемые handle'ы
+    
+    // Создаём анонимный канал
+    if (!CreatePipe(&hReadPipe, &hWritePipe, &sa, 0)) {
+        cout << "Ошибка создания канала" << endl;
+        return 1;
+    }
+    
+    cout << "Канал создан. Read handle: " << hReadPipe << ", Write handle: " << hWritePipe << endl;
+    
+    // Данные для передачи
+    char dataToSend[] = "Hello from parent process!";
+    DWORD written;
+    
+    // Записываем данные в канал
+    WriteFile(hWritePipe, dataToSend, sizeof(dataToSend), &written, NULL);
+    cout << "Родитель записал в канал: " << dataToSend << " (" << written << " байт)" << endl;
+    
+    // Закрываем write handle в родителе (он больше не нужен)
+    CloseHandle(hWritePipe);
+    
+    // Создаём первый дочерний процесс
+    STARTUPINFOA si1 = { sizeof(si1) };
+    PROCESS_INFORMATION pi1;
+    
+    char cmdLine1[] = "child1.exe";
+    if (!CreateProcessA(NULL, cmdLine1, NULL, NULL, TRUE, 0, NULL, NULL, &si1, &pi1)) {
+        cout << "Ошибка запуска child1.exe" << endl;
+        return 1;
+    }
+    
+    // Создаём второй дочерний процесс
+    STARTUPINFOA si2 = { sizeof(si2) };
+    PROCESS_INFORMATION pi2;
+    
+    char cmdLine2[] = "child2.exe";
+    if (!CreateProcessA(NULL, cmdLine2, NULL, NULL, TRUE, 0, NULL, NULL, &si2, &pi2)) {
+        cout << "Ошибка запуска child2.exe" << endl;
+        return 1;
+    }
+    
+    cout << "Дочерние процессы запущены" << endl;
+    
+    // Ждём завершения дочерних процессов
+    WaitForSingleObject(pi1.hProcess, INFINITE);
+    WaitForSingleObject(pi2.hProcess, INFINITE);
+    
+    // Закрываем handle'ы
+    CloseHandle(pi1.hProcess);
+    CloseHandle(pi1.hThread);
+    CloseHandle(pi2.hProcess);
+    CloseHandle(pi2.hThread);
+    CloseHandle(hReadPipe);
+    
+    cout << "Родительский процесс завершён" << endl;
+    
+    return 0;
+}
+Дочерний процесс 1 (child1.cpp):
+
+cpp
+#include <windows.h>
+#include <iostream>
+using namespace std;
+
+int main() {
+    // Получаем handle канала от родителя (передаётся через наследование)
+    HANDLE hReadPipe = GetStdHandle(STD_INPUT_HANDLE);
+    
+    char buffer[256];
+    DWORD read;
+    
+    if (ReadFile(hReadPipe, buffer, sizeof(buffer), &read, NULL)) {
+        buffer[read] = '\0';
+        cout << "Child1 прочитал из канала: " << buffer << endl;
+    }
+    
+    return 0;
+}
