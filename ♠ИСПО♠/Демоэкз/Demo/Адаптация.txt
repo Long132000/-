@@ -1,0 +1,292 @@
+📋 ПЛАН АДАПТАЦИИ ДЛЯ ДРУГОГО ВАРИАНТА
+Отличный вопрос! Вот подробный план, что и где менять, если у вас будет другой вариант (стройматериалы, продукты, книги и т.д.).
+
+🗺️ ОБЩАЯ СТРУКТУРА АДАПТАЦИИ
+text
+1. БАЗА ДАННЫХ (самое важное!)
+   ↓
+2. ТЕСТОВЫЕ ДАННЫЕ
+   ↓
+3. НАЗВАНИЯ ПОЛЕЙ В ИНТЕРФЕЙСЕ
+   ↓
+4. ПРАВА ДОСТУПА (если меняются роли)
+   ↓
+5. БИЗНЕС-ЛОГИКА (скидки, подсветка)
+   ↓
+6. ИМПОРТ ДАННЫХ (если есть файлы)
+1️⃣ БАЗА ДАННЫХ (функция init_database)
+Где искать:
+python
+def init_database():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    # ↓↓↓ ВОТ ЗДЕСЬ МЕНЯТЬ ↓↓↓
+📌 Таблицы, которые могут меняться:
+Что нужно изменить	Где находится	Примеры
+Название таблицы products	CREATE TABLE products	Может быть materials, books, food
+Название таблицы categories	CREATE TABLE categories	Может быть types, sections
+Название таблицы suppliers	CREATE TABLE suppliers	Может быть manufacturers, vendors
+Название таблицы orders	CREATE TABLE orders	Может быть purchases, sales
+Поля в товарах	Внутри CREATE TABLE products	У вас могут быть: weight, color, size, material, author, pages
+🔧 Как менять поля в таблице products:
+sql
+-- ВАШ ВАРИАНТ (игрушки) → НОВЫЙ ВАРИАНТ (стройматериалы)
+CREATE TABLE products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,                    -- ОСТАЁТСЯ
+    description TEXT,                      -- ОСТАЁТСЯ
+    category_id INTEGER NOT NULL,          -- ОСТАЁТСЯ
+    manufacturer TEXT,                     -- ОСТАЁТСЯ
+    supplier_id INTEGER NOT NULL,          -- ОСТАЁТСЯ
+    price REAL NOT NULL,                   -- ОСТАЁТСЯ
+    unit TEXT,                             -- ОСТАЁТСЯ
+    quantity INTEGER NOT NULL,             -- ОСТАЁТСЯ
+    discount REAL DEFAULT 0,               -- ОСТАЁТСЯ
+    photo_path TEXT,                       -- ОСТАЁТСЯ
+    -- ↓↓↓ ДОБАВЛЯЕТЕ СВОИ ПОЛЯ ↓↓↓
+    weight REAL,                           -- вес (для стройматериалов)
+    color TEXT,                            -- цвет
+    material TEXT,                         -- материал
+    size TEXT,                             -- размер
+    country TEXT,                          -- страна производства
+    FOREIGN KEY (category_id) REFERENCES categories(id),
+    FOREIGN KEY (supplier_id) REFERENCES suppliers(id)
+)
+📌 Как обновить SQL запросы после изменения таблицы:
+Где искать все SQL запросы:
+
+init_database() - создание таблиц и вставка
+
+refresh_products_tree() - SELECT запрос
+
+load_product_data() - SELECT для редактирования
+
+save_product() - INSERT и UPDATE
+
+Пример изменения SELECT запроса:
+
+python
+# БЫЛО (игрушки)
+query = """
+    SELECT p.id, p.name, p.description, p.price, p.unit, p.quantity, p.discount, p.photo_path,
+           c.name as category_name, s.name as supplier_name, p.manufacturer
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    JOIN suppliers s ON p.supplier_id = s.id
+"""
+
+# СТАЛО (стройматериалы - добавили weight и material)
+query = """
+    SELECT p.id, p.name, p.description, p.price, p.unit, p.quantity, p.discount, p.photo_path,
+           c.name as category_name, s.name as supplier_name, p.manufacturer,
+           p.weight, p.material, p.color, p.size     -- ← добавили новые поля
+    FROM products p
+    JOIN categories c ON p.category_id = c.id
+    JOIN suppliers s ON p.supplier_id = s.id
+"""
+2️⃣ ТЕСТОВЫЕ ДАННЫЕ (в функции init_database)
+Где искать:
+python
+# ↓↓↓ ВСТАВКА ТЕСТОВЫХ ДАННЫХ ↓↓↓
+
+# Категории
+categories = ['Конструкторы', 'Мягкие игрушки', ...]  # ← ИЗМЕНИТЬ
+
+# Поставщики
+suppliers = ['ООО "Мир игрушек"', 'ИП Смирнов', ...]  # ← ИЗМЕНИТЬ
+
+# Товары
+products = [
+    ('LEGO City', 'описание', cat_id, 'LEGO', sup_id, 2999.99, 'шт', 15, 10, None),
+    # ↑↑↑ ИЗМЕНИТЬ НА СВОИ ТОВАРЫ ↑↑↑
+]
+📌 Пример для стройматериалов:
+python
+# Категории (стройматериалы)
+categories = ['Пиломатериалы', 'Крепёж', 'Лакокрасочные', 'Сантехника', 'Электрика']
+
+# Поставщики
+suppliers = ['ООО "СтройГрупп"', 'ИП Петров', 'ЗАО "СтройМаркет"', 'ООО "Мастерок"']
+
+# Товары (с новыми полями)
+products = [
+    ('Доска обрезная 50х150', 'Сосна, сорт А', cat_map['Пиломатериалы'], 'ЛесХоз', sup_map['ООО "СтройГрупп"'], 1200.00, 'м³', 50, 5, None),
+    ('Саморезы 4х40', 'Оцинкованные, 1000 шт', cat_map['Крепёж'], 'КрепМастер', sup_map['ИП Петров'], 450.00, 'уп', 200, 0, None),
+    ('Краска белая матовая', 'Для внутренних работ', cat_map['Лакокрасочные'], 'Текс', sup_map['ЗАО "СтройМаркет"'], 800.00, 'л', 30, 10, None),
+]
+3️⃣ ИНТЕРФЕЙС (поля в карточках и окнах)
+Где искать:
+Класс App → метод create_product_card() - отображение карточки
+
+Класс EditProductWindow → метод create_widgets() - поля для ввода
+
+📌 Как добавить новое поле в карточку:
+python
+def create_product_card(self, row):
+    # ... существующий код ...
+    
+    # ДОБАВЛЯЕМ НОВОЕ ПОЛЕ (например, вес)
+    if row['weight']:
+        weight_label = ttk.Label(info_frame, text=f"⚖️ Вес: {row['weight']} кг")
+        weight_label.pack(anchor='w')
+    
+    # ИЛИ материал
+    if row['material']:
+        material_label = ttk.Label(info_frame, text=f"🧱 Материал: {row['material']}")
+        material_label.pack(anchor='w')
+📌 Как добавить новое поле в окно редактирования:
+python
+def create_widgets(self):
+    # ... существующие поля ...
+    
+    # ДОБАВЛЯЕМ НОВОЕ ПОЛЕ
+    ttk.Label(scrollable_frame, text="Вес (кг):").grid(row=row, column=0, sticky='w', pady=5)
+    self.weight_var = tk.DoubleVar()  # создаём переменную
+    ttk.Entry(scrollable_frame, textvariable=self.weight_var, width=40).grid(row=row, column=1, pady=5)
+    row += 1
+    
+    # ИЛИ материал
+    ttk.Label(scrollable_frame, text="Материал:").grid(row=row, column=0, sticky='w', pady=5)
+    self.material_var = tk.StringVar()
+    ttk.Entry(scrollable_frame, textvariable=self.material_var, width=40).grid(row=row, column=1, pady=5)
+    row += 1
+📌 Как добавить в save_product():
+python
+def save_product(self):
+    # ... получаем существующие значения ...
+    
+    # ДОБАВЛЯЕМ НОВЫЕ ПОЛЯ
+    weight = self.weight_var.get() if hasattr(self, 'weight_var') else None
+    material = self.material_var.get().strip() if hasattr(self, 'material_var') else ''
+    
+    # В SQL запрос добавляем новые поля
+    cur.execute('''
+        INSERT INTO products (name, description, category_id, manufacturer, supplier_id, 
+                             price, unit, quantity, discount, photo_path,
+                             weight, material)  -- ← ДОБАВИЛИ
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  -- ← добавили два ?
+    ''', (name, description, category_id, manufacturer, supplier_id, 
+          price, unit, quantity, discount, saved_photo,
+          weight, material))  # ← добавили значения
+4️⃣ БИЗНЕС-ЛОГИКА (скидки, подсветка)
+Где искать:
+python
+def create_product_card(self, row):
+    # ↓↓↓ УСЛОВИЯ ПОДСВЕТКИ ↓↓↓
+    bg_color = 'white'
+    if row['quantity'] == 0:           # товара нет на складе
+        bg_color = 'lightblue'
+    elif row['discount'] > 17:          # скидка больше 17%
+        bg_color = '#FFDEAD'
+📌 Если в вашем варианте другие условия:
+python
+# Например, стройматериалы: если вес > 50 кг - жёлтый
+if row['weight'] and row['weight'] > 50:
+    bg_color = '#FFFACD'
+
+# Или если срок годности истекает
+if row['expiry_date']:
+    days_left = (datetime.fromisoformat(row['expiry_date']) - datetime.now()).days
+    if days_left < 30:
+        bg_color = '#FFB6C1'
+5️⃣ ПРАВА ДОСТУПА (если роли другие)
+Где искать:
+python
+def show_main_window(self):
+    role = self.current_user['role']
+    
+    # ↓↓↓ ПРОВЕРКА РОЛЕЙ ↓↓↓
+    if role in ('manager', 'admin'):   # кто видит заказы
+        self.init_orders_tab(role)
+    
+    if role == 'admin':                # кто может редактировать
+        btn_add = ttk.Button(...)
+📌 Если у вас другие роли:
+python
+# Пример: если есть роль "директор" вместо "admin"
+if role in ('manager', 'director'):
+    self.init_orders_tab(role)
+
+if role == 'director':
+    # показываем кнопки управления
+    btn_add = ttk.Button(...)
+6️⃣ ИМПОРТ ДАННЫХ (если есть файлы)
+Если в вашем варианте есть файлы для импорта (CSV, Excel), добавьте этот метод:
+
+python
+import csv
+
+def import_from_csv(self, file_path):
+    """Импорт товаров из CSV файла."""
+    conn = get_db_connection()
+    cur = conn.cursor()
+    
+    with open(file_path, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f, delimiter=';')
+        for row in reader:
+            # Получаем ID категории и поставщика
+            cur.execute("SELECT id FROM categories WHERE name=?", (row['category'],))
+            cat_id = cur.fetchone()[0]
+            
+            cur.execute("SELECT id FROM suppliers WHERE name=?", (row['supplier'],))
+            sup_id = cur.fetchone()[0]
+            
+            # Вставляем товар
+            cur.execute('''
+                INSERT INTO products (name, description, category_id, supplier_id, price, quantity)
+                VALUES (?, ?, ?, ?, ?, ?)
+            ''', (row['name'], row['description'], cat_id, sup_id, float(row['price']), int(row['quantity'])))
+    
+    conn.commit()
+    conn.close()
+    messagebox.showinfo("Успех", "Данные импортированы")
+📋 ЧЕК-ЛИСТ АДАПТАЦИИ
+Шаг	Что проверить	Где
+1	Названия таблиц	init_database()
+2	Поля в таблицах	CREATE TABLE
+3	Тестовые категории	categories = [...]
+4	Тестовые поставщики	suppliers = [...]
+5	Тестовые товары	products = [...]
+6	SQL запрос SELECT	refresh_products_tree()
+7	SQL запрос INSERT	save_product()
+8	SQL запрос UPDATE	save_product()
+9	Поля в карточке	create_product_card()
+10	Поля в редактировании	EditProductWindow
+11	Загрузка данных в редактор	load_product_data()
+12	Права ролей	show_main_window()
+13	Условия подсветки	create_product_card()
+14	Импорт данных (если есть)	Создать метод
+🚀 БЫСТРАЯ АДАПТАЦИЯ (для экзамена)
+Если времени мало:
+
+Скопируйте мой код
+
+Найдите и замените:
+
+Названия таблиц (products → ваше)
+
+Названия полей (добавьте свои)
+
+Тестовые данные
+
+Проверьте SQL запросы (все SELECT, INSERT, UPDATE)
+
+Добавьте новые поля в интерфейс
+
+Главное правило: все изменения должны быть согласованы — если добавили поле в таблицу, добавьте его во все SQL запросы и в интерфейс!
+
+📌 ПРИМЕР ПОЛНОЙ АДАПТАЦИИ
+Допустим, у вас вариант "Стройматериалы" вместо "Игрушки":
+
+Что менять	Где	Как
+Таблицы	init_database()	Заменить products на materials
+Поля	CREATE TABLE materials	Добавить weight, material
+Категории	categories = [...]	['Пиломатериалы', 'Крепёж', ...]
+Поставщики	suppliers = [...]	['ООО "СтройГрупп"', ...]
+Товары	products = [...]	Свои товары
+SELECT	refresh_products_tree()	Добавить p.weight, p.material
+Карточка	create_product_card()	Показать вес и материал
+Редактирование	EditProductWindow	Поля для веса и материала
+Сохранение	save_product()	Добавить вес и материал в SQL
+Всё остальное остаётся без изменений! 🎉
+
