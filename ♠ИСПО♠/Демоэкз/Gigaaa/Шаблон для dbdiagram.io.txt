@@ -1,0 +1,93 @@
+Как создать ER-диаграмму:
+Вариант 1: Онлайн-инструменты (бесплатно, без установки)
+
+dbdiagram.io (самый быстрый)
+
+Зайдите на https://dbdiagram.io
+
+Вставьте код из моего шаблона ниже
+
+Нажмите "Export" → "PDF"
+
+
+
+Вариант 2: Бесплатная программа (локально)
+
+Скачайте DBeaver (бесплатно)
+
+Подключитесь к database.db
+
+ПКМ по БД → "View Diagram"
+
+Экспортируйте как PDF
+
+Вариант 3: draw.io (бесплатно)
+
+Зайдите на https://app.diagrams.net
+
+Выберите "Device" → "Create New Diagram"
+
+Используйте инструмент "SQL" для импорта схемы
+
+
+
+
+
+
+
+
+// Таблица пользователей
+Table users {
+  id integer [pk, increment]
+  login varchar [unique, not null]
+  password varchar [not null]
+  full_name varchar [not null]
+  role varchar [not null]
+}
+
+// Таблица категорий
+Table categories {
+  id integer [pk, increment]
+  name varchar [unique, not null]
+}
+
+// Таблица поставщиков
+Table suppliers {
+  id integer [pk, increment]
+  name varchar [unique, not null]
+}
+
+// Таблица товаров
+Table products {
+  id integer [pk, increment]
+  name varchar [not null]
+  description text
+  category_id integer [ref: > categories.id, not null]
+  manufacturer varchar
+  supplier_id integer [ref: > suppliers.id, not null]
+  price real [not null]
+  unit varchar
+  quantity integer [not null]
+  discount real [default: 0]
+  photo_path text
+}
+
+// Таблица заказов
+Table orders {
+  id integer [pk, increment]
+  order_number varchar [unique, not null]
+  user_id integer [ref: > users.id, not null]
+  status varchar [not null]
+  pickup_address varchar [not null]
+  order_date datetime [not null]
+  delivery_date datetime
+}
+
+// Таблица позиций заказов
+Table order_details {
+  id integer [pk, increment]
+  order_id integer [ref: > orders.id, not null]
+  product_id integer [ref: > products.id, not null]
+  quantity integer [not null]
+  price_at_order real [not null]
+}
